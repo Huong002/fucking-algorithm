@@ -44,7 +44,7 @@ class UF {
 }
 ```
 
-"Liên thông" nói chỗ này là một quan hệ tương đương, tức là nói có ba tính chất如下:
+"Liên thông" nói ở đây là một quan hệ tương đương, tức là nói có ba tính chất như sau:
 
 1, Tính phản xạ: nút `p` và `p` liên thông.
 
@@ -60,7 +60,7 @@ Lại gọi `union(1, 2)`, lúc này 0,1,2 đều được liên thông, gọi `
 
 ![](https://labuladong.online/algo/images/unionfind/2.jpg)
 
-kiểm tra loại "quan hệ tương đương" này rất 实用, ví như trình biên dịchkiểm tra引用 khác nhau của cùng một biến, ví như tính vòng bạn bè trong mạng xã hội, v.v.
+kiểm tra loại "quan hệ tương đương" này rất thực dụng, ví như trình biên dịch kiểm tra các tham chiếu khác nhau của cùng một biến, ví như tính vòng bạn bè trong mạng xã hội, v.v.
 
 Như vậy, bạn hẳn đại khái hiểu là gì tính liên thông động, then chốt của thuật toán Union-Find nằm ở hiệu suất của hàm `union` và `connected`. Vậy dùng mô hình gì để biểu thị trạng thái liên thông của đồ thị này? Dùng cấu trúc dữ liệu gì để cài đặt code?
 
@@ -68,7 +68,7 @@ Như vậy, bạn hẳn đại khái hiểu là gì tính liên thông động, 
 
 Chú ý vừa rồi tôi đem "mô hình" và "cấu trúc dữ liệu" cụ thể tách ra nói, làm vậy là có nguyên nhân. Vì chúng ta dùng rừng (một số cây) để biểu thị tính liên thông động của đồ thị, dùng mảng để cài đặt cụ thể rừng này.
 
-Dùng rừng biểu thị tính liên thông thế nào? Chúng ta设 mỗi nút của cây có một con trỏ chỉ nút cha của nó, nếu là nút gốc, con trỏ này chỉ chính mình. Ví như vừa rồi đồ thị 10 nút, lúc đầu không liên thông nhau, chính là như sau:
+Dùng rừng biểu thị tính liên thông thế nào? Chúng ta giả sử mỗi nút của cây có một con trỏ chỉ nút cha của nó, nếu là nút gốc, con trỏ này chỉ chính mình. Ví như đồ thị 10 nút vừa rồi, lúc đầu không liên thông nhau, chính là như sau:
 
 ![](https://labuladong.online/algo/images/unionfind/3.jpg)
 
@@ -81,7 +81,7 @@ class UF {
 
     // Hàm tạo, n là tổng số nút của đồ thị
     public UF(int n) {
-        // Ban đầu互 không liên thông
+        // Ban đầu không liên thông nhau
         this.count = n;
         // Con trỏ nút cha ban đầu chỉ chính mình
         parent = new int[n];
@@ -93,7 +93,7 @@ class UF {
 }
 ```
 
-**Nếu hai nút nào đó được liên thông, 則 để nút gốc của một nút (tùy ý) trong đó gắn vào nút gốc của nút còn lại**:
+**Nếu hai nút nào đó được liên thông, thì để nút gốc của một nút (tùy ý) trong đó gắn vào nút gốc của nút còn lại**:
 
 ![](https://labuladong.online/algo/images/unionfind/4.jpg)
 
@@ -149,13 +149,13 @@ class UF {
 
 Vậy độ phức tạp của thuật toán này bao nhiêu? Chúng ta phát hiện, độ phức tạp trong API chính `connected` và `union` đều do hàm `find` gây ra, nên nói độ phức tạp của chúng và `find` giống nhau.
 
-Chức năng chính của `find` chính là từ một nút nào đó duyệt lên đến gốc cây, độ phức tạp thời gian của nó chính là chiều cao của cây. Chúng ta có thể thói quen 性 cho rằng chiều cao cây chính là `logN`, nhưng chuyện này không nhất định. Chiều cao `logN` chỉ tồn tại ở cây nhị phân cân bằng, với cây thường có thể xuất hiện tình huống cực đoan không cân bằng, khiến "cây" gần như suy biến thành "danh sách liên kết", chiều cao cây trường hợp xấu nhất có thể biến thành `N`.
+Chức năng chính của `find` chính là từ một nút nào đó duyệt lên đến gốc cây, độ phức tạp thời gian của nó chính là chiều cao của cây. Chúng ta có thể theo thói quen cho rằng chiều cao cây chính là `logN`, nhưng chuyện này không nhất định. Chiều cao `logN` chỉ tồn tại ở cây nhị phân cân bằng, với cây thường có thể xuất hiện tình huống cực đoan không cân bằng, khiến "cây" gần như suy biến thành "danh sách liên kết", chiều cao cây trường hợp xấu nhất có thể biến thành `N`.
 
 ![](https://labuladong.online/algo/images/unionfind/6.jpg)
 
-Nên nói cách giải trên, độ phức tạp thời gian của `find`, `union`, `connected` đều là O(N). Độ phức tạp này很 không lý tưởng, bạn nghĩ lý thuyết đồ thị giải đều là vấn đề quy mô dữ liệu巨 lớn như mạng xã hội, với lệnh gọi `union` và `connected` rất thường xuyên, mỗi lần gọi cần thời gian tuyến tính hoàn toàn không thể忍受.
+Nên nói cách giải trên, độ phức tạp thời gian của `find`, `union`, `connected` đều là O(N). Độ phức tạp này rất không lý tưởng, bạn nghĩ xem lý thuyết đồ thị giải đều là vấn đề quy mô dữ liệu khổng lồ như mạng xã hội, với lệnh gọi `union` và `connected` rất thường xuyên, mỗi lần gọi cần thời gian tuyến tính hoàn toàn không thể chịu được.
 
-**Then chốt của vấn đề nằm ở, làm sao nghĩ cách tránh cây không cân bằng**? Chỉ cần lược 施小 kế là được.
+**Then chốt của vấn đề nằm ở việc làm sao nghĩ cách tránh cây không cân bằng**? Chỉ cần dùng chút mẹo là được.
 
 ## Ba, tối ưu cân bằng
 
@@ -241,13 +241,13 @@ Bước tối ưu này tuy code rất đơn giản, nhưng nguyên lý rất kh�
 
 **Thực ra chúng ta không quan tâm cấu trúc mỗi cây trông thế nào, chỉ quan tâm nút gốc**.
 
-Vì dù cây trông gì 样, nút gốc của mỗi nút trên cây đều giống nhau, nên có thể sâu hơn nén chiều cao mỗi cây, khiến chiều cao cây始终 giữ hằng số không?
+Vì dù cây trông thế nào, nút gốc của mỗi nút trên cây đều giống nhau, nên có thể nén sâu hơn chiều cao mỗi cây, khiến chiều cao cây thủy chung giữ ở hằng số không?
 
 ![](https://labuladong.online/algo/images/unionfind/8.jpg)
 
 Như vậy nút cha của mỗi nút chính là nút gốc của cả cây, `find` là có thể lấy thời gian O(1) tìm được nút gốc của một nút nào đó, tương ứng, độ phức tạp `connected` và `union` đều giảm còn O(1).
 
-Muốn做 tới điểm này chủ yếu là sửa logic hàm `find`, rất đơn giản, nhưng bạn có thể thấy hai cách viết khác nhau.
+Muốn làm được điểm này chủ yếu là sửa logic hàm `find`, rất đơn giản, nhưng bạn có thể thấy hai cách viết khác nhau.
 
 Loại thứ nhất là trong `find` thêm một dòng code:
 
@@ -288,9 +288,9 @@ class UF {
 }
 ```
 
-Tôi một độ cho rằng cách viết đệ quy này và cách viết lặp loại thứ nhất làm chuyện giống nhau, nhưng thực tế là tôi lớn 意 rồi, có độc giả chỉ ra cách viết này tiến hành nén đường đi hiệu suất cao hơn cách giải trên.
+Tôi một thời từng cho rằng cách viết đệ quy này và cách viết lặp loại thứ nhất làm chuyện giống nhau, nhưng thực tế là tôi đã sơ ý rồi, có độc giả chỉ ra cách viết này tiến hành nén đường đi hiệu suất cao hơn cách giải trên.
 
-Quá trình đệ quy này hơi không 好 hiểu, bạn có thể tự vẽ tay quá trình đệ quy. Tôi đem chuyện hàm này làm dịch thành dạng lặp, tiện bạn hiểu nguyên lý nó tiến hành nén đường đi:
+Quá trình đệ quy này hơi khó hiểu, bạn có thể tự vẽ tay quá trình đệ quy. Tôi đem việc hàm này làm dịch thành dạng lặp, tiện cho bạn hiểu nguyên lý nó tiến hành nén đường đi:
 
 ```java
 // Đoạn code lặp này tiện bạn hiểu chuyện code đệ quy làm
@@ -315,9 +315,9 @@ Hiệu quả nén đường đi này như sau:
 
 ![](https://labuladong.online/algo/images/unionfind/10.jpeg)
 
-So với loại nén đường đi thứ nhất, hiển nhiên phương pháp này nén triệt để hơn, trực tiếp đem cả một cành cây压 phẳng, một chút bất ngờ cũng không có. Dù một số trường hợp cực đoan sinh ra một cây khá cao, chỉ cần một lần nén đường đi là có thể đáng kể 降低 chiều cao cây, từ góc độ [phân tích摊还](https://labuladong.online/algo/essential-technique/complexity-analysis/) mà xem, độ phức tạp thời gian trung bình mọi thao tác vẫn là O(1), nên từ góc độ hiệu suất, khuyên bạn dùng thuật toán nén đường đi này.
+So với loại nén đường đi thứ nhất, hiển nhiên phương pháp này nén triệt để hơn, trực tiếp đem cả một cành cây ép phẳng, một chút bất ngờ cũng không có. Dù một số trường hợp cực đoan sinh ra một cây khá cao, chỉ cần một lần nén đường đi là có thể đáng kể hạ thấp chiều cao cây, từ góc độ [phân tích khấu hao](https://labuladong.online/algo/essential-technique/complexity-analysis/) mà xem, độ phức tạp thời gian trung bình mọi thao tác vẫn là O(1), nên từ góc độ hiệu suất, khuyên bạn dùng thuật toán nén đường đi này.
 
-**Ngoài ra, nếu dùngkỹ thuật nén đường đi, vậy tối ưu cân bằng của mảng `size` sẽ không cần thiết**. Nên thuật toán Union Find mà bạn thường thấy hẳn là cài đặt 如下:
+**Ngoài ra, nếu dùng kỹ thuật nén đường đi, vậy tối ưu cân bằng của mảng `size` sẽ không cần thiết**. Nên thuật toán Union Find mà bạn thường thấy hẳn là cài đặt như sau:
 
 ```java
 class UF {
@@ -371,7 +371,7 @@ class UF {
 
 Độ phức tạp của thuật toán Union-Find có thể phân tích như sau: hàm tạo khởi tạo cấu trúc dữ liệu cần độ phức tạp thời gian và không gian O(N); liên thông hai nút `union`, kiểm tra tính liên thông hai nút `connected`, tính thành phần liên thông `count` độ phức tạp thời gian đều làm O(1).
 
-Đến đây, tin rằng bạn đã nắm logic cốt lõi của thuật toán Union-Find, tổng kết下 quá trình chúng ta tối ưu thuật toán:
+Đến đây, tin rằng bạn đã nắm logic cốt lõi của thuật toán Union-Find, tổng kết lại quá trình chúng ta tối ưu thuật toán:
 
 1, Dùng mảng `parent` ghi nút cha của mỗi nút,tương đương với con trỏ chỉ nút cha, nên trong mảng `parent` thực tế lưu một rừng (một số cây đa phân).
 
@@ -380,7 +380,7 @@ class UF {
 3, Trong hàm `find` tiến hành nén đường đi, đảm bảo chiều cao cây bất kỳ giữ ở hằng số, khiến độ phức tạp thời gian các API là O(1). Sau khi dùng nén đường đi, có thể không dùng tối ưu cân bằng của mảng `size`.
 
 > [!TIP]
-> Đa số thi viết đều cho phép bạn dùng IDE của mình code, nên bạn có thể trước đem lớp `UF` này用 ngôn ngữ lập trình bạn quen viết sẵn, lúc thi viết cần thì trực tiếp lấy dùng. Lượng code của nó hơi nhiều, không cần hiện sân từ đầu viết.
+> Đa số thi viết đều cho phép bạn dùng IDE của mình code, nên bạn có thể trước hết đem lớp `UF` này dùng ngôn ngữ lập trình bạn quen viết sẵn, lúc thi viết cần thì trực tiếp lấy dùng. Lượng code của nó hơi nhiều, không cần viết từ đầu tại chỗ thi.
 
 <hr>
 <details class="hint-container details">

@@ -34,7 +34,7 @@ Tại sao thuật toán BFS thường dùng để tìm lời giải vấn đề 
 
 Thực ra cái gọi là đường đi ngắn nhất, đều có thể loại hơn thành loại vấn đề độ sâu nhỏ nhất của cây nhị phân (tìm nút lá gần nút gốc nhất), duyệt đệ quy bắt buộc cần duyệt mọi nút của cả cây mới có thể tìm được nút mục tiêu, mà duyệt tầng không cần duyệt mọi nút là xử lý xong được, nên duyệt tầng phù hợp giải loại vấn đề đường đi ngắn nhất này.
 
-Chải như vậy hẳn够 rõ rồi?
+Chải như vậy hẳn đã đủ rõ rồi?
 
 Nên trước khi đọc bài này, cần đảm bảo bạn đã học [Duyệt đệ quy/duyệt tầng của cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/), [Duyệt đệ quy/duyệt tầng của cây đa phân](https://labuladong.online/algo/data-structure-basic/n-ary-tree-traverse-basic/) và [Duyệt DFS/BFS của cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/) phía trước, trước đem thuật toán duyệt của mấy cấu trúc dữ liệu cơ bản này chơi hiểu, thuật toán khác đều sẽ rất dễ hiểu.
 
@@ -48,7 +48,7 @@ Lại ví như hai từ, yêu cầu bạn thông qua thay thế nào đó, đem 
 
 Lại ví như game nối hình, điều kiện hai ô xóa bỏ không chỉ hình vẽ giống nhau, còn được đảm bảo đường nối ngắn nhất giữa hai ô không được nhiều hơn hai góc ngoặt. Bạn chơi nối hình, bấm hai tọa độ, gamekiểm tra đường nối ngắn nhất của chúng có mấy góc ngoặt thế nào?
 
-Bạn xem mấy ví dụ trên, có phải cảm giác và cấu trúc cây/đồ thị chúng ta học trước đó hoàn toàn扯 không trên quan hệ? Nhưng thực tế chỉ cần hơi thêm trừu tượng, chúng chính là duyệt cấu trúc cây/đồ thị, thực sự quá đơn giản khô khan.
+Bạn xem mấy ví dụ trên, có phải cảm giác với cấu trúc cây/đồ thị chúng ta học trước đó hoàn toàn chẳng có quan hệ gì? Nhưng thực tế chỉ cần hơi thêm trừu tượng, chúng chính là duyệt cấu trúc cây/đồ thị, thực sự quá đơn giản khô khan.
 
 Dưới đây dùng vài bài ví dụ đểgiảng giải công thức khung BFS, sau này lại cũng đừng thấy loại vấn đề này khó giải.
 
@@ -56,9 +56,9 @@ Dưới đây dùng vài bài ví dụ đểgiảng giải công thức khung BF
 
 Khung thuật toán BFS thực ra chính là code BFS duyệt cấu trúc đồ thị cho trong [Duyệt DFS/BFS của cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/), tổng cộng có ba cách viết.
 
-Với vấn đề thuật toán BFS thực tế, cách viết thứ nhất đơn giản nhất, nhưng hạn chế 太 lớn, không thường dùng; cách viết thứ hai thường dùng nhất, đề thuật toán BFS độ khó trung bình cơ bản đều có thể dùng cách viết này giải; cách viết thứ ba hơi phức tạp, nhưng linh hoạt nhất, có thể sẽ trong một số vấn đề BFS độ khó khá lớn dùng đến. Trong [Chương bài tập thuật toán BFS](https://labuladong.online/algo/problem-set/bfs/) tiếp theo, sẽ có một số đề độ khó lớn hơn dùng cách viết thứ ba, đến lúc đó bạn có thể tự thử.
+Với vấn đề thuật toán BFS thực tế, cách viết thứ nhất đơn giản nhất, nhưng hạn chế quá lớn, không thường dùng; cách viết thứ hai thường dùng nhất, đề thuật toán BFS độ khó trung bình cơ bản đều có thể dùng cách viết này giải; cách viết thứ ba hơi phức tạp, nhưng linh hoạt nhất, có thể sẽ trong một số vấn đề BFS độ khó khá lớn dùng đến. Trong [Chương bài tập thuật toán BFS](https://labuladong.online/algo/problem-set/bfs/) tiếp theo, sẽ có một số đề độ khó lớn hơn dùng cách viết thứ ba, đến lúc đó bạn có thể tự thử.
 
-Ví dụ của bài này đều độ khó trung bình, nên cách giải bài này cho 出 đều lấy cách viết thứ hai làm chuẩn:
+Ví dụ của bài này đều độ khó trung bình, nên cách giải bài này đưa ra đều lấy cách viết thứ hai làm chuẩn:
 
 ```java
 // Từ s bắt đầu BFS duyệt mọi nút của đồ thị, mà ghi lại số bước duyệt
@@ -94,7 +94,7 @@ int bfs(int s, int target) {
 }
 ```
 
-Code khung trên gần như chính là từ [Duyệt DFS/BFS của cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/) copy qua, chỉ có điều thêm một tham số `target`, khi lần đầu đi đến `target` khi, trực tiếp kết thúc thuật toán并 trả về số bước đã đi.
+Code khung trên gần như chính là từ [Duyệt DFS/BFS của cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/) copy qua, chỉ có điều thêm một tham số `target`, khi lần đầu đi đến `target`, trực tiếp kết thúc thuật toán và trả về số bước đã đi.
 
 Dưới đây chúng ta dùng vài ví dụ cụ thể xem vận dụng khung này thế nào.
 
@@ -349,11 +349,11 @@ Chữ ký hàm như sau:
 int openLock(String[] deadends, String target)
 ```
 
-Trong đề mô tả chính là loại khóa mật mã thường gặp trong đời sống chúng ta, nếu không có bất kỳ ràng buộc nào, số lần拨 ít nhất rất dễ tính. Ví như muốn拨 đến `"1234"`, vậy từng số拨 động là được, số lần拨 ít nhất chính là `1 + 2 + 3 + 4 = 10` lần.
+Trong đề mô tả chính là loại khóa mật mã thường gặp trong đời sống chúng ta, nếu không có bất kỳ ràng buộc nào, số lần vặn ít nhất rất dễ tính. Ví như muốn vặn đến `"1234"`, vậy từng số vặn một chút là được, số lần vặn ít nhất chính là `1 + 2 + 3 + 4 = 10` lần.
 
-Nhưng điểm khó bây giờ nằm ở, trong quá trình拨 khóa mật mã không thể xuất hiện `deadends`, như vậy thì có chút độ khó. Nếu gặp `deadends`, bạn nên xử lý thế nào, mới khiến tổng số lần拨 ít nhất?
+Nhưng điểm khó bây giờ nằm ở việc trong quá trình vặn khóa mật mã không thể xuất hiện `deadends`, như vậy thì có chút độ khó. Nếu gặp `deadends`, bạn nên xử lý thế nào, mới khiến tổng số lần vặn là ít nhất?
 
-Ngàn vạn đừng rơi vào chi tiết, thử nghĩ đủ loại tình huống cụ thể. cần biết bản chất của thuật toán chính làvét cạn, chúng ta trực tiếp từ `"0000"` bắt đầu bạo lựcvét cạn, đem mọi tình huống拨 có thể đềuvét cạn ra, chẳng lẽ còn sợ không tìm được số lần拨 ít nhất sao?
+Ngàn vạn đừng rơi vào chi tiết, thử nghĩ đủ loại tình huống cụ thể. cần biết bản chất của thuật toán chính là vét cạn, chúng ta trực tiếp từ `"0000"` bắt đầu bạo lực vét cạn, đem mọi tình huống vặn có thể đều vét cạn ra, chẳng lẽ còn sợ không tìm được số lần vặn ít nhất sao?
 
 **Bước một, chúng ta bất kể mọi điều kiện giới hạn, bất kể giới hạn của `deadends` và `target`, sẽ suy nghĩ một vấn đề: nếu để bạn thiết kế một thuật toán, vét cạn mọi tổ hợp mật mã có thể, bạn làm sao**?
 
@@ -366,7 +366,7 @@ Cây đệ quy trong lòng ra chưa? Hẳn là một cây tám phân, mỗi nút
 Đoạn mã giả dưới sẽ mô tảý tưởng trên, dùng duyệt tầng một cây tám phân:
 
 ```java
-// đem s[j]拨 lên một lần
+// vặn s[j] lên một lần
 String plusOne(String s, int j) {
     char[] ch = s.toCharArray();
     if (ch[j] == '9')
@@ -375,7 +375,7 @@ String plusOne(String s, int j) {
         ch[j] += 1;
     return new String(ch);
 }
-// đem s[i]拨 xuống một lần
+// vặn s[i] xuống một lần
 String minusOne(String s, int j) {
     char[] ch = s.toCharArray();
     if (ch[j] == '0')
@@ -385,7 +385,7 @@ String minusOne(String s, int j) {
     return new String(ch);
 }
 
-// Khung BFS, tìm số lần拨 ít nhất
+// Khung BFS, tìm số lần vặn ít nhất
 void BFS(String target) {
     Queue<String> q = new LinkedList<>();
     q.offer("0000");
@@ -411,7 +411,7 @@ void BFS(String target) {
         step++;
     }
 }
-// đem mỗi bit của s拨 lên một lần hoặc拨 xuống một lần, 8 mật mã kề nhau
+// vặn mỗi bit của s lên một lần hoặc xuống một lần, được 8 mật mã kề nhau
 List<String> getNeighbors(String s) {
     List<String> neighbors = new ArrayList<>();
     for (int i = 0; i < 4; i++) {
@@ -424,7 +424,7 @@ List<String> getNeighbors(String s) {
 
 Code này đã có thểvét cạn mọi tổ hợp mật mã có thể, nhưng còn có vấn đề cần giải.
 
-1, Sẽ đi đường quay lại, chúng ta có thể từ `"0000"`拨 đến `"1000"`, nhưng vân vân từ hàng đợi lấy ra `"1000"` khi, còn sẽ 拨 ra một `"0000"`, như vậy sẽ sinh vòng lặp chết.
+1, Sẽ đi đường quay lại, chúng ta có thể từ `"0000"` vặn đến `"1000"`, nhưng khi từ hàng đợi lấy ra `"1000"`, còn sẽ vặn ra một `"0000"`, như vậy sẽ sinh vòng lặp chết.
 
 Vấn đề này rất dễ giải, thực ra chính là thành vòng, chúng ta dùng một tập `visited` ghi mật mã đãvét cạn qua, lần nữa gặp khi, đừng thêm vào hàng đợi là được.
 
@@ -477,7 +477,7 @@ class Solution {
         return -1;
     }
 
-    // đem s[j]拨 lên một lần
+    // vặn s[j] lên một lần
     String plusOne(String s, int j) {
         char[] ch = s.toCharArray();
         if (ch[j] == '9')
@@ -487,7 +487,7 @@ class Solution {
         return new String(ch);
     }
 
-    // đem s[i]拨 xuống một lần
+    // vặn s[i] xuống một lần
     String minusOne(String s, int j) {
         char[] ch = s.toCharArray();
         if (ch[j] == '0')
@@ -497,7 +497,7 @@ class Solution {
         return new String(ch);
     }
 
-    // đem mỗi bit của s拨 lên một lần hoặc拨 xuống một lần, 8 mật mã kề nhau
+    // vặn mỗi bit của s lên một lần hoặc xuống một lần, được 8 mật mã kề nhau
     List<String> getNeighbors(String s) {
         List<String> neighbors = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
@@ -513,7 +513,7 @@ class Solution {
 
 Dưới đây giới thiệu thêm mộtý tưởng tối ưu của thuật toán BFS: **BFS hai chiều**, có thể nâng cao hiệu suất tìm kiếm BFS.
 
-Bạn đem kỹ thuật này coi như đọc mở rộng là được, trong đề thi viết phỏng vấn thường, thuật toán BFS thường đã够 dùng, nếu gặp timeout không qua được, hoặc truy vấn của người phỏng vấn, có thể xét cách giải có cần tối ưu BFS hai chiều không.
+Bạn đem kỹ thuật này coi như đọc mở rộng là được, trong đề thi viết phỏng vấn thường, thuật toán BFS thường đã đủ dùng, nếu gặp timeout không qua được, hoặc truy vấn của người phỏng vấn, có thể xét cách giải có cần tối ưu BFS hai chiều không.
 
 BFS hai chiều chính là phát sinh từ thuật toán BFS chuẩn:
 
@@ -598,7 +598,7 @@ class Solution {
         return -1;
     }
 
-    // đem s[j]拨 lên một lần
+    // vặn s[j] lên một lần
     String plusOne(String s, int j) {
         char[] ch = s.toCharArray();
         if (ch[j] == '9')
@@ -608,7 +608,7 @@ class Solution {
         return new String(ch);
     }
 
-    // đem s[i]拨 xuống một lần
+    // vặn s[i] xuống một lần
     String minusOne(String s, int j) {
         char[] ch = s.toCharArray();
         if (ch[j] == '0')
@@ -629,9 +629,9 @@ class Solution {
 }
 ```
 
-BFS hai chiều vẫn循 khung thuật toán BFS, nhưng có vài khác biệt chi tiết:
+BFS hai chiều vẫn theo khung thuật toán BFS, nhưng có vài khác biệt chi tiết:
 
-1, Không dùng hàng đợi lưu phần tử nữa, mà đổi dùng [tập băm](https://labuladong.online/algo/data-structure-basic/hash-set/), tiện nhanh判 hai tập hợp có giao nhau không.
+1, Không dùng hàng đợi lưu phần tử nữa, mà đổi dùng [tập băm](https://labuladong.online/algo/data-structure-basic/hash-set/), tiện cho việc nhanh chóng kiểm tra hai tập hợp có giao nhau không.
 
 2, Điều chỉnh vị trí return step. Vì trong BFS hai chiều không còn đơn giảnkiểm tra có đến điểm đích không, màkiểm tra hai tập hợp có giao nhau không, nên cần tính ra nút 이웃 khi sẽ tiến hànhkiểm tra.
 
@@ -641,7 +641,7 @@ Vì theo logic BFS, phần tử trong hàng đợi (tập hợp) càng nhiều, 
 
 Có điều nói lại, **dù BFS truyền thống hay BFS hai chiều, dù làm tối ưu hay không, từ tiêu chuẩn Big O đo, độ phức tạp thời gian đều giống nhau**, chỉ có thể nói BFS hai chiều là mộtkỹ thuật nâng cao, tốc độ chạy thuật toán sẽ tương đối nhanh hơn, nắm hay không nắm thực ra đều không sao cả.
 
-Then chốt nhất vẫn cần đem khung tổng quát BFS ghi lại, và 做 tới thành thạo vận dụng, phía sau có [Chương bài tập BFS](https://labuladong.online/algo/problem-set/bfs/), hãy bạn thử vận dụngkỹ thuật của bài này, giải đề trong đó.
+Then chốt nhất vẫn cần đem khung tổng quát BFS ghi nhớ, và đạt tới mức vận dụng thành thạo, phía sau có [Chương bài tập BFS](https://labuladong.online/algo/problem-set/bfs/), bạn hãy thử vận dụng kỹ thuật của bài này để giải các đề trong đó.
 
 <hr>
 <details class="hint-container details">

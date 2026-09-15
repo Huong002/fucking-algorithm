@@ -31,13 +31,13 @@ Hồi nhỏ tôi còn chơi một game trí tuệ gọi là "Hoa Dung Đạo", c
 
 Thực tế, game ghép hình trượt cũng gọi là Hoa Dung Đạo số, bạn xem hai thứ khá tương tự.
 
-Vậy game này chơi thế nào? Tôi nhớ là có một sốcông thức, tương tự công thức khôi phục rubik. Nhưng hôm nay chúng ta không đến nghiên cứukỹ thuật khiến người hói đầu, **những game trí tuệ này通通 có thể dùng thuật toán tìm kiếm bạo lực giải quyết, nên hôm nay chúng ta sẽ học đi đôi với hành, dùng khung thuật toán BFS đểxử gọn những game này**.
+Vậy game này chơi thế nào? Tôi nhớ là có một sốcông thức, tương tự công thức khôi phục rubik. Nhưng hôm nay chúng ta không nghiên cứu kỹ thuật khiến người hói đầu, **những game trí tuệ này tất cả đều có thể dùng thuật toán tìm kiếm vét cạn để giải quyết, nên hôm nay chúng ta sẽ học đi đôi với hành, dùng khung thuật toán BFS để xử gọn những game này**.
 
 ### Một, phân tích đề bài
 
 LeetCode 773 "Câu đố trượt" chính là vấn đề này, yêu cầu của đề như sau:
 
-Cho bạn một ghép hình trượt 2x3, dùng một mảng 2x3 `board` biểu thị. Trong ghép hình có sáu số 0~5, trong đó**số 0 sẽ biểu thị ô trống đó**, bạn có thể di chuyển số trong đó, khi `board` biến thành `[[1, 2, 3], [4, 5, 0]]`时, thắng game.
+Cho bạn một ghép hình trượt 2x3, dùng một mảng 2x3 `board` biểu thị. Trong ghép hình có sáu số 0~5, trong đó**số 0 sẽ biểu thị ô trống đó**, bạn có thể di chuyển số trong đó, khi `board` biến thành `[[1, 2, 3], [4, 5, 0]]`, thắng game.
 
 Hãy viết một thuật toán, tính số lần di chuyển ít nhất cần để thắng game, nếu không thể thắng game, trả về -1.
 
@@ -45,17 +45,17 @@ Ví như mảng hai chiều nhập `board = [[4,1,2],[5,0,3]]`, thuật toán h�
 
 ![](https://labuladong.online/algo/images/sliding_puzzle/5.jpeg)
 
-Nếu nhập là `board = [[1,2,3],[5,4,0]]`,则 thuật toán trả về -1, vì trong cục diện này dù thế nào cũng không thể thắng game.
+Nếu nhập là `board = [[1,2,3],[5,4,0]]`, thuật toán trả về -1, vì trong cục diện này dù thế nào cũng không thể thắng game.
 
 ### Hai, phân tíchý tưởng
 
 Với loại vấn đề tính số bước ít nhất này, chúng ta sẽ cần nhạy bén nghĩ đến thuật toán BFS.
 
-Đề này chuyển thành vấn đề BFS là có một sốkỹ thuật, chúng ta đối mặt vấn đề如下:
+Đề này chuyển thành vấn đề BFS có một số kỹ thuật, chúng ta đối mặt với các vấn đề như sau:
 
 1, Thuật toán BFS thường, là từ một điểm bắt đầu `start` xuất phát, tìm đường đến điểm cuối `target`, nhưng vấn đề ghép hình không phải đang tìm đường, mà đang không ngừng hoán đổi số, chuyện này hẳn chuyển thành bài toán BFS thế nào?
 
-2, Dù vấn đề này có thể chuyển thành vấn đề BFS, xử lý điểm bắt đầu `start` và điểm cuối `target` thế nào? Chúng đều là mảng, đem mảng放 vào hàng đợi, áp dụng khung BFS, nghĩ thôi đã thấy khá phiền phức 且 kém hiệu quả.
+2, Dù vấn đề này có thể chuyển thành vấn đề BFS, xử lý điểm bắt đầu `start` và điểm cuối `target` thế nào? Chúng đều là mảng, đem mảng đặt vào hàng đợi, áp dụng khung BFS, nghĩ thôi đã thấy khá phiền phức và kém hiệu quả.
 
 Trước trả lời câu hỏi thứ nhất, **thuật toán BFS không chỉ là một thuật toán tìm đường, mà là một thuật toán tìm kiếm bạo lực**, chỉ cần liên quan vấn đềvét cạn bạo lực, BFS sẽ có thể dùng, mà có thể nhanh nhất tìm được đáp án.
 
@@ -65,7 +65,7 @@ Hiểu rõ đạo lý này, vấn đề của chúng ta sẽ chuyển thành:**l
 
 ![](https://labuladong.online/algo/images/sliding_puzzle/3.jpeg)
 
-Như vậy thực ra chính là một vấn đề BFS, mỗi lần先 tìm số 0, rồi hoán đổi với số xung quanh, tạo thành cục diện mới thêm vào hàng đợi... Khi lần đầu đến `target`时, thì nhận được số bước ít nhất để thắng game.
+Như vậy thực ra chính là một vấn đề BFS, mỗi lần trước hết tìm số 0, rồi hoán đổi với số xung quanh, tạo thành cục diện mới thêm vào hàng đợi... Khi lần đầu đến `target`, thì nhận được số bước ít nhất để thắng game.
 
 Với câu hỏi thứ hai, `board` chỗ này vẻn vẹn là mảng hai chiều 2x3, nên có thể nén thành một chuỗi một chiều.**Trong đó khá cókỹ thuật điểm nằm ở, mảng hai chiều có khái niệm "trên-dưới-trái-phải", nén thành một chiều xong, làm sao nhận được chỉ số trên-dưới-trái-phải của một chỉ số nào đó**?
 
@@ -165,7 +165,7 @@ class Solution {
                 // Hoán đổi số 0 và số kề nhau
                 for (int adj : neighbor[idx]) {
                     String new_board = swap(cur.toCharArray(), adj, idx);
-                    // 防 đi đường quay lại
+                    // tránh đi đường quay lại
                     if (!visited.contains(new_board)) {
                         q.offer(new_board);
                         visited.add(new_board);

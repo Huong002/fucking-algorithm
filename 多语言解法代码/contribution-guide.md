@@ -2,7 +2,7 @@
 
 ## Bối cảnh
 
-Để giúp mọi người học thuật toán tốt hơn, trước đây tôi đã viết nhiều bài hướng dẫn thuật toán và phát triển một loạt plugin luyện đề, gọi chung là "combo luyện đề của labuladong" (labuladong 的刷题全家桶), chi tiết xem [tại đây](https://labuladong.github.io/article/fname.html?fname=全家桶简介).
+Để giúp mọi người học thuật toán tốt hơn, trước đây tôi đã viết nhiều bài hướng dẫn thuật toán và phát triển một loạt plugin luyện đề, gọi chung là "combo luyện đề của labuladong", chi tiết xem [tại đây](https://labuladong.github.io/article/fname.html?fname=全家桶简介).
 
 Lời giải trong hướng dẫn và plugin của tôi chủ yếu dùng ngôn ngữ Java, vì Java là ngôn ngữ khuôn phép, ngay cả khi chưa từng tiếp xúc cũng tương đối dễ hiểu logic. Nhưng giờ chatGPT đã xuất hiện, tôi liền nhờ chatGPT viết lại lời giải của mình sang nhiều ngôn ngữ, hy vọng thân thiện hơn với các bạn có nền tảng công nghệ khác nhau.
 

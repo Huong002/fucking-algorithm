@@ -1,4 +1,4 @@
-# 动态规划之KMP字符匹配算法
+# Quy hoạch động và thuật toán khớp ký tự KMP
 
 <p align='center'>
 <a href="https://github.com/labuladong/fucking-algorithm" target="view_window"><img alt="GitHub" src="https://img.shields.io/github/stars/labuladong/fucking-algorithm?label=Stars&style=flat-square&logo=GitHub"></a>
@@ -9,49 +9,49 @@
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**通知：[新版网站会员](https://labuladong.online/algo/intro/site-vip/) 即将涨价；已支持老用户续费~另外，建议你在我的 [网站](https://labuladong.online/algo/) 学习文章，体验更好。**
+**Thông báo: [Hội viên website bản mới](https://labuladong.online/algo/intro/site-vip/) sắp tăng giá; đã hỗ trợ gia hạn cho người dùng cũ~ Ngoài ra, bạn nên học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
 
 
-读完本文，你不仅学会了算法套路，还可以顺便解决如下题目：
+Đọc xong bài này, bạn không chỉ học được mô-típ thuật toán mà còn tiện thể giải được các đề sau:
 
-| LeetCode | 力扣 | 难度 |
+| LeetCode | Lực khấu (LeetCode Trung Quốc) | Độ khó |
 | :----: | :----: | :----: |
-| [28. Find the Index of the First Occurrence in a String](https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/) | [28. 找出字符串中第一个匹配项的下标](https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/) | 🟠
+| [28. Find the Index of the First Occurrence in a String](https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/) | [28. Tìm chỉ số của vị trí khớp đầu tiên trong chuỗi](https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/) | 🟠 |
 
 **-----------**
 
 ::: tip
 
-阅读本文之前，建议你先学习一下另一种字符串匹配算法：[Rabin Karp 字符匹配算法](https://labuladong.online/algo/practice-in-action/rabinkarp/)。
+Trước khi đọc bài này, gợi ý bạn học trước một thuật toán khớp chuỗi khác: [Thuật toán khớp ký tự Rabin Karp](https://labuladong.online/algo/practice-in-action/rabinkarp/).
 
 :::
 
-KMP 算法（Knuth-Morris-Pratt 算法）是一个著名的字符串匹配算法，效率很高，但是确实有点复杂。
+Thuật toán KMP (thuật toán Knuth-Morris-Pratt) là một thuật toán khớp chuỗi nổi tiếng, hiệu quả rất cao nhưng quả thật hơi phức tạp.
 
-很多读者抱怨 KMP 算法无法理解，这很正常，想到大学教材上关于 KMP 算法的讲解，也不知道有多少未来的 Knuth、Morris、Pratt 被提前劝退了。有一些优秀的同学通过手推 KMP 算法的过程来辅助理解该算法，这是一种办法，不过本文要从逻辑层面帮助读者理解算法的原理。十行代码之间，KMP 灰飞烟灭。
+Nhiều bạn đọc than thuật toán KMP không hiểu nổi, điều này rất bình thường, nghĩ tới cách giảng thuật toán KMP trong giáo trình đại học, không biết đã có bao nhiêu Knuth, Morris, Pratt tương lai bị dọa bỏ cuộc từ sớm. Có một số bạn giỏi tự tay suy diễn từng bước quá trình KMP để hỗ trợ hiểu thuật toán, đây cũng là một cách, nhưng bài này sẽ giúp bạn đọc hiểu nguyên lý thuật toán về mặt logic. Chỉ trong mười dòng code, KMP tan thành mây khói.
 
-**先在开头约定，本文用 `pat` 表示模式串，长度为 `M`，`txt` 表示文本串，长度为 `N`。KMP 算法是在 `txt` 中查找子串 `pat`，如果存在，返回这个子串的起始索引，否则返回 -1**。
+**Quy ước trước ở đầu bài, bài này dùng `pat` biểu thị chuỗi mẫu, độ dài là `M`, `txt` biểu thị chuỗi văn bản, độ dài là `N`. Thuật toán KMP là tìm chuỗi con `pat` trong `txt`, nếu tồn tại thì trả về chỉ số bắt đầu của chuỗi con này, nếu không thì trả về -1**.
 
-为什么我认为 KMP 算法就是个动态规划问题呢，等会再解释。对于动态规划，之前多次强调了要明确 `dp` 数组的含义，而且同一个问题可能有不止一种定义 `dp` 数组含义的方法，不同的定义会有不同的解法。
+Vì sao mình cho rằng thuật toán KMP chính là một bài toán quy hoạch động, lát nữa sẽ giải thích. Với quy hoạch động, trước đây đã nhấn mạnh nhiều lần phải xác định rõ ý nghĩa của mảng `dp`, mà cùng một bài toán có thể có không chỉ một cách định nghĩa ý nghĩa mảng `dp`, định nghĩa khác nhau sẽ có cách giải khác nhau.
 
-读者见过的 KMP 算法应该是，一波诡异的操作处理 `pat` 后形成一个一维的数组 `next`，然后根据这个数组经过又一波复杂操作去匹配 `txt`。时间复杂度 O(N)，空间复杂度 O(M)。其实它这个 `next` 数组就相当于 `dp` 数组，其中元素的含义跟 `pat` 的前缀和后缀有关，判定规则比较复杂，不好理解。**本文则用一个二维的 `dp` 数组（但空间复杂度还是 O(M)），重新定义其中元素的含义，使得代码长度大大减少，可解释性大大提高**。
+Thuật toán KMP mà bạn đọc từng thấy hẳn là: một loạt thao tác kỳ quái xử lý `pat` rồi tạo thành một mảng một chiều `next`, rồi dựa vào mảng này lại qua một loạt thao tác phức tạp để khớp `txt`. Độ phức tạp thời gian O(N), độ phức tạp không gian O(M). Thật ra mảng `next` này tương đương mảng `dp`, trong đó ý nghĩa các phần tử liên quan tới tiền tố và hậu tố của `pat`, quy tắc phán đoán phức tạp, khó hiểu. **Còn bài này dùng một mảng `dp` hai chiều (nhưng độ phức tạp không gian vẫn là O(M)), định nghĩa lại ý nghĩa các phần tử trong đó, khiến độ dài code giảm mạnh, tính dễ hiểu tăng mạnh**.
 
 ::: note
 
-本文的代码参考《算法4》，原代码使用的数组名称是 `dfa`（确定有限状态机），因为我们的公众号之前有一系列动态规划的文章，就不说这么高大上的名词了，我对书中代码进行了一点修改，并沿用 `dp` 数组的名称。
+Code bài này tham khảo《Thuật toán 4》, code gốc trong sách dùng tên mảng là `dfa` (máy trạng thái hữu hạn xác định), vì tài khoản công chúng của bọn mình trước đây có cả loạt bài quy hoạch động nên không nói từ ngữ đao to búa lớn này nữa, mình đã sửa code trong sách một chút và dùng tiếp tên mảng `dp`.
 
 :::
 
-### 一、KMP 算法概述
+### Một, Tổng quan thuật toán KMP
 
-首先还是简单介绍一下 KMP 算法和暴力匹配算法的不同在哪里，难点在哪里，和动态规划有啥关系。
+Trước hết vẫn giới thiệu đơn giản thuật toán KMP và thuật toán khớp vét cạn khác nhau ở đâu, điểm khó ở đâu, và liên quan gì tới quy hoạch động.
 
-力扣第 28 题「实现 strStr」就是字符串匹配问题，暴力的字符串匹配算法很容易写，看一下它的运行逻辑：
+Bài 28「Hiện thực strStr」trên LeetCode chính là bài toán khớp chuỗi, thuật toán khớp chuỗi vét cạn rất dễ viết, xem logic chạy của nó:
 
 <!-- muliti_language -->
 ```java
-// 暴力匹配（伪码）
+// Khớp vét cạn (mã giả)
 int search(String pat, String txt) {
     int M = pat.length;
     int N = txt.length;
@@ -61,39 +61,39 @@ int search(String pat, String txt) {
             if (pat[j] != txt[i+j])
                 break;
         }
-        // pat 全都匹配了
+        // pat khớp hết rồi
         if (j == M) return i;
     }
-    // txt 中不存在 pat 子串
+    // trong txt không tồn tại chuỗi con pat
     return -1;
 }
 ```
 
-对于暴力算法，如果出现不匹配字符，同时回退 `txt` 和 `pat` 的指针，嵌套 for 循环，时间复杂度 `O(MN)`，空间复杂度`O(1)`。最主要的问题是，如果字符串中重复的字符比较多，该算法就显得很蠢。
+Với thuật toán vét cạn, nếu xuất hiện ký tự không khớp thì đồng thời lùi con trỏ `txt` và `pat`, vòng for lồng nhau, độ phức tạp thời gian `O(MN)`, độ phức tạp không gian`O(1)`. Vấn đề lớn nhất là, nếu trong chuỗi có nhiều ký tự lặp lại thì thuật toán này trông rất ngốc.
 
-比如 `txt = "aaacaaab", pat = "aaab"`：
+Ví dụ `txt = "aaacaaab", pat = "aaab"`:
 
 ![](https://labuladong.online/algo/images/kmp/1.gif)
 
-很明显，`pat` 中根本没有字符 c，根本没必要回退指针 `i`，暴力解法明显多做了很多不必要的操作。
+Rất rõ ràng, trong `pat` vốn không có ký tự c, hoàn toàn không cần lùi con trỏ `i`, cách giải vét cạn rõ ràng đã làm nhiều thao tác không cần thiết.
 
-KMP 算法的不同之处在于，它会花费空间来记录一些信息，在上述情况中就会显得很聪明：
+Điểm khác của thuật toán KMP là, nó sẽ tốn không gian để ghi lại một số thông tin, trong tình huống trên sẽ trông rất khôn:
 
 ![](https://labuladong.online/algo/images/kmp/2.gif)
 
-再比如类似的 `txt = "aaaaaaab", pat = "aaab"`，暴力解法还会和上面那个例子一样蠢蠢地回退指针 `i`，而 KMP 算法又会耍聪明：
+Lấy thêm ví dụ tương tự `txt = "aaaaaaab", pat = "aaab"`, cách giải vét cạn vẫn sẽ ngốc nghếch lùi con trỏ `i` như ví dụ trên, mà thuật toán KMP lại biết khôn lỏi:
 
 ![](https://labuladong.online/algo/images/kmp/3.gif)
 
-因为 KMP 算法知道字符 b 之前的字符 a 都是匹配的，所以每次只需要比较字符 b 是否被匹配就行了。
+Vì thuật toán KMP biết các ký tự a trước ký tự b đều đã khớp, nên mỗi lần chỉ cần so ký tự b có được khớp không là được.
 
-**KMP 算法永不回退 `txt` 的指针 `i`，不走回头路（不会重复扫描 `txt`），而是借助 `dp` 数组中储存的信息把 `pat` 移到正确的位置继续匹配**，时间复杂度只需 O(N)，用空间换时间，所以我认为它是一种动态规划算法。
+**Thuật toán KMP không bao giờ lùi con trỏ `i` của `txt`, không đi đường vòng (không quét lặp `txt`), mà nhờ thông tin lưu trong mảng `dp` để đưa `pat` tới vị trí đúng đắn rồi khớp tiếp**, độ phức tạp thời gian chỉ cần O(N), lấy không gian đổi thời gian, nên mình cho rằng nó là một thuật toán quy hoạch động.
 
-KMP 算法的难点在于，如何计算 `dp` 数组中的信息？如何根据这些信息正确地移动 `pat` 的指针？这个就需要**确定有限状态自动机**来辅助了，别怕这种高大上的文学词汇，其实和动态规划的 `dp` 数组如出一辙，等你学会了也可以拿这个词去吓唬别人。
+Điểm khó của thuật toán KMP là, tính thông tin trong mảng `dp` thế nào? Dựa vào các thông tin này di chuyển đúng đắn con trỏ `pat` thế nào? Việc này cần **máy trạng thái hữu hạn xác định** hỗ trợ, đừng sợ thuật ngữ văn chương đao to búa lớn này, thật ra nó giống hệt mảng `dp` của quy hoạch động, đợi bạn học xong cũng có thể lấy từ này đi dọa người khác.
 
-还有一点需要明确的是：**计算这个 `dp` 数组，只和 `pat` 串有关**。意思是说，只要给我个 `pat`，我就能通过这个模式串计算出 `dp` 数组，然后你可以给我不同的 `txt`，我都不怕，利用这个 `dp` 数组我都能在 O(N) 时间完成字符串匹配。
+Còn một điểm cần xác định rõ: **tính mảng `dp` này chỉ liên quan tới chuỗi `pat`**. Ý là, chỉ cần cho mình một `pat`, mình tính được mảng `dp` qua chuỗi mẫu này, rồi bạn cho mình `txt` khác nhau thế nào mình cũng không sợ, dùng mảng `dp` này mình đều hoàn thành khớp chuỗi trong thời gian O(N).
 
-具体来说，比如上文举的两个例子：
+Cụ thể, ví dụ hai ví dụ nêu trên:
 
 ```python
 txt1 = "aaacaaab" 
@@ -102,31 +102,31 @@ txt2 = "aaaaaaab"
 pat = "aaab"
 ```
 
-我们的 `txt` 不同，但是 `pat` 是一样的，所以 KMP 算法使用的 `dp` 数组是同一个。
+`txt` của ta khác nhau, nhưng `pat` giống nhau, nên mảng `dp` mà thuật toán KMP dùng là cùng một mảng.
 
-只不过对于 `txt1` 的下面这个即将出现的未匹配情况：
+Chỉ là với tình huống sắp xuất hiện không khớp dưới đây của `txt1`:
 
 ![](https://labuladong.online/algo/images/kmp/txt1.jpg)
 
-`dp` 数组指示 `pat` 这样移动：
+Mảng `dp` chỉ thị `pat` di chuyển thế này:
 
 ![](https://labuladong.online/algo/images/kmp/txt2.jpg)
 
 ::: note
 
-这个`j` 不要理解为索引，它的含义更准确地说应该是**状态**（state），所以它会出现这个奇怪的位置，后文会详述。
+Đừng hiểu `j` này là chỉ số, ý nghĩa của nó nói chính xác hơn hẳn là **trạng thái** (state), nên nó mới xuất hiện ở vị trí kỳ lạ này, phần sau sẽ nói kỹ.
 
 :::
 
-而对于 `txt2` 的下面这个即将出现的未匹配情况：
+Còn với tình huống sắp xuất hiện không khớp dưới đây của `txt2`:
 
 ![](https://labuladong.online/algo/images/kmp/txt3.jpg)
 
-`dp` 数组指示 `pat` 这样移动：
+Mảng `dp` chỉ thị `pat` di chuyển thế này:
 
 ![](https://labuladong.online/algo/images/kmp/txt4.jpg)
 
-明白了 `dp` 数组只和 `pat` 有关，那么我们这样设计 KMP 算法就会比较漂亮：
+Hiểu rõ mảng `dp` chỉ liên quan tới `pat` rồi, vậy ta thiết kế thuật toán KMP thế này sẽ khá đẹp:
 
 <!-- muliti_language -->
 ```java
@@ -136,18 +136,18 @@ public class KMP {
 
     public KMP(String pat) {
         this.pat = pat;
-        // 通过 pat 构建 dp 数组
-        // 需要 O(M) 时间
+        // Xây dựng mảng dp qua pat
+        // Cần thời gian O(M)
     }
 
     public int search(String txt) {
-        // 借助 dp 数组去匹配 txt
-        // 需要 O(N) 时间
+        // Khớp txt nhờ mảng dp
+        // Cần thời gian O(N)
     }
 }
 ```
 
-这样，当我们需要用同一 `pat` 去匹配不同 `txt` 时，就不需要浪费时间构造 `dp` 数组了：
+Như vậy, khi ta cần dùng cùng một `pat` để khớp các `txt` khác nhau thì không cần tốn thời gian xây dựng mảng `dp` nữa:
 
 ```java
 KMP kmp = new KMP("aaab");
@@ -155,148 +155,148 @@ int pos1 = kmp.search("aaacaaab"); //4
 int pos2 = kmp.search("aaaaaaab"); //4
 ```
 
-### 二、状态机概述
+### Hai, Tổng quan máy trạng thái
 
-为什么说 KMP 算法和状态机有关呢？是这样的，我们可以认为 `pat` 的匹配就是状态的转移。比如当 pat = "ABABC"：
+Vì sao nói thuật toán KMP liên quan tới máy trạng thái? Là thế này, ta có thể coi việc khớp `pat` chính là chuyển trạng thái. Ví dụ khi pat = "ABABC":
 
 ![](https://labuladong.online/algo/images/kmp/state.jpg)
 
-如上图，圆圈内的数字就是状态，状态 0 是起始状态，状态 5（`pat.length`）是终止状态。开始匹配时 `pat` 处于起始状态，一旦转移到终止状态，就说明在 `txt` 中找到了 `pat`。比如说当前处于状态 2，就说明字符 "AB" 被匹配：
+Như hình trên, số trong vòng tròn chính là trạng thái, trạng thái 0 là trạng thái bắt đầu, trạng thái 5 (`pat.length`) là trạng thái kết thúc. Khi bắt đầu khớp thì `pat` ở trạng thái bắt đầu, một khi chuyển tới trạng thái kết thúc thì tức là đã tìm thấy `pat` trong `txt`. Ví dụ nói hiện tại ở trạng thái 2, tức là chuỗi "AB" đã được khớp:
 
 ![](https://labuladong.online/algo/images/kmp/state2.jpg)
 
-另外，处于不同状态时，`pat` 状态转移的行为也不同。比如说假设现在匹配到了状态 4，如果遇到字符 A 就应该转移到状态 3，遇到字符 C 就应该转移到状态 5，如果遇到字符 B 就应该转移到状态 0：
+Ngoài ra, ở trạng thái khác nhau thì hành vi chuyển trạng thái của `pat` cũng khác. Ví dụ giả sử giờ đã khớp tới trạng thái 4, nếu gặp ký tự A thì nên chuyển sang trạng thái 3, gặp ký tự C thì nên chuyển sang trạng thái 5, gặp ký tự B thì nên chuyển sang trạng thái 0:
 
 ![](https://labuladong.online/algo/images/kmp/state4.jpg)
 
-具体什么意思呢，我们来一个个举例看看。用变量 `j` 表示指向当前状态的指针，当前 `pat` 匹配到了状态 4：
+Cụ thể là ý gì, ta xem từng ví dụ. Dùng biến `j` biểu thị con trỏ đang trỏ trạng thái hiện tại, hiện tại `pat` đã khớp tới trạng thái 4:
 
 ![](https://labuladong.online/algo/images/kmp/exp1.jpg)
 
-如果遇到了字符 "A"，根据箭头指示，转移到状态 3 是最聪明的：
+Nếu gặp ký tự "A", theo mũi tên chỉ, chuyển sang trạng thái 3 là khôn nhất:
 
 ![](https://labuladong.online/algo/images/kmp/exp3.jpg)
 
-如果遇到了字符 "B"，根据箭头指示，只能转移到状态 0（一夜回到解放前）：
+Nếu gặp ký tự "B", theo mũi tên chỉ, chỉ có thể chuyển sang trạng thái 0 (một đêm quay về vạch xuất phát):
 
 ![](https://labuladong.online/algo/images/kmp/exp5.jpg)
 
-如果遇到了字符 "C"，根据箭头指示，应该转移到终止状态 5，这也就意味着匹配完成：
+Nếu gặp ký tự "C", theo mũi tên chỉ, nên chuyển sang trạng thái kết thúc 5, điều này cũng có nghĩa là khớp xong:
 
 ![](https://labuladong.online/algo/images/kmp/exp7.jpg)
 
-当然了，还可能遇到其他字符，比如 Z，但是显然应该转移到起始状态 0，因为 `pat` 中根本都没有字符 Z：
+Đương nhiên, còn có thể gặp ký tự khác, ví dụ Z, nhưng hiển nhiên nên chuyển sang trạng thái bắt đầu 0, vì trong `pat` vốn không có ký tự Z:
 
 ![](https://labuladong.online/algo/images/kmp/z.jpg)
 
-这里为了清晰起见，我们画状态图时就把其他字符转移到状态 0 的箭头省略，只画 `pat` 中出现的字符的状态转移：
+Ở đây để cho rõ ràng, khi vẽ đồ thị trạng thái ta lược bỏ mũi tên chuyển các ký tự khác về trạng thái 0, chỉ vẽ chuyển trạng thái của các ký tự xuất hiện trong `pat`:
 
 ![](https://labuladong.online/algo/images/kmp/allstate.jpg)
 
-KMP 算法最关键的步骤就是构造这个状态转移图。**要确定状态转移的行为，得明确两个变量，一个是当前的匹配状态，另一个是遇到的字符**；确定了这两个变量后，就可以知道这个情况下应该转移到哪个状态。
+Bước then chốt nhất của thuật toán KMP chính là xây dựng đồ thị chuyển trạng thái này. **Muốn xác định hành vi chuyển trạng thái, phải làm rõ hai biến, một là trạng thái khớp hiện tại, hai là ký tự gặp phải**; xác định hai biến này rồi là biết trong tình huống này nên chuyển sang trạng thái nào.
 
-下面看一下 KMP 算法根据这幅状态转移图匹配字符串 `txt` 的过程：
+Dưới đây xem quá trình thuật toán KMP khớp chuỗi `txt` theo đồ thị chuyển trạng thái này:
 
 ![](https://labuladong.online/algo/images/kmp/kmp.gif)
 
-**请记住这个 GIF 的匹配过程，这就是 KMP 算法的核心逻辑**！
+**Hãy nhớ quá trình khớp trong GIF này, đây chính là logic cốt lõi của thuật toán KMP**!
 
-为了描述状态转移图，我们定义一个二维 dp 数组，它的含义如下：
+Để mô tả đồ thị chuyển trạng thái, ta định nghĩa một mảng dp hai chiều, ý nghĩa của nó như sau:
 
 ```python
 dp[j][c] = next
-0 <= j < M，代表当前的状态
-0 <= c < 256，代表遇到的字符（ASCII 码）
-0 <= next <= M，代表下一个状态
+0 <= j < M, biểu thị trạng thái hiện tại
+0 <= c < 256, biểu thị ký tự gặp phải (mã ASCII)
+0 <= next <= M, biểu thị trạng thái tiếp theo
 
-dp[4]['A'] = 3 表示：
-当前是状态 4，如果遇到字符 A，
-pat 应该转移到状态 3
+dp[4]['A'] = 3 nghĩa là:
+hiện tại là trạng thái 4, nếu gặp ký tự A,
+pat nên chuyển sang trạng thái 3
 
-dp[1]['B'] = 2 表示：
-当前是状态 1，如果遇到字符 B，
-pat 应该转移到状态 2
+dp[1]['B'] = 2 nghĩa là:
+hiện tại là trạng thái 1, nếu gặp ký tự B,
+pat nên chuyển sang trạng thái 2
 ```
 
-根据我们这个 dp 数组的定义和刚才状态转移的过程，我们可以先写出 KMP 算法的 search 函数代码：
+Dựa vào định nghĩa mảng dp này và quá trình chuyển trạng thái vừa rồi, ta có thể viết trước code hàm search của thuật toán KMP:
 
 <!-- muliti_language -->
 ```java
 public int search(String txt) {
     int M = pat.length();
     int N = txt.length();
-    // pat 的初始态为 0
+    // Trạng thái khởi đầu của pat là 0
     int j = 0;
     for (int i = 0; i < N; i++) {
-        // 当前是状态 j，遇到字符 txt[i]，
-        // pat 应该转移到哪个状态？
+        // Hiện tại là trạng thái j, gặp ký tự txt[i],
+        // pat nên chuyển sang trạng thái nào?
         j = dp[j][txt.charAt(i)];
-        // 如果达到终止态，返回匹配开头的索引
+        // Nếu tới trạng thái kết thúc, trả về chỉ số bắt đầu của vị trí khớp
         if (j == M) return i - M + 1;
     }
-    // 没到达终止态，匹配失败
+    // Chưa tới trạng thái kết thúc, khớp thất bại
     return -1;
 }
 ```
 
-到这里，应该还是很好理解的吧，`dp` 数组就是我们刚才画的那幅状态转移图，如果不清楚的话回去看下 GIF 的算法演进过程。下面讲解：如何通过 `pat` 构建这个 `dp` 数组？
+Tới đây hẳn vẫn dễ hiểu, mảng `dp` chính là đồ thị chuyển trạng thái ta vừa vẽ, nếu chưa rõ thì quay lại xem quá trình diễn tiến thuật toán trong GIF. Dưới đây sẽ giảng: làm sao xây dựng mảng `dp` này qua `pat`?
 
-### 三、构建状态转移图
+### Ba, Xây dựng đồ thị chuyển trạng thái
 
-回想刚才说的：**要确定状态转移的行为，必须明确两个变量，一个是当前的匹配状态，另一个是遇到的字符**，而且我们已经根据这个逻辑确定了 `dp` 数组的含义，那么构造 `dp` 数组的框架就是这样：
+Nhớ lại vừa nói: **muốn xác định hành vi chuyển trạng thái, phải làm rõ hai biến, một là trạng thái khớp hiện tại, hai là ký tự gặp phải**, mà ta đã xác định ý nghĩa mảng `dp` theo logic này, vậy khung xây dựng mảng `dp` là thế này:
 
 ```python
-for 0 <= j < M: # 状态
-    for 0 <= c < 256: # 字符
+for 0 <= j < M: # trạng thái
+    for 0 <= c < 256: # ký tự
         dp[j][c] = next
 ```
 
-这个 next 状态应该怎么求呢？显然，**如果遇到的字符 `c` 和 `pat[j]` 匹配的话**，状态就应该向前推进一个，也就是说 `next = j + 1`，我们不妨称这种情况为**状态推进**：
+Trạng thái next này tính thế nào? Hiển nhiên, **nếu ký tự `c` gặp phải khớp với `pat[j]`**, trạng thái nên tiến lên một, tức là `next = j + 1`, ta gọi tình huống này là **tiến trạng thái**:
 
 ![](https://labuladong.online/algo/images/kmp/forward.jpg)
 
-**如果字符 `c` 和 `pat[j]` 不匹配的话**，状态就要回退（或者原地不动），我们不妨称这种情况为**状态重启**：
+**Nếu ký tự `c` và `pat[j]` không khớp**, trạng thái sẽ lùi (hoặc đứng yên), ta gọi tình huống này là **khởi động lại trạng thái**:
 
 ![](https://labuladong.online/algo/images/kmp/back.jpg)
 
-那么，如何得知在哪个状态重启呢？解答这个问题之前，我们再定义一个名字：**影子状态**（我编的名字），用变量 `X` 表示。**所谓影子状态，就是和当前状态具有相同的前缀**。比如下面这种情况：
+Vậy làm sao biết nên khởi động lại ở trạng thái nào? Trước khi trả lời câu này, ta định nghĩa thêm một cái tên: **trạng thái bóng** (tên do mình đặt), dùng biến `X` biểu thị. **Cái gọi là trạng thái bóng, chính là có cùng tiền tố với trạng thái hiện tại**. Ví dụ tình huống dưới đây:
 
 ![](https://labuladong.online/algo/images/kmp/shadow.jpg)
 
-当前状态 `j = 4`，其影子状态为 `X = 2`，它们都有相同的前缀 "AB"。因为状态 `X` 和状态 `j` 存在相同的前缀，所以当状态 `j` 准备进行状态重启的时候（遇到的字符 `c` 和 `pat[j]` 不匹配），可以通过 `X` 的状态转移图来获得**最近的重启位置**。
+Trạng thái hiện tại `j = 4`, trạng thái bóng của nó là `X = 2`, chúng đều có cùng tiền tố "AB". Vì trạng thái `X` và trạng thái `j` có tiền tố giống nhau, nên khi trạng thái `j` chuẩn bị khởi động lại trạng thái (ký tự `c` gặp phải không khớp với `pat[j]`), có thể lấy **vị trí khởi động lại gần nhất** qua đồ thị chuyển trạng thái của `X`.
 
-比如说刚才的情况，如果状态 `j` 遇到一个字符 "A"，应该转移到哪里呢？首先只有遇到 "C" 才能推进状态，遇到 "A" 显然只能进行状态重启。**状态 `j` 会把这个字符委托给状态 `X` 处理，也就是 `dp[j]['A'] = dp[X]['A']`**：
+Ví dụ tình huống vừa rồi, nếu trạng thái `j` gặp một ký tự "A" thì nên chuyển đi đâu? Trước hết chỉ khi gặp "C" mới tiến trạng thái được, gặp "A" hiển nhiên chỉ có thể khởi động lại trạng thái. **Trạng thái `j` sẽ ủy thác ký tự này cho trạng thái `X` xử lý, tức là `dp[j]['A'] = dp[X]['A']`**:
 
 ![](https://labuladong.online/algo/images/kmp/shadow1.jpg)
 
-为什么这样可以呢？因为：既然 `j` 这边已经确定字符 "A" 无法推进状态，**只能回退**，而且 KMP 就是要**尽可能少的回退**，以免多余的计算。那么 `j` 就可以去问问和自己具有相同前缀的 `X`，如果 `X` 遇见 "A" 可以进行「状态推进」，那就转移过去，因为这样回退最少。
+Vì sao làm vậy được? Vì: đã xác định phía `j` ký tự "A" không tiến trạng thái được, **chỉ có thể lùi**, mà KMP là phải **lùi ít nhất có thể** để tránh tính toán thừa. Vậy `j` có thể đi hỏi `X` có cùng tiền tố với mình, nếu `X` gặp "A" mà tiến trạng thái được thì chuyển qua đó, vì như vậy lùi ít nhất.
 
 ![](https://labuladong.online/algo/images/kmp/A.gif)
 
-当然，如果遇到的字符是 "B"，状态 `X` 也不能进行「状态推进」，只能回退，`j` 只要跟着 `X` 指引的方向回退就行了：
+Đương nhiên, nếu ký tự gặp phải là "B", trạng thái `X` cũng không tiến trạng thái được, chỉ có thể lùi, `j` cứ lùi theo hướng `X` chỉ là được:
 
 ![](https://labuladong.online/algo/images/kmp/shadow2.jpg)
 
-你也许会问，这个 `X` 怎么知道遇到字符 "B" 要回退到状态 0 呢？因为 `X` 永远跟在 `j` 的身后，状态 `X` 如何转移，在之前就已经算出来了。动态规划算法不就是利用过去的结果解决现在的问题吗？
+Bạn có thể hỏi, sao `X` này biết gặp ký tự "B" thì lùi về trạng thái 0? Vì `X` mãi đi sau lưng `j`, trạng thái `X` chuyển thế nào trước đó đã tính xong. Thuật toán quy hoạch động chẳng phải là dùng kết quả quá khứ giải quyết vấn đề hiện tại sao?
 
-这样，我们就细化一下刚才的框架代码：
+Như vậy, ta viết chi tiết hơn khung code vừa rồi:
 
 ```python
-int X # 影子状态
+int X # trạng thái bóng
 for 0 <= j < M:
     for 0 <= c < 256:
         if c == pat[j]:
-            # 状态推进
+            # tiến trạng thái
             dp[j][c] = j + 1
         else: 
-            # 状态重启
-            # 委托 X 计算重启位置
+            # khởi động lại trạng thái
+            # ủy thác X tính vị trí khởi động lại
             dp[j][c] = dp[X][c] 
 ```
 
-### 四、代码实现
+### Bốn, Hiện thực code
 
-如果之前的内容你都能理解，恭喜你，现在就剩下一个问题：影子状态 `X` 是如何得到的呢？下面先直接看完整代码吧。
+Nếu nội dung trước đó bạn đều hiểu, chúc mừng, giờ chỉ còn một vấn đề: trạng thái bóng `X` lấy thế nào? Dưới đây xem thẳng code đầy đủ.
 
 <!-- muliti_language -->
 ```java
@@ -307,13 +307,13 @@ public class KMP {
     public KMP(String pat) {
         this.pat = pat;
         int M = pat.length();
-        // dp[状态][字符] = 下个状态
+        // dp[trạng thái][ký tự] = trạng thái tiếp theo
         dp = new int[M][256];
         // base case
         dp[0][pat.charAt(0)] = 1;
-        // 影子状态 X 初始为 0
+        // Trạng thái bóng X khởi đầu là 0
         int X = 0;
-        // 当前状态 j 从 1 开始
+        // Trạng thái hiện tại j bắt đầu từ 1
         for (int j = 1; j < M; j++) {
             for (int c = 0; c < 256; c++) {
                 if (pat.charAt(j) == c) 
@@ -321,7 +321,7 @@ public class KMP {
                 else 
                     dp[j][c] = dp[X][c];
             }
-            // 更新影子状态
+            // Cập nhật trạng thái bóng
             X = dp[X][pat.charAt(j)];
         }
     }
@@ -330,49 +330,49 @@ public class KMP {
 }
 ```
 
-先解释一下这一行代码：
+Giải thích trước dòng code này:
 
 ```java
 // base case
 dp[0][pat.charAt(0)] = 1;
 ```
 
-这行代码是 base case，只有遇到 pat[0] 这个字符才能使状态从 0 转移到 1，遇到其它字符的话还是停留在状态 0（Java 默认初始化数组全为 0）。
+Dòng code này là base case, chỉ khi gặp ký tự pat[0] này mới khiến trạng thái chuyển từ 0 sang 1, gặp ký tự khác thì vẫn đứng yên ở trạng thái 0 (Java mặc định khởi tạo mảng toàn là 0).
 
-影子状态 `X` 是先初始化为 0，然后随着 `j` 的前进而不断更新的。下面看看到底应该**如何更新影子状态 `X`**：
+Trạng thái bóng `X` khởi đầu là 0 trước, rồi theo bước tiến của `j` mà không ngừng cập nhật. Dưới đây xem rốt cuộc nên **cập nhật trạng thái bóng `X` thế nào**:
 
 ```java
 int X = 0;
 for (int j = 1; j < M; j++) {
     ...
-    // 更新影子状态
-    // 当前是状态 X，遇到字符 pat[j]，
-    // pat 应该转移到哪个状态？
+    // Cập nhật trạng thái bóng
+    // Hiện tại là trạng thái X, gặp ký tự pat[j],
+    // pat nên chuyển sang trạng thái nào?
     X = dp[X][pat.charAt(j)];
 }
 ```
 
-更新 `X` 其实和 `search` 函数中更新状态 `j` 的过程是非常相似的：
+Cập nhật `X` thật ra rất giống quá trình cập nhật trạng thái `j` trong hàm `search`:
 
 ```java
 int j = 0;
 for (int i = 0; i < N; i++) {
-    // 当前是状态 j，遇到字符 txt[i]，
-    // pat 应该转移到哪个状态？
+    // Hiện tại là trạng thái j, gặp ký tự txt[i],
+    // pat nên chuyển sang trạng thái nào?
     j = dp[j][txt.charAt(i)];
     ...
 }
 ```
 
-**其中的原理非常微妙**，注意代码中 for 循环的变量初始值，可以这样理解：后者是在 `txt` 中匹配 `pat`，前者是在 `pat` 中匹配 `pat[1..end]`，状态 `X` 总是落后状态 `j` 一个状态，与 `j` 具有最长的相同前缀。所以我把 `X` 比喻为影子状态，似乎也有一点贴切。
+**Nguyên lý trong đó rất tinh tế**, chú ý giá trị khởi đầu của biến vòng for trong code, có thể hiểu thế này: cái sau là khớp `pat` trong `txt`, cái trước là khớp `pat[1..end]` trong `pat`, trạng thái `X` mãi đi sau trạng thái `j` một trạng thái và có tiền tố chung dài nhất với `j`. Nên mình ví `X` là trạng thái bóng, dường như cũng hơi xác đáng.
 
-另外，构建 dp 数组是根据 base case `dp[0][..]` 向后推演。这就是我认为 KMP 算法就是一种动态规划算法的原因。
+Ngoài ra, xây dựng mảng dp là suy diễn về sau theo base case `dp[0][..]`. Đây chính là nguyên nhân mình cho rằng thuật toán KMP là một thuật toán quy hoạch động.
 
-下面来看一下状态转移图的完整构造过程，你就能理解状态 `X` 作用之精妙了：
+Dưới đây xem quá trình xây dựng đầy đủ của đồ thị chuyển trạng thái, bạn sẽ hiểu chỗ tinh diệu trong tác dụng của trạng thái `X`:
 
 ![](https://labuladong.online/algo/images/kmp/dfa.gif)
 
-至此，KMP 算法的核心终于写完啦啦啦啦！看下 KMP 算法的完整代码吧：
+Tới đây, cốt lõi của thuật toán KMP cuối cùng cũng viết xong! Xem code đầy đủ của thuật toán KMP nào:
 
 <!-- muliti_language -->
 ```java
@@ -383,18 +383,18 @@ public class KMP {
     public KMP(String pat) {
         this.pat = pat;
         int M = pat.length();
-        // dp[状态][字符] = 下个状态
+        // dp[trạng thái][ký tự] = trạng thái tiếp theo
         dp = new int[M][256];
         // base case
         dp[0][pat.charAt(0)] = 1;
-        // 影子状态 X 初始为 0
+        // Trạng thái bóng X khởi đầu là 0
         int X = 0;
-        // 构建状态转移图（稍改的更紧凑了）
+        // Xây dựng đồ thị chuyển trạng thái (sửa gọn hơn một chút)
         for (int j = 1; j < M; j++) {
             for (int c = 0; c < 256; c++)
                 dp[j][c] = dp[X][c];
             dp[j][pat.charAt(j)] = j + 1;
-            // 更新影子状态
+            // Cập nhật trạng thái bóng
             X = dp[X][pat.charAt(j)];
         }
     }
@@ -402,104 +402,103 @@ public class KMP {
     public int search(String txt) {
         int M = pat.length();
         int N = txt.length();
-        // pat 的初始态为 0
+        // Trạng thái khởi đầu của pat là 0
         int j = 0;
         for (int i = 0; i < N; i++) {
-            // 计算 pat 的下一个状态
+            // Tính trạng thái tiếp theo của pat
             j = dp[j][txt.charAt(i)];
-            // 到达终止态，返回结果
+            // Tới trạng thái kết thúc, trả về kết quả
             if (j == M) return i - M + 1;
         }
-        // 没到达终止态，匹配失败
+        // Chưa tới trạng thái kết thúc, khớp thất bại
         return -1;
     }
 }
 ```
 
-经过之前的详细举例讲解，你应该可以理解这段代码的含义了，当然你也可以把 KMP 算法写成一个函数。核心代码也就是两个函数中 for 循环的部分，数一下有超过十行吗？
+Qua phần giảng giải ví dụ chi tiết trước đó, bạn hẳn hiểu được ý nghĩa đoạn code này, đương nhiên bạn cũng có thể viết thuật toán KMP thành một hàm. Code cốt lõi cũng chính là phần vòng for trong hai hàm, đếm xem có quá mười dòng không?
 
-### 五、最后总结
+### Năm, Tổng kết cuối cùng
 
-传统的 KMP 算法是使用一个一维数组 `next` 记录前缀信息，而本文是使用一个二维数组 `dp` 以状态转移的角度解决字符匹配问题，但是空间复杂度仍然是 O(256M) = O(M)。
+Thuật toán KMP truyền thống dùng một mảng một chiều `next` ghi thông tin tiền tố, còn bài này dùng một mảng hai chiều `dp` để giải quyết bài toán khớp ký tự dưới góc độ chuyển trạng thái, nhưng độ phức tạp không gian vẫn là O(256M) = O(M).
 
-在 `pat` 匹配 `txt` 的过程中，只要明确了「当前处在哪个状态」和「遇到的字符是什么」这两个问题，就可以确定应该转移到哪个状态（推进或回退）。
+Trong quá trình `pat` khớp `txt`, chỉ cần làm rõ hai vấn đề「đang ở trạng thái nào」và「ký tự gặp phải là gì」là xác định được nên chuyển sang trạng thái nào (tiến hay lùi).
 
-对于一个模式串 `pat`，其总共就有 M 个状态，对于 ASCII 字符，总共不会超过 256 种。所以我们就构造一个数组 `dp[M][256]` 来包含所有情况，并且明确 `dp` 数组的含义：
+Với một chuỗi mẫu `pat`, tổng cộng có M trạng thái, với ký tự ASCII thì tổng cộng không quá 256 loại. Nên ta xây dựng một mảng `dp[M][256]` để bao mọi tình huống, và xác định rõ ý nghĩa mảng `dp`:
 
-`dp[j][c] = next` 表示，当前是状态 `j`，遇到了字符 `c`，应该转移到状态 `next`。
+`dp[j][c] = next` biểu thị, hiện tại là trạng thái `j`, gặp ký tự `c` thì nên chuyển sang trạng thái `next`.
 
-明确了其含义，就可以很容易写出 search 函数的代码。
+Xác định rõ ý nghĩa của nó là viết được code hàm search dễ dàng.
 
-对于如何构建这个 `dp` 数组，需要一个辅助状态 `X`，它永远比当前状态 `j` 落后一个状态，拥有和 `j` 最长的相同前缀，我们给它起了个名字叫「影子状态」。
+Còn cách xây dựng mảng `dp` này thì cần một trạng thái phụ `X`, nó mãi đi sau trạng thái hiện tại `j` một trạng thái và có tiền tố chung dài nhất với `j`, ta đặt cho nó cái tên「trạng thái bóng」.
 
-在构建当前状态 `j` 的转移方向时，只有字符 `pat[j]` 才能使状态推进（`dp[j][pat[j]] = j+1`）；而对于其他字符只能进行状态回退，应该去请教影子状态 `X` 应该回退到哪里（`dp[j][other] = dp[X][other]`，其中 `other` 是除了 `pat[j]` 之外所有字符）。
+Khi xây dựng hướng chuyển của trạng thái hiện tại `j`, chỉ có ký tự `pat[j]` mới khiến trạng thái tiến (`dp[j][pat[j]] = j+1`); còn với ký tự khác chỉ có thể lùi trạng thái, nên đi hỏi trạng thái bóng `X` xem nên lùi về đâu (`dp[j][other] = dp[X][other]`, trong đó `other` là mọi ký tự ngoài `pat[j]`).
 
-对于影子状态 `X`，我们把它初始化为 0，并且随着 `j` 的前进进行更新，更新的方式和 search 过程更新 `j` 的过程非常相似（`X = dp[X][pat[j]]`）。
+Với trạng thái bóng `X`, ta khởi tạo nó là 0, và cập nhật theo bước tiến của `j`, cách cập nhật rất giống quá trình cập nhật `j` trong quá trình search (`X = dp[X][pat[j]]`).
 
-KMP 算法也就是动态规划那点事，我们的公众号文章目录有一系列专门讲动态规划的，而且都是按照一套框架来的，无非就是描述问题逻辑，明确 `dp` 数组含义，定义 base case 这点破事。希望这篇文章能让大家对动态规划有更深的理解。
+Thuật toán KMP cũng chỉ là mấy chuyện của quy hoạch động, mục lục bài viết trên tài khoản công chúng của bọn mình có cả loạt bài chuyên về quy hoạch động, mà đều làm theo một khung, chẳng qua là mô tả logic bài toán, xác định rõ ý nghĩa mảng `dp`, định nghĩa base case mấy chuyện cỏn con đó. Hy vọng bài này giúp mọi người hiểu sâu hơn về quy hoạch động.
 
 
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的文章</strong></summary>
+<summary><strong>Các bài viết trích dẫn bài này</strong></summary>
 
- - [我的刷题心得：算法的本质](https://labuladong.online/algo/essential-technique/algorithm-summary/)
- - [滑动窗口算法延伸：Rabin Karp 字符匹配算法](https://labuladong.online/algo/practice-in-action/rabinkarp/)
+ - [Tâm đắc cày bài của mình: Bản chất của thuật toán](https://labuladong.online/algo/essential-technique/algorithm-summary/)
+ - [Mở rộng thuật toán cửa sổ trượt: Thuật toán khớp ký tự Rabin Karp](https://labuladong.online/algo/practice-in-action/rabinkarp/)
 
 </details><hr>
 
 
 
 
-
 **＿＿＿＿＿＿＿＿＿＿＿＿＿**
 
-**《labuladong 的算法笔记》已经出版，关注公众号查看详情；后台回复「**全家桶**」可下载配套 PDF 和刷题全家桶**：
+**《Ghi chép thuật toán của labuladong》đã xuất bản, theo dõi tài khoản công chúng để xem chi tiết; trả lời「**full bộ**」ở hậu trường để tải PDF kèm theo và full bộ cày bài**:
 
 ![](https://labuladong.online/algo/images/souyisou2.png)
 
-======其他语言代码======
+======Code các ngôn ngữ khác======
 
-[28.实现 strStr()](https://leetcode-cn.com/problems/implement-strstr)
+[28. Hiện thực strStr()](https://leetcode-cn.com/problems/implement-strstr)
 
 ### python
 
-[MoguCloud](https://github.com/MoguCloud) 提供 实现 strStr() 的 Python 完整代码：
+[MoguCloud](https://github.com/MoguCloud) cung cấp code Python đầy đủ hiện thực strStr():
 
 ```python
 class Solution:
   def strStr(self, haystack: str, needle: str) -> int:
-    # 边界条件判断
+    # Kiểm tra điều kiện biên
     if not needle:
       return 0
     pat = needle
     txt = haystack
 
     M = len(pat)
-    # dp[状态][字符] = 下个状态
+    # dp[trạng thái][ký tự] = trạng thái tiếp theo
     dp = [[0 for _ in range(256)] for _ in pat]
     # base case
     dp[0][ord(pat[0])] = 1
-    # 影子状态 X 初始化为 0
+    # Trạng thái bóng X khởi tạo là 0
     X = 0
     for j in range(1, M):
       for c in range(256):
         dp[j][c] = dp[X][c]
         dp[j][ord(pat[j])] = j + 1
-        # 更新影子状态
+        # Cập nhật trạng thái bóng
         X = dp[X][ord(pat[j])]
 
         N = len(txt)
-        # pat 初始状态为 0 
+        # Trạng thái khởi đầu của pat là 0 
         j = 0
         for i in range(N):
-          # 计算 pat 的下一个状态
+          # Tính trạng thái tiếp theo của pat
           j = dp[j][ord(txt[i])]
-          # 到达终止态，返回结果
+          # Tới trạng thái kết thúc, trả về kết quả
           if j == M:
             return i - M + 1
-          # 没到达终止态，匹配失败
+          # Chưa tới trạng thái kết thúc, khớp thất bại
           return -1
 ```
 
@@ -513,7 +512,7 @@ class KMP {
     this.pat = pat;
     let m = pat.length;
 
-    // dp[状态][字符] = 下个状态  初始化一个m*256的整数矩阵
+    // dp[trạng thái][ký tự] = trạng thái tiếp theo  Khởi tạo một ma trận số nguyên m*256
     this.dp = new Array(m);
     for (let i = 0; i < m; i++) {
       this.dp[i] = new Array(256);
@@ -523,19 +522,19 @@ class KMP {
     // base case
     this.dp[0][this.pat[0].charCodeAt()] = 1;
 
-    // 影子状态X 初始为0
+    // Trạng thái bóng X khởi đầu là 0
     let x = 0;
 
-    // 构建状态转移图
+    // Xây dựng đồ thị chuyển trạng thái
     for (let j = 1; j < m; j++) {
       for (let c = 0; c < 256; c++) {
         this.dp[j][c] = this.dp[x][c];
       }
 
-      // dp[][对应的ASCII码]
+      // dp[][mã ASCII tương ứng]
       this.dp[j][this.pat[j].charCodeAt()] = j + 1;
 
-      // 更新影子状态
+      // Cập nhật trạng thái bóng
       x = this.dp[x][this.pat[j].charCodeAt()]
     }
   }
@@ -545,17 +544,17 @@ class KMP {
     let m = this.pat.length;
     let n = txt.length;
 
-    // pat的初始态为0
+    // Trạng thái khởi đầu của pat là 0
     let j = 0;
     for (let i = 0; i < n; i++) {
-      // 计算pat的下一个状态
+      // Tính trạng thái tiếp theo của pat
       j = this.dp[j][txt[i].charCodeAt()];
 
-      // 到达终止态 返回结果
+      // Tới trạng thái kết thúc, trả về kết quả
       if (j === m) return i - m + 1;
     }
 
-    // 没到终止态 匹配失败
+    // Chưa tới trạng thái kết thúc, khớp thất bại
     return -1;
   }
 
@@ -581,6 +580,5 @@ var strStr = function(haystack, needle) {
   return kmp.search(haystack)
 };
 ```
-
 
 
