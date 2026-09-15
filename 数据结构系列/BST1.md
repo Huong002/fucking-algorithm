@@ -1,80 +1,81 @@
-# 二叉搜索树心法（特性篇）
+# Tâm pháp Cây tìm kiếm nhị phân BST (Phần đặc tính)
+
 
 
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**通知：为满足广大读者的需求，网站上架 [速成目录](https://labuladong.online/algo/intro/quick-learning-plan/)，如有需要可以看下，谢谢大家的支持~另外，建议你在我的 [网站](https://labuladong.online/algo/) 学习文章，体验更好。**
+**Thông báo: Theo nhu cầu của đông đảo độc giả, website đã ra mắt [Lộ trình速成](https://labuladong.online/algo/intro/quick-learning-plan/), ai cần có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, khuyên bạn học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
 
 
-读完本文，你不仅学会了算法套路，还可以顺便解决如下题目：
+Đọc xong bài này, bạn không chỉ học được套路thuật toán, mà còn tiện tay giải được các bài sau:
 
-| LeetCode | 力扣 | 难度 |
+| LeetCode | 力扣 | Độ khó |
 | :----: | :----: | :----: |
-| [1038. Binary Search Tree to Greater Sum Tree](https://leetcode.com/problems/binary-search-tree-to-greater-sum-tree/) | [1038. 从二叉搜索树到更大和树](https://leetcode.cn/problems/binary-search-tree-to-greater-sum-tree/) | 🟠 |
-| [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/) | [230. 二叉搜索树中第K小的元素](https://leetcode.cn/problems/kth-smallest-element-in-a-bst/) | 🟠 |
-| [538. Convert BST to Greater Tree](https://leetcode.com/problems/convert-bst-to-greater-tree/) | [538. 把二叉搜索树转换为累加树](https://leetcode.cn/problems/convert-bst-to-greater-tree/) | 🟠 |
+| [1038. Binary Search Tree to Greater Sum Tree](https://leetcode.com/problems/binary-search-tree-to-greater-sum-tree/) | [1038. Từ cây tìm kiếm nhị phân sang cây tổng lớn hơn](https://leetcode.cn/problems/binary-search-tree-to-greater-sum-tree/) | 🟠 |
+| [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/) | [230. Phần tử nhỏ thứ K trong cây tìm kiếm nhị phân](https://leetcode.cn/problems/kth-smallest-element-in-a-bst/) | 🟠 |
+| [538. Convert BST to Greater Tree](https://leetcode.com/problems/convert-bst-to-greater-tree/) | [538. Biến cây tìm kiếm nhị phân thành cây累加](https://leetcode.cn/problems/convert-bst-to-greater-tree/) | 🟠 |
 
 **-----------**
 
 
 
 > [!NOTE]
-> 阅读本文前，你需要先学习：
-> 
-> - [二叉树结构基础](https://labuladong.online/algo/data-structure-basic/binary-tree-basic/)
-> - [二叉树的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
+> Trước khi đọc bài này, bạn cần học trước:
+>
+> - [Cơ bản về cấu trúc cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-basic/)
+> - [Duyệt DFS/BFS cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
 
-前文手把手带你刷二叉树已经写了 [思维篇](https://labuladong.online/algo/data-structure/binary-tree-part1/)，[构造篇](https://labuladong.online/algo/data-structure/binary-tree-part2/)，[后序篇](https://labuladong.online/algo/data-structure/binary-tree-part3/) 和 [序列化篇](https://labuladong.online/algo/data-structure/serialize-and-deserialize-binary-tree/)。
+Bài trước dẫn bạn刷cây nhị phân từng bước đã viết [Phần tư duy](https://labuladong.online/algo/data-structure/binary-tree-part1/), [Phần dựng cây](https://labuladong.online/algo/data-structure/binary-tree-part2/), [Phần hậu序](https://labuladong.online/algo/data-structure/binary-tree-part3/) và [Phần serialize](https://labuladong.online/algo/data-structure/serialize-and-deserialize-binary-tree/).
 
-今天开启二叉搜索树（Binary Search Tree，后文简写 BST）的系列文章，手把手带你刷 BST。
+Hôm nay mở series cây tìm kiếm nhị phân (Binary Search Tree, sau đây viết tắt là BST), dẫn bạn刷BST từng bước.
 
-首先，BST 的特性大家应该都很熟悉了（详见基础知识章节的 [二叉树基础](https://labuladong.online/algo/data-structure-basic/binary-tree-basic/)）：
+Trước hết, đặc tính của BST chắc mọi người đều quen rồi (xem chi tiết ở chương kiến thức cơ bản [Cơ bản về cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-basic/)):
 
-1、对于 BST 的每一个节点 `node`，左子树节点的值都比 `node` 的值要小，右子树节点的值都比 `node` 的值大。
+1、Với mỗi Node `node` của BST, giá trị các Node trong cây con trái đều nhỏ hơn giá trị của `node`, giá trị các Node trong cây con phải đều lớn hơn giá trị của `node`.
 
-2、对于 BST 的每一个节点 `node`，它的左侧子树和右侧子树都是 BST。
+2、Với mỗi Node `node` của BST, cây con trái và cây con phải của nó đều là BST.
 
-二叉搜索树并不算复杂，但我觉得它可以算是数据结构领域的半壁江山，直接基于 BST 的数据结构有 AVL 树，红黑树等等，拥有了自平衡性质，可以提供 logN 级别的增删查改效率；还有 B+ 树，线段树等结构都是基于 BST 的思想来设计的。
+Cây tìm kiếm nhị phân không算phức tạp, nhưng tôi thấy nó có thể算là nửa giang sơn của lĩnh vực cấu trúc dữ liệu, các cấu trúc dữ liệu trực tiếp dựa trên BST có cây AVL, cây đỏ-đen, v.v., sở hữu tính chất tự cân bằng, có thể cho hiệu suất thêm/xóa/tìm/sửa cấp logN; còn có cây B+, cây đoạn (segment tree)等cấu trúc đều được thiết kế dựa trên tư tưởng của BST.
 
-**从做算法题的角度来看 BST，除了它的定义，还有一个重要的性质：BST 的中序遍历结果是有序的（升序）**。
+**Xét từ góc độ làm bài thuật toán với BST, ngoài định nghĩa của nó, còn một tính chất quan trọng: kết quả duyệt trung序 (inorder) của BST là có thứ tự (tăng dần)**.
 
-也就是说，如果输入一棵 BST，以下代码可以将 BST 中每个节点的值升序打印出来：
+Tức là, nếu cho một BST, đoạn code sau có thể in giá trị mỗi Node trong BST theo thứ tự tăng dần:
 
 ```java
 void traverse(TreeNode root) {
     if (root == null) return;
     traverse(root.left);
-    // 中序遍历代码位置
+    // Vị trí code duyệt trung序
     print(root.val);
     traverse(root.right);
 }
 ```
 
-那么根据这个性质，我们来做两道算法题。
+Vậy dựa vào tính chất này, chúng ta làm hai bài thuật toán.
 
-## 寻找第 K 小的元素
+## Tìm phần tử nhỏ thứ K
 
-这是力扣第 230 题「二叉搜索树中第 K 小的元素」，看下题目：
+Đây là bài 230 trên LeetCode「Phần tử nhỏ thứ K trong cây tìm kiếm nhị phân」, xem đề:
 
 <Problem slug="kth-smallest-element-in-a-bst" />
 
-这个需求很常见吧，一个直接的思路就是升序排序，然后找第 `k` 个元素呗。BST 的中序遍历其实就是升序排序的结果，找第 `k` 个元素肯定不是什么难事。
+Nhu cầu này rất thường gặp đúng không, một思路trực tiếp là sắp xếp tăng dần, rồi tìm phần tử thứ `k`. Duyệt trung序 BST thực ra chính là kết quả sắp xếp tăng dần, tìm phần tử thứ `k` chắc chắn không phải việc khó.
 
-按照这个思路，可以直接写出代码：
+Theo思路này, có thể viết thẳng code:
 
 ```java
 class Solution {
     int kthSmallest(TreeNode root, int k) {
-        // 利用 BST 的中序遍历特性
+        // Lợi dụng đặc tính duyệt trung序 của BST
         traverse(root, k);
         return res;
     }
 
-    // 记录结果
+    // Ghi lại kết quả
     int res = 0;
-    // 记录当前元素的排名
+    // Ghi lại thứ hạng của phần tử hiện tại
     int rank = 0;
     void traverse(TreeNode root, int k) {
         if (root == null) {
@@ -82,10 +83,10 @@ class Solution {
         }
         traverse(root.left, k);
 
-        // 中序代码位置
+        // Vị trí code trung序
         rank++;
         if (k == rank) {
-            // 找到第 k 小的元素
+            // Tìm được phần tử nhỏ thứ k
             res = root.val;
             return;
         }
@@ -100,7 +101,7 @@ class Solution {
 <a href="https://labuladong.online/algo-visualize/leetcode/kth-smallest-element-in-a-bst/" target="_blank">
 <details style="max-width:90%;max-height:400px">
 <summary>
-<strong>🍭 代码可视化动画🍭</strong>
+<strong>🍭 Animation trực quan hóa code🍭</strong>
 </summary>
 </details>
 </a>
@@ -108,94 +109,94 @@ class Solution {
 
 
 
-这道题就做完了，不过呢，还是要多说几句，因为这个解法并不是最高效的解法，而是仅仅适用于这道题。
+Bài này làm xong rồi, nhưng vẫn phải nói thêm vài câu, vì解法này không phải解法hiệu quả nhất, mà chỉ áp dụng cho bài này.
 
-我们前文 [高效计算数据流的中位数](https://labuladong.online/algo/practice-in-action/find-median-from-data-stream/) 中就提过今天的这个问题：
+Bài trước [Tính trung vị của dòng dữ liệu hiệu quả](https://labuladong.online/algo/practice-in-action/find-median-from-data-stream/) đã từng nhắc vấn đề hôm nay:
 
 > [!NOTE]
-> 如果让你实现一个在二叉搜索树中通过排名计算对应元素的方法 `select(int k)`，你会怎么设计？
+> Nếu bắt bạn cài đặt một phương thức tính phần tử tương ứng theo thứ hạng trong cây tìm kiếm nhị phân `select(int k)`, bạn sẽ thiết kế thế nào?
 
-如果按照我们刚才说的方法，利用「BST 中序遍历就是升序排序结果」这个性质，每次寻找第 `k` 小的元素都要中序遍历一次，最坏的时间复杂度是 $O(N)$，`N` 是 BST 的节点个数。
+Nếu làm theo cách vừa nói, lợi dụng tính chất「duyệt trung序 BST chính là kết quả sắp xếp tăng dần」, mỗi lần tìm phần tử nhỏ thứ `k` đều phải duyệt trung序 một lần, độ phức tạp thời gian worst-case là $O(N)$, `N` là số Node của BST.
 
-要知道 BST 性质是非常牛逼的，像红黑树这种改良的自平衡 BST，增删查改都是 $O(logN)$ 的复杂度，让你算一个第 `k` 小元素，时间复杂度竟然要 $O(N)$，有点低效了。
+Phải biết tính chất BST rất牛, như cây đỏ-đen cải tiến tự cân bằng BST, thêm/xóa/tìm/sửa đều có độ phức tạp $O(logN)$, bắt bạn tính một phần tử nhỏ thứ `k`, độ phức tạp thời gian lại要 $O(N)$, hơi kém hiệu quả.
 
-所以说，计算第 `k` 小元素，最好的算法肯定也是对数级别的复杂度，不过这个依赖于 BST 节点记录的信息有多少。
+Cho nên, tính phần tử nhỏ thứ `k`, thuật toán tốt nhất chắc chắn cũng là độ phức tạp cấp log, nhưng điều này phụ thuộc vào lượng thông tin mà Node BST ghi lại.
 
-我们想一下 BST 的操作为什么这么高效？就拿搜索某一个元素来说，BST 能够在对数时间找到该元素的根本原因还是在 BST 的定义里，左子树小右子树大嘛，所以每个节点都可以通过对比自身的值判断去左子树还是右子树搜索目标值，从而避免了全树遍历，达到对数级复杂度。
+Chúng ta nghĩ xem tại sao thao tác của BST hiệu quả vậy? Lấy tìm kiếm một phần tử mà nói, nguyên nhân căn bản khiến BST tìm được phần tử đó trong thời gian log vẫn nằm trong định nghĩa của BST, trái nhỏ phải lớn嘛, nên mỗi Node đều có thể so sánh giá trị của mình để quyết định đi tìm giá trị mục tiêu ở cây con trái hay cây con phải, nhờ đó tránh duyệt toàn cây, đạt độ phức tạp cấp log.
 
-那么回到这个问题，想找到第 `k` 小的元素，或者说找到排名为 `k` 的元素，如果想达到对数级复杂度，关键也在于每个节点得知道他自己排第几。
+Vậy quay lại vấn đề này, muốn tìm phần tử nhỏ thứ `k`, hay nói là tìm phần tử có thứ hạng `k`, nếu muốn đạt độ phức tạp cấp log, mấu chốt cũng nằm ở mỗi Node phải biết mình xếp thứ mấy.
 
-比如说你让我查找排名为 `k` 的元素，当前节点知道自己排名第 `m`，那么我可以比较 `m` 和 `k` 的大小：
+Ví dụ bạn bắt tôi tìm phần tử hạng `k`, Node hiện tại biết mình hạng `m`, vậy tôi có thể so sánh `m` và `k`:
 
-1、如果 `m == k`，显然就是找到了第 `k` 个元素，返回当前节点就行了。
+1、Nếu `m == k`, hiển nhiên là tìm được phần tử thứ `k` rồi, trả về Node hiện tại là được.
 
-2、如果 `k < m`，那说明排名第 `k` 的元素在左子树，所以可以去左子树搜索第 `k` 个元素。
+2、Nếu `k < m`,说明phần tử hạng `k` ở cây con trái, nên có thể去cây con trái tìm phần tử thứ `k`.
 
-3、如果 `k > m`，那说明排名第 `k` 的元素在右子树，所以可以去右子树搜索第 `k - m - 1` 个元素。
+3、Nếu `k > m`,说明phần tử hạng `k` ở cây con phải, nên có thể去cây con phải tìm phần tử thứ `k - m - 1`.
 
-这样就可以将时间复杂度降到 $O(logN)$ 了。
+Như vậy là có thể giảm độ phức tạp thời gian xuống $O(logN)$.
 
-那么，如何让每一个节点知道自己的排名呢？
+Vậy, làm sao để mỗi Node biết thứ hạng của mình?
 
-这就是我们之前说的，需要在二叉树节点中维护额外信息。**每个节点需要记录，以自己为根的这棵二叉树有多少个节点**。
+Đây chính là điều chúng ta nói trước đó, cần维护thông tin thêm trong Node cây nhị phân. **Mỗi Node cần ghi lại, cây nhị phân lấy mình làm gốc có bao nhiêu Node**.
 
-也就是说，我们 `TreeNode` 中的字段应该如下：
+Tức là, trường trong `TreeNode` của chúng ta phải như sau:
 
 ```java
 class TreeNode {
     int val;
-    // 以该节点为根的树的节点总数
+    // Tổng số Node của cây lấy Node này làm gốc
     int size;
     TreeNode left;
     TreeNode right;
 }
 ```
 
-有了 `size` 字段，外加 BST 节点左小右大的性质，对于每个节点 `node` 就可以通过 `node.left` 推导出 `node` 的排名，从而做到我们刚才说到的对数级算法。
+Có trường `size`, cộng thêm tính chất左nhỏ右lớn của Node BST, với mỗi Node `node` là có thể suy ra thứ hạng của `node` qua `node.left`, nhờ đó làm được thuật toán cấp log vừa nói.
 
-当然，`size` 字段需要在增删元素的时候需要被正确维护，力扣提供的 `TreeNode` 是没有 `size` 这个字段的，所以我们这道题就只能利用 BST 中序遍历的特性实现了，但是我们上面说到的优化思路是 BST 的常见操作，还是有必要理解的。
+Dĩ nhiên, trường `size` cần được维护đúng khi thêm/xóa phần tử, `TreeNode` mà LeetCode cho không có trường `size` này, nên bài này chúng ta chỉ đành lợi dụng đặc tính duyệt trung序 của BST để cài đặt, nhưng思路tối ưu nói ở trên là thao tác thường gặp của BST, vẫn cần hiểu.
 
-## BST 转化累加树
+## BST chuyển thành cây累加
 
-力扣第 538 题和 1038 题都是这道题，完全一样，你可以把它们一块做掉。看下题目：
+Bài 538 và 1038 trên LeetCode đều là bài này, hoàn toàn giống nhau, bạn có thể làm cả hai luôn. Xem đề:
 
 <Problem slug="convert-bst-to-greater-tree" />
 
-题目应该不难理解，比如图中的节点 5，转化成累加树的话，比 5 大的节点有 6，7，8，加上 5 本身，所以累加树上这个节点的值应该是 5+6+7+8=26。
+Đề chắc không khó hiểu, ví dụ Node 5 trong hình, nếu chuyển thành cây累加, Node lớn hơn 5 có 6,7,8, cộng thêm bản thân 5, nên giá trị của Node này trên cây累加phải là 5+6+7+8=26.
 
-我们需要把 BST 转化成累加树，函数签名如下：
+Chúng ta cần biến BST thành cây累加, chữ ký hàm như sau:
 
 ```java
 TreeNode convertBST(TreeNode root)
 ```
 
-按照二叉树的通用思路，需要思考每个节点应该做什么，但是这道题上很难想到什么思路。
+Theo思路chung của cây nhị phân, cần nghĩ mỗi Node nên làm gì, nhưng với bài này rất khó nghĩ ra思路gì.
 
-BST 的每个节点左小右大，这似乎是一个有用的信息，既然累加和是计算大于等于当前值的所有元素之和，那么每个节点都去计算右子树的和，不就行了吗？
+Mỗi Node của BST trái nhỏ phải lớn, đây似乎là thông tin hữu ích, vì累加和là tính tổng mọi phần tử lớn hơn hoặc bằng giá trị hiện tại, vậy mỗi Node都去tính tổng cây con phải, không phải được sao?
 
-这是不行的。对于一个节点来说，确实右子树都是比它大的元素，但问题是它的父节点也可能是比它大的元素呀？这个没法确定的，我们又没有触达父节点的指针，所以二叉树的通用思路在这里用不了。
+Không được. Với một Node mà nói, đúng là cây con phải đều là phần tử lớn hơn nó, nhưng vấn đề là Node cha của nó cũng có thể là phần tử lớn hơn nó呀? Cái này không xác định được, chúng ta lại không có con trỏ chạm tới Node cha, nên思路chung của cây nhị phân ở đây dùng không được.
 
-**此路不通，我们不妨换一个思路，还是利用 BST 的中序遍历特性**。
+**Đường này không thông, chúng ta不妨đổi思路, vẫn lợi dụng đặc tính duyệt trung序 của BST**.
 
-刚才我们说了 BST 的中序遍历代码可以升序打印节点的值，那如果我想降序打印节点的值怎么办？
+Vừa rồi chúng ta nói code duyệt trung序 của BST có thể in giá trị Node theo tăng dần, vậy nếu tôi muốn in giá trị Node theo giảm dần thì sao?
 
-很简单，只要把递归顺序改一下，先遍历右子树，后遍历左子树就行了：
+Rất đơn giản, chỉ cần đổi thứ tự đệ quy, duyệt cây con phải trước, cây con trái sau là được:
 
 ```java
 void traverse(TreeNode root) {
     if (root == null) return;
-    // 先递归遍历右子树
+    // Đệ quy duyệt cây con phải trước
     traverse(root.right);
-    // 中序遍历代码位置
+    // Vị trí code duyệt trung序
     print(root.val);
-    // 后递归遍历左子树
+    // Đệ quy duyệt cây con trái sau
     traverse(root.left);
 }
 ```
 
-**这段代码可以降序打印 BST 节点的值，如果维护一个外部累加变量 `sum`，然后把 `sum` 赋值给 BST 中的每一个节点，不就将 BST 转化成累加树了吗**？
+**Đoạn code này có thể in giá trị Node BST theo giảm dần, nếu维护một biến累加ngoài `sum`, rồi gán `sum` cho mỗi Node trong BST, không phải đã biến BST thành cây累加sao**?
 
-看下代码就明白了：
+Xem code là hiểu ngay:
 
 ```java
 class Solution {
@@ -204,16 +205,16 @@ class Solution {
         return root;
     }
 
-    // 记录累加和
+    // Ghi lại累加和
     int sum = 0;
     void traverse(TreeNode root) {
         if (root == null) {
             return;
         }
         traverse(root.right);
-        // 维护累加和
+        //维护累加和
         sum += root.val;
-        // 将 BST 转化成累加树
+        // Biến BST thành cây累加
         root.val = sum;
         traverse(root.left);
     }
@@ -225,7 +226,7 @@ class Solution {
 <a href="https://labuladong.online/algo-visualize/leetcode/convert-bst-to-greater-tree/" target="_blank">
 <details style="max-width:90%;max-height:400px">
 <summary>
-<strong>🥳 代码可视化动画🥳</strong>
+<strong>🥳 Animation trực quan hóa code🥳</strong>
 </summary>
 </details>
 </a>
@@ -233,12 +234,11 @@ class Solution {
 
 
 
-这道题就解决了，核心还是 BST 的中序遍历特性，只不过我们修改了递归顺序，降序遍历 BST 的元素值，从而契合题目累加树的要求。
+Bài này giải xong rồi, cốt lõi vẫn là đặc tính duyệt trung序 của BST, chỉ là chúng ta sửa thứ tự đệ quy, duyệt giảm dần giá trị phần tử BST, nhờ đó khớp với yêu cầu cây累加của đề.
 
-简单总结下吧，BST 相关的问题，要么利用 BST 左小右大的特性提升算法效率，要么利用中序遍历的特性满足题目的要求，也就这么些事儿吧。
+Tóm tắt đơn giản, vấn đề liên quan BST, hoặc lợi dụng đặc tính左nhỏ右lớn của BST để nâng hiệu suất thuật toán, hoặc lợi dụng đặc tính duyệt trung序 để满足yêu cầu đề bài, cũng chỉ mấy chuyện đó.
 
-本文就到这里，更多经典的二叉树习题以及递归思维的训练，请参见二叉树章节中的 [习题部分](https://labuladong.online/algo/problem-set/bst1/)
-
+Bài này đến đây thôi, thêm nhiều bài tập cây nhị phân kinh điển và rèn luyện tư duy đệ quy, xem phần [bài tập](https://labuladong.online/algo/problem-set/bst1/) trong chương cây nhị phân.
 
 
 
@@ -247,11 +247,11 @@ class Solution {
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的文章</strong></summary>
+<summary><strong>Bài viết trích dẫn bài này</strong></summary>
 
- - [【强化练习】二叉搜索树经典例题 I](https://labuladong.online/algo/problem-set/bst1/)
- - [二叉搜索树心法（基操篇）](https://labuladong.online/algo/data-structure/bst-part2/)
- - [二叉搜索树心法（构造篇）](https://labuladong.online/algo/data-structure/bst-part3/)
+ - [【Luyện tập tăng cường】Bài tập kinh điển về cây tìm kiếm nhị phân I](https://labuladong.online/algo/problem-set/bst1/)
+ - [Tâm pháp cây tìm kiếm nhị phân (Phần thao tác cơ bản)](https://labuladong.online/algo/data-structure/bst-part2/)
+ - [Tâm pháp cây tìm kiếm nhị phân (Phần dựng cây)](https://labuladong.online/algo/data-structure/bst-part3/)
 
 </details><hr>
 
@@ -260,13 +260,13 @@ class Solution {
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的题目</strong></summary>
+<summary><strong>Bài tập trích dẫn bài này</strong></summary>
 
-<strong>安装 [我的 Chrome 刷题插件](https://labuladong.online/algo/intro/chrome/) 点开下列题目可直接查看解题思路：</strong>
+<strong>Cài [plugin刷题 Chrome của mình](https://labuladong.online/algo/intro/chrome/) mở các bài dưới đây có thể xem trực tiếp思路giải:</strong>
 
-| LeetCode | 力扣 | 难度 |
+| LeetCode | 力扣 | Độ khó |
 | :----: | :----: | :----: |
-| - | [剑指 Offer II 054. 所有大于等于节点的值之和](https://leetcode.cn/problems/w6cpku/?show=1) | 🟠 |
+| - | [Kiếm Chỉ Offer II 054. Tổng mọi giá trị lớn hơn hoặc bằng Node](https://leetcode.cn/problems/w6cpku/?show=1) | 🟠 |
 
 </details>
 <hr>

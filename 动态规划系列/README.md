@@ -1,13 +1,13 @@
-# 动态规划系列
+# Chuỗi bài Quy hoạch động
 
-我们公众号最火的就是动态规划系列的文章，也许是动态规划问题有难度而且有意思，也许因为它是面试常考题型。不管你之前是否害怕动态规划系列的问题，相信这一章的内容足以帮助你消除对动态规划算法的恐惧。
+Các bài viết hot nhất trên tài khoản công chúng (public account) của chúng tôi chính là chuỗi bài về quy hoạch động. Có lẽ vì bài toán quy hoạch động vừa khó vừa thú vị, cũng có lẽ vì nó là dạng bài thường gặp khi phỏng vấn. Dù trước đây bạn có sợ các bài toán quy hoạch động hay không, tôi tin rằng nội dung chương này đủ để giúp bạn xóa bỏ nỗi sợ với thuật toán quy hoạch động.
 
-具体来说，动态规划的一般流程就是三步：**暴力的递归解法 -> 带备忘录的递归解法 -> 迭代的动态规划解法**。
+Cụ thể, quy trình chung của quy hoạch động gồm ba bước: **cách đệ quy brute-force -> cách đệ quy có memo ghi nhớ -> cách quy hoạch động lặp (iterative)**.
 
-就思考流程来说，就分为一下几步：**找到状态和选择 -> 明确 dp 数组/函数的定义 -> 寻找状态之间的关系**。
+Xét về mạch suy nghĩ, quá trình được chia thành các bước sau: **tìm trạng thái và lựa chọn -> làm rõ định nghĩa của mảng/hàm dp -> tìm mối quan hệ giữa các trạng thái**.
 
-这就是思维模式的框架，**本章都会按照以上的模式来解决问题，辅助读者养成这种模式思维**，有了方向遇到问题就不会抓瞎，足以解决一般的动态规划问题。
+Đó chính là khung tư duy, **toàn bộ chương này sẽ giải quyết vấn đề theo mô hình trên, giúp bạn đọc rèn được cách tư duy theo mô hình này**. Có định hướng rồi thì gặp bài toán sẽ không bị lúng túng, đủ để giải quyết các bài toán quy hoạch động thông thường.
 
-欢迎关注我的公众号 labuladong，查看全部文章：
+Mời theo dõi tài khoản công chúng labuladong để xem toàn bộ bài viết:
 
-![labuladong二维码](../pictures/qrcode.jpg)
+![Mã QR labuladong](../pictures/qrcode.jpg)

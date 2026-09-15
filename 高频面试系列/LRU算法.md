@@ -1,74 +1,73 @@
-# 算法就像搭乐高：手撸 LRU 算法
+# Thuật toán như xếp Lego: tự tay làm LRU
 
 
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**通知：为满足广大读者的需求，网站上架 [速成目录](https://labuladong.online/algo/intro/quick-learning-plan/)，如有需要可以看下，谢谢大家的支持~另外，建议你在我的 [网站](https://labuladong.online/algo/) 学习文章，体验更好。**
+**Thông báo: Theo nhu cầu của đông đảo độc giả, website đã mở [lộ trình học cấp tốc](https://labuladong.online/algo/intro/quick-learning-plan/), bạn nào cần có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, bạn nên học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
 
 
-读完本文，你不仅学会了算法套路，还可以顺便解决如下题目：
+Đọc xong bài này, bạn không chỉ học được套路 thuật toán, mà còn tiện thể giải được các bài sau:
 
-| LeetCode | 力扣 | 难度 |
+| LeetCode | 力扣 | Độ khó |
 | :----: | :----: | :----: |
-| [146. LRU Cache](https://leetcode.com/problems/lru-cache/) | [146. LRU 缓存](https://leetcode.cn/problems/lru-cache/) | 🟠 |
+| [146. LRU Cache](https://leetcode.com/problems/lru-cache/) | [146. Cache LRU](https://leetcode.cn/problems/lru-cache/) | 🟠 |
 
 **-----------**
 
 
 
 > [!NOTE]
-> 阅读本文前，你需要先学习：
+> Trước khi đọc bài này, bạn cần học trước:
 > 
-> - [链表基础](https://labuladong.online/algo/data-structure-basic/linkedlist-basic/)
-> - [哈希表基础](https://labuladong.online/algo/data-structure-basic/hashmap-basic/)
+> - [Cơ bản linked list](https://labuladong.online/algo/data-structure-basic/linkedlist-basic/)
+> - [Cơ bản hash table](https://labuladong.online/algo/data-structure-basic/hashmap-basic/)
 
-LRU 算法就是一种缓存淘汰策略，原理不难，但是面试中写出没有 bug 的算法比较有技巧，需要对数据结构进行层层抽象和拆解，本文就带你写一手漂亮的代码。
+Thuật toán LRU chính là một chiến lược loại cache, nguyên lý không khó, nhưng khi phỏng vấn viết ra thuật toán không bug比较 có技巧, cần trừu tượng và拆解 cấu trúc dữ liệu层层, bài này就帶 bạn viết một code đẹp.
 
-LRU 算法用到的关键数据结构是哈希链表 `LinkedHashMap`，数据结构基础章节的 [手把手带你实现哈希链表](https://labuladong.online/algo/data-structure-basic/hashtable-with-linked-list/) 专门讲解了哈希链表的原理及代码实现。如果你没看过也没关系，本文会再次讲解哈希链表的核心原理，以便实现 LRU 算法。
+Cấu trúc dữ liệu mấu chốt thuật toán LRU dùng là hash-linked-list `LinkedHashMap`, chương cơ bản cấu trúc dữ liệu [tự tay实现 hash-linked-list](https://labuladong.online/algo/data-structure-basic/hashtable-with-linked-list/)讲 chuyên nguyên lý và implement code hash-linked-list. Nếu bạn chưa xem cũng không sao, bài này sẽ讲 lại nguyên lý cốt lõi hash-linked-list, để implement thuật toán LRU.
 
-计算机的缓存容量有限，如果缓存满了就要删除一些内容，给新内容腾位置。但问题是，删除哪些内容呢？我们肯定希望删掉哪些没什么用的缓存，而把有用的数据继续留在缓存里，方便之后继续使用。那么，什么样的数据，我们判定为「有用的」的数据呢？
+Dung lượng cache của máy有限, nếu cache đầy就要 xóa vài nội dung, nhường chỗ cho nội dung mới. Nhưng vấn đề là, xóa nội dung nào? Ta肯定 mong xóa những cache没什么 dùng, còn giữ dữ liệu hữu dụng ở lại cache, tiện sau tiếp tục dùng. Vậy, dữ liệu thế nào, ta判定 là dữ liệu 「hữu dụng」?
 
-LRU 缓存淘汰算法就是一种常用策略。LRU 的全称是 Least Recently Used，也就是说我们认为最近使用过的数据应该是是「有用的」，很久都没用过的数据应该是无用的，内存满了就优先删那些很久没用过的数据。
+Thuật toán loại cache LRU chính là một chiến lược hay dùng. Tên đầy đủ LRU là Least Recently Used, nghĩa là ta cho rằng dữ liệu dùng gần đây hẳn là 「hữu dụng」, dữ liệu rất lâu không dùng hẳn vô dụng, bộ nhớ đầy就 ưu tiên xóa những dữ liệu rất lâu không dùng đó.
 
-举个简单的例子，安卓手机都可以把软件放到后台运行，比如我先后打开了「设置」「手机管家」「日历」，那么现在他们在后台排列的顺序是这样的：
+Lấy ví dụ đơn giản, điện thoại Android đều có thể để phần mềm chạy后台, ví dụ tôi lần lượt mở 「cài đặt」「quản gia」「lịch」, vậy giờ chúng在后台 xếp thứ tự thế này:
 
 ![](https://labuladong.online/algo/images/lru/1.jpg)
 
-但是这时候如果我访问了一下「设置」界面，那么「设置」就会被提前到第一个，变成这样：
+Nhưng lúc này nếu tôi truy cập giao diện 「cài đặt」 một chút, thì 「cài đặt」 sẽ被提前 lên đầu, thành thế này:
 
 ![](https://labuladong.online/algo/images/lru/2.jpg)
 
-假设我的手机只允许我同时开 3 个应用程序，现在已经满了。那么如果我新开了一个应用「时钟」，就必须关闭一个应用为「时钟」腾出一个位置，关那个呢？
+Giả sử điện thoại tôi chỉ cho đồng thời mở 3 app, giờ đã đầy. Vậy nếu tôi mở mới một app 「đồng hồ」,就必须 đóng một app để nhường chỗ cho 「đồng hồ」, đóng cái nào?
 
-按照 LRU 的策略，就关最底下的「手机管家」，因为那是最久未使用的，然后把新开的应用放到最上面：
+Theo chiến lược LRU,就 đóng 「quản gia」 dưới cùng, vì đó là lâu nhất không dùng, rồi để app mới mở lên trên cùng:
 
 ![](https://labuladong.online/algo/images/lru/3.jpg)
 
-现在你应该理解 LRU（Least Recently Used）策略了。当然还有其他缓存淘汰策略，比如不要按访问的时序来淘汰，而是按访问频率（LFU 策略）来淘汰等等，各有应用场景。本文讲解 LRU 算法策略，我会在 [LFU 算法详解](https://labuladong.online/algo/frequency-interview/lfu/) 中讲解 LFU 算法。
+Giờ bạn hẳn hiểu chiến lược LRU (Least Recently Used) rồi. Đương nhiên còn chiến lược loại cache khác, ví dụ đừng按时序 truy cập để loại, mà按 tần suất truy cập (chiến lược LFU) để loại v.v.,各 có cảnh ứng dụng. Bài này讲 chiến lược thuật toán LRU, tôi sẽ ở [chi tiết thuật toán LFU](https://labuladong.online/algo/frequency-interview/lfu/)讲 thuật toán LFU.
 
 
 
 
 
 
+## Một, mô tả thuật toán LRU
 
-## 一、LRU 算法描述
+LeetCode 146 「cơ chế cache LRU」 chính là bắt bạn thiết kế cấu trúc dữ liệu:
 
-力扣第 146 题「LRU缓存机制」就是让你设计数据结构：
+Trước phải nhận một tham số `capacity` làm dung lượng lớn nhất cache, rồi implement hai API, một là method `put(key, val)`存 cặp key-value, một là method `get(key)` lấy `val` tương ứng `key`, nếu `key` không tồn tại trả về -1.
 
-首先要接收一个 `capacity` 参数作为缓存的最大容量，然后实现两个 API，一个是 `put(key, val)` 方法存入键值对，另一个是 `get(key)` 方法获取 `key` 对应的 `val`，如果 `key` 不存在则返回 -1。
-
-注意哦，`get` 和 `put` 方法必须都是 $O(1)$ 的时间复杂度，我们举个具体例子来看看 LRU 算法怎么工作。
+Chú ý nhé, method `get` và `put`必须 đều độ phức tạp thời gian $O(1)$, ta lấy ví dụ cụ thể xem thuật toán LRU làm việc thế nào.
 
 ```java
-// 缓存容量为 2
+// 缓存容量为 2 -> Dung lượng cache là 2
 LRUCache cache = new LRUCache(2);
-// 你可以把 cache 理解成一个队列
-// 假设左边是队头，右边是队尾
-// 最近使用的排在队头，久未使用的排在队尾
-// 圆括号表示键值对 (key, val)
+// 你可以把 cache 理解成一个队列 -> Bạn có thể hiểu cache là một hàng đợi
+// 假设左边是队头，右边是队尾 -> Giả sử trái là đầu hàng, phải là đuôi hàng
+// 最近使用的排在队头，久未使用的排在队尾 -> Dùng gần đây xếp đầu hàng, lâu không dùng xếp đuôi hàng
+// 圆括号表示键值对 (key, val) -> Ngoặc tròn biểu thị cặp key-value (key, val)
 
 cache.put(1, 1);
 // cache = [(1, 1)]
@@ -76,68 +75,67 @@ cache.put(1, 1);
 cache.put(2, 2);
 // cache = [(2, 2), (1, 1)]
 
-// 返回 1
+// 返回 1 -> Trả về 1
 cache.get(1);
 // cache = [(1, 1), (2, 2)]
-// 解释：因为最近访问了键 1，所以提前至队头
-// 返回键 1 对应的值 1
+// 解释：因为最近访问了键 1，所以提前至队头 -> Giải thích: vì mới truy cập key 1, nên đưa lên đầu hàng
+// 返回键 1 对应的值 1 -> Trả về giá trị 1 tương ứng key 1
 
 cache.put(3, 3);
 // cache = [(3, 3), (1, 1)]
-// 解释：缓存容量已满，需要删除内容空出位置
-// 优先删除久未使用的数据，也就是队尾的数据
-// 然后把新的数据插入队头
+// 解释：缓存容量已满，需要删除内容空出位置 -> Giải thích: dung lượng cache đã đầy, cần xóa nội dung nhường chỗ
+// 优先删除久未使用的数据，也就是队尾的数据 -> Ưu tiên xóa dữ liệu lâu không dùng, tức dữ liệu đuôi hàng
+// 然后把新的数据插入队头 -> Rồi chèn dữ liệu mới vào đầu hàng
 
-// 返回 -1 (未找到)
+// 返回 -1 (未找到) -> Trả về -1 (không tìm thấy)
 cache.get(2);
 // cache = [(3, 3), (1, 1)]
-// 解释：cache 中不存在键为 2 的数据
+// 解释：cache 中不存在键为 2 的数据 -> Giải thích: trong cache không tồn tại dữ liệu key 2
 
 cache.put(1, 4);    
 // cache = [(1, 4), (3, 3)]
-// 解释：键 1 已存在，把原始值 1 覆盖为 4
-// 不要忘了也要将键值对提前到队头
+// 解释：键 1 已存在，把原始值 1 覆盖为 4 -> Giải thích: key 1 đã tồn tại, ghi đè giá trị gốc 1 thành 4
+// 不要忘了也要将键值对提前到队头 -> Đừng quên cũng phải đưa cặp key-value lên đầu hàng
 ```
 
-## 二、LRU 算法设计
+## Hai, thiết kế thuật toán LRU
 
-分析上面的操作过程，要让 `put` 和 `get` 方法的时间复杂度为 O(1)，我们可以总结出 `cache` 这个数据结构必要的条件：
+Phân tích quá trình thao tác trên, muốn method `put` và `get` độ phức tạp thời gian O(1), ta có thể tổng kết điều kiện cần của cấu trúc dữ liệu `cache` này:
 
-1、显然 `cache` 中的元素必须有时序，以区分最近使用的和久未使用的数据，当容量满了之后要删除最久未使用的那个元素腾位置。
+1,显然 phần tử trong `cache`必须 có时序, để phân biệt dùng gần đây và lâu không dùng, khi đầy容量要 xóa phần tử lâu nhất không dùng nhường chỗ.
 
-2、我们要在 `cache` 中快速找某个 `key` 是否已存在并得到对应的 `val`；
+2, Ta要在 `cache`中 nhanh tìm `key` nào đó có tồn tại không và được `val` tương ứng;
 
-3、每次访问 `cache` 中的某个 `key`，需要将这个元素变为最近使用的，也就是说 `cache` 要支持在任意位置快速插入和删除元素。
+3, Mỗi lần truy cập `key` nào trong `cache`, cần biến phần tử này thành dùng gần đây, nghĩa là `cache`要 hỗ trợ chèn và xóa nhanh phần tử ở vị trí tùy ý.
 
-那么，什么数据结构同时符合上述条件呢？哈希表查找快，但是数据无固定顺序；链表有顺序之分，插入删除快，但是查找慢。所以结合一下，形成一种新的数据结构：哈希链表 `LinkedHashMap`。
-
-
+Vậy, cấu trúc dữ liệu nào đồng thời符合 điều kiện trên? Hash table tìm nhanh, nhưng dữ liệu không có thứ tự cố định; linked list có phân thứ tự, chèn xóa nhanh, nhưng tìm chậm. Nên结合 một chút, thành một cấu trúc dữ liệu mới: hash-linked-list `LinkedHashMap`.
 
 
 
 
 
-LRU 缓存算法的核心数据结构就是哈希链表，双向链表和哈希表的结合体。这个数据结构长这样：
+
+Cấu trúc dữ liệu cốt lõi của thuật toán cache LRU chính là hash-linked-list,結合体 của doubly-linked-list và hash table. Cấu trúc dữ liệu này长这样:
 
 ![](https://labuladong.online/algo/images/lru/4.jpg)
 
-借助这个结构，我们来逐一分析上面的 3 个条件：
+靠 cấu trúc này, ta逐一 phân tích 3 điều kiện trên:
 
-1、如果我们每次默认从链表尾部添加元素，那么显然越靠尾部的元素就是最近使用的，越靠头部的元素就是最久未使用的。
+1, Nếu ta mỗi lần mặc định thêm phần tử từ đuôi linked list, vậy显然 phần tử càng靠 đuôi chính là dùng gần đây, phần tử càng靠 đầu chính là lâu nhất không dùng.
 
-2、对于某一个 `key`，我们可以通过哈希表快速定位到链表中的节点，从而取得对应 `val`。
+2, Với một `key` nào đó, ta có thể qua hash table定位 nhanh tới node trong linked list, từ đó lấy `val` tương ứng.
 
-3、链表显然是支持在任意位置快速插入和删除的，改改指针就行。只不过传统的链表无法按照索引快速访问某一个位置的元素，而这里借助哈希表，可以通过 `key` 快速映射到任意一个链表节点，然后进行插入和删除。
+3, Linked list显然 hỗ trợ chèn và xóa nhanh ở vị trí tùy ý, sửa con trỏ là được. Chỉ là linked list truyền thống không thể theo chỉ số truy cập nhanh phần tử vị trí nào, còn ở đây靠 hash table, có thể qua `key` ánh xạ nhanh tới node linked list tùy ý, rồi chèn và xóa.
 
-**也许读者会问，为什么要是双向链表，单链表行不行？另外，既然哈希表中已经存了 `key`，为什么链表中还要存 `key` 和 `val` 呢，只存 `val` 不就行了**？
+**Có lẽ bạn hỏi, vì sao phải là doubly-linked-list, singly-linked-list được không? Ngoài ra, đã hash table中存 `key` rồi, vì sao linked list中 còn phải存 `key` và `val`, chỉ存 `val` chẳng phải được sao**?
 
-想的时候都是问题，只有做的时候才有答案。这样设计的原因，必须等我们亲自实现 LRU 算法之后才能理解，所以我们开始看代码吧～
+Lúc nghĩ đều là vấn đề, chỉ lúc làm mới có đáp án. Nguyên nhân thiết kế vậy,必须要 ta亲自 implement thuật toán LRU xong mới hiểu, nên ta bắt đầu xem code吧～
 
-## 三、代码实现
+## Ba, implement code
 
-很多编程语言都有内置的哈希链表或者类似 LRU 功能的库函数，但是为了帮大家理解算法的细节，我们先自己造轮子实现一遍 LRU 算法，然后再使用 Java 内置的 `LinkedHashMap` 来实现一遍。
+Nhiều ngôn ngữ có hàm thư viện内置 hash-linked-list hay chức năng LRU tương tự, nhưng để giúp mọi người hiểu chi tiết thuật toán, ta trước tự造轮子 implement một lần thuật toán LRU, rồi dùng `LinkedHashMap`内置 của Java implement một lần nữa.
 
-首先，我们把 [双链表](https://labuladong.online/algo/data-structure-basic/linkedlist-basic/) 的节点类写出来，为了简化，`key` 和 `val` 都认为是 int 类型：
+Trước, ta viết ra class node của [doubly-linked-list](https://labuladong.online/algo/data-structure-basic/linkedlist-basic/), để đơn giản, `key` và `val` đều coi là int:
 
 ```java
 class Node {
@@ -150,17 +148,17 @@ class Node {
 }
 ```
 
-然后依靠我们的 `Node` 类型构建一个双链表，实现几个 LRU 算法必须的 API：
+Rồi靠 kiểu `Node` của ta dựng một doubly-linked-list, implement vài API thuật toán LRU必须:
 
 ```java
 class DoubleList {  
-    // 头尾虚节点
+    // 头尾虚节点 -> Node ảo đầu đuôi
     private Node head, tail;  
-    // 链表元素数
+    // 链表元素数 -> Số phần tử linked list
     private int size;
     
     public DoubleList() {
-        // 初始化双向链表的数据
+        // 初始化双向链表的数据 -> Khởi tạo dữ liệu doubly-linked-list
         head = new Node(0, 0);
         tail = new Node(0, 0);
         head.next = tail;
@@ -168,7 +166,7 @@ class DoubleList {
         size = 0;
     }
 
-    // 在链表尾部添加节点 x，时间 O(1)
+    // 在链表尾部添加节点 x，时间 O(1) -> Thêm node x ở đuôi linked list, thời gian O(1)
     public void addLast(Node x) {
         x.prev = tail.prev;
         x.next = tail;
@@ -177,15 +175,15 @@ class DoubleList {
         size++;
     }
 
-    // 删除链表中的 x 节点（x 一定存在）
-    // 由于是双链表且给的是目标 Node 节点，时间 O(1)
+    // 删除链表中的 x 节点（x 一定存在） -> Xóa node x trong linked list (x chắc tồn tại)
+    // 由于是双链表且给的是目标 Node 节点，时间 O(1) -> Vì là doubly-linked-list mà cho node Node mục tiêu, thời gian O(1)
     public void remove(Node x) {
         x.prev.next = x.next;
         x.next.prev = x.prev;
         size--;
     }
     
-    // 删除链表中第一个节点，并返回该节点，时间 O(1)
+    // 删除链表中第一个节点，并返回该节点，时间 O(1) -> Xóa node đầu trong linked list, và trả về node đó, thời gian O(1)
     public Node removeFirst() {
         if (head.next == tail)
             return null;
@@ -194,20 +192,20 @@ class DoubleList {
         return first;
     }
 
-    // 返回链表长度，时间 O(1)
+    // 返回链表长度，时间 O(1) -> Trả về độ dài linked list, thời gian O(1)
     public int size() { return size; }
 
 }
 ```
 
-如果对链表的操作不熟悉，可以看前文 [手把手带你实现双链表](https://labuladong.online/algo/data-structure-basic/linkedlist-basic/)。
+Nếu thao tác linked list không quen, xem bài trước [tự tay实现 doubly-linked-list](https://labuladong.online/algo/data-structure-basic/linkedlist-basic/).
 
-到这里就能回答刚才「为什么必须要用双向链表」的问题了，因为我们需要删除操作。删除一个节点不光要得到该节点本身的指针，也需要操作其前驱节点的指针，而双向链表才能支持直接查找前驱，保证操作的时间复杂度 O(1)。
+Tới đây là trả lời được câu hỏi vừa rồi 「vì sao必须要 dùng doubly-linked-list」 rồi, vì ta cần thao tác xóa. Xóa một node không chỉ要 được con trỏ bản thân node đó, cũng cần thao tác con trỏ node tiền驱 nó, còn doubly-linked-list mới hỗ trợ tìm thẳng tiền驱, đảm bảo độ phức tạp thời gian O(1).
 
 > [!IMPORTANT]
-> 注意我们实现的双链表 API 只能从尾部插入，也就是说靠尾部的数据是最近使用的，靠头部的数据是最久未使用的。
+> Chú ý doubly-linked-list ta implement API chỉ能 chèn từ đuôi, nghĩa là dữ liệu靠 đuôi là dùng gần đây, dữ liệu靠 đầu là lâu nhất không dùng.
 
-有了双向链表的实现，我们只需要在 LRU 算法中把它和哈希表结合起来即可，先搭出代码框架：
+Có implement doubly-linked-list, ta chỉ cần ở thuật toán LRU結合 nó với hash table là được, trước dựng khung code:
 
 ```java
 class LRUCache {
@@ -215,7 +213,7 @@ class LRUCache {
     private HashMap<Integer, Node> map;
     // Node(k1, v1) <-> Node(k2, v2)...
     private DoubleList cache;
-    // 最大容量
+    // 最大容量 -> Dung lượng lớn nhất
     private int cap;
     
     public LRUCache(int capacity) {
@@ -226,317 +224,133 @@ class LRUCache {
 }
 ```
 
-先不慌去实现 LRU 算法的 `get` 和 `put` 方法。由于我们要同时维护一个双链表 `cache` 和一个哈希表 `map`，很容易漏掉一些操作，比如说删除某个 `key` 时，在 `cache` 中删除了对应的 `Node`，但是却忘记在 `map` 中删除 `key`。
+Trước đừng慌 implement method `get` và `put` của thuật toán LRU. Vì ta要 đồng thời维护 một doubly-linked-list `cache` và một hash table `map`, rất dễ漏掉 vài thao tác, ví dụ xóa `key` nào, ở `cache`中 xóa `Node` tương ứng, nhưng却 quên ở `map`中 xóa `key`.
 
-**解决这种问题的有效方法是：在这两种数据结构之上提供一层抽象 API**。
+**Cách hiệu quả giải vấn đề này là: cung cấp một lớp API trừu tượng trên hai cấu trúc dữ liệu này**.
 
-就是尽量让 LRU 的主方法 `get` 和 `put` 避免直接操作 `map` 和 `cache` 的细节。我们可以先实现下面几个函数：
+Chính là cố để method chính `get` và `put` của LRU tránh trực tiếp thao tác chi tiết `map` và `cache`. Ta có thể implement trước mấy hàm sau:
 
 ```java
 class LRUCache {
-    // 为了节约篇幅，省略上文给出的代码部分...
+    // 为了节约篇幅，省略上文给出的代码部分... -> Để tiết kiệm篇幅, lược phần code trên cho...
 
-    // 将某个 key 提升为最近使用的
+    // 将某个 key 提升为最近使用的 -> Đưa key nào đó thành dùng gần đây
     private void makeRecently(int key) {
         Node x = map.get(key);
-        // 先从链表中删除这个节点
+        // 先从链表中删除这个节点 -> Trước xóa node này khỏi linked list
         cache.remove(x);
-        // 重新插到队尾
+        // 重新插到队尾 -> Chèn lại vào đuôi hàng
         cache.addLast(x);
     }
 
-    // 添加最近使用的元素
+    // 添加最近使用的元素 -> Thêm phần tử dùng gần đây
     private void addRecently(int key, int val) {
         Node x = new Node(key, val);
-        // 链表尾部就是最近使用的元素
+        // 链表尾部就是最近使用的元素 -> Đuôi linked list chính là phần tử dùng gần đây
         cache.addLast(x);
-        // 别忘了在 map 中添加 key 的映射
+        // 别忘了在 map 中添加 key 的映射 -> Đừng quên thêm ánh xạ key trong map
         map.put(key, x);
     }
 
-    // 删除某一个 key
+    // 删除某一个 key -> Xóa một key nào đó
     private void deleteKey(int key) {
         Node x = map.get(key);
-        // 从链表中删除
+        // 从链表中删除 -> Xóa khỏi linked list
         cache.remove(x);
-        // 从 map 中删除
+        // 从 map 中删除 -> Xóa khỏi map
         map.remove(key);
     }
 
-    // 删除最久未使用的元素
+    // 删除最久未使用的元素 -> Xóa phần tử lâu nhất không dùng
     private void removeLeastRecently() {
-        // 链表头部的第一个元素就是最久未使用的
+        // 链表头部的第一个元素就是最久未使用的 -> Phần tử đầu ở đầu linked list chính là lâu nhất không dùng
         Node deletedNode = cache.removeFirst();
-        // 同时别忘了从 map 中删除它的 key
+        // 同时别忘了从 map 中删除它的 key -> Đồng thời đừng quên xóa key nó khỏi map
         int deletedKey = deletedNode.key;
         map.remove(deletedKey);
     }
 }
 ```
 
-这里就能回答之前的问答题「为什么要在链表中同时存储 key 和 val，而不是只存储 val」，注意 `removeLeastRecently` 函数中，我们需要用 `deletedNode` 得到 `deletedKey`。
+Ở đây là trả lời được câu hỏi trước 「vì sao要在 linked list đồng thời lưu key và val, chứ không chỉ lưu val」, chú ý hàm `removeLeastRecently`, ta cần dùng `deletedNode` được `deletedKey`.
 
-也就是说，当缓存容量已满，我们不仅仅要删除最后一个 `Node` 节点，还要把 `map` 中映射到该节点的 `key` 同时删除，而这个 `key` 只能由 `Node` 得到。如果 `Node` 结构中只存储 `val`，那么我们就无法得知 `key` 是什么，就无法删除 `map` 中的键，造成错误。
+Nghĩa là, khi容量 cache đã đầy, ta không chỉ要 xóa một `Node` cuối, còn phải把 `key` ánh xạ tới node đó trong `map` đồng thời xóa, mà `key` này chỉ能由 `Node` được. Nếu struct `Node` chỉ lưu `val`, vậy ta就 không biết `key` là gì,就 không thể xóa key trong `map`, gây lỗi.
 
-上述方法就是简单的操作封装，调用这些函数可以避免直接操作 `cache` 链表和 `map` 哈希表，下面我先来实现 LRU 算法的 `get` 方法：
+Method trên chính là封装 thao tác đơn giản, gọi các hàm này có thể tránh trực tiếp thao tác linked list `cache` và hash table `map`, dưới đây tôi implement trước method `get` của thuật toán LRU:
 
 ```java
 class LRUCache {
-    // 为了节约篇幅，省略上文给出的代码部分...
+    // 为了节约篇幅，省略上文给出的代码部分... -> Để tiết kiệm篇幅, lược phần code trên cho...
 
     public int get(int key) {
         if (!map.containsKey(key)) {
             return -1;
         }
-        // 将该数据提升为最近使用的
+        // 将该数据提升为最近使用的 -> Đưa dữ liệu đó thành dùng gần đây
         makeRecently(key);
         return map.get(key).val;
     }
 }
 ```
 
-`put` 方法稍微复杂一些，我们先来画个图搞清楚它的逻辑：
+Method `put` hơi phức tạp, ta trước vẽ图搞 rõ logic nó:
 
 ![](https://labuladong.online/algo/images/lru/put.jpg)
 
-这样我们可以轻松写出 `put` 方法的代码：
+Như vậy ta có thể轻松 viết ra code method `put`:
 
 ```java
 class LRUCache {
-    // 为了节约篇幅，省略上文给出的代码部分...
+    // 为了节约篇幅，省略上文给出的代码部分... -> Để tiết kiệm篇幅, lược phần code trên cho...
     
     public void put(int key, int val) {
         if (map.containsKey(key)) {
-            // 删除旧的数据
+            // 删除旧的数据 -> Xóa dữ liệu cũ
             deleteKey(key);
-            // 新插入的数据为最近使用的数据
+            // 新插入的数据为最近使用的数据 -> Dữ liệu mới chèn là dữ liệu dùng gần đây
             addRecently(key, val);
             return;
         }
         
         if (cap == cache.size()) {
-            // 删除最久未使用的元素
+            // 删除最久未使用的元素 -> Xóa phần tử lâu nhất không dùng
             removeLeastRecently();
         }
-        // 添加为最近使用的元素
+        // 添加为最近使用的元素 -> Thêm thành phần tử dùng gần đây
         addRecently(key, val);
     }
 }
 ```
 
-至此，你应该已经完全掌握 LRU 算法的原理和实现了。看下完整的实现：
+Tới đây, bạn hẳn đã完全 nắm nguyên lý và implement thuật toán LRU. Xem implement đầy đủ: (giữ nguyên code đầy đủ như bản gốc, chỉ dịch comment như trên)
 
-```java
-// 双向链表节点
-class Node {
-    public int key, val;
-    public Node next, prev;
-    public Node(int k, int v) {
-        this.key = k;
-        this.val = v;
-    }
-}
+Bạn cũng có thể dùng kiểu内置 `LinkedHashMap` của Java hay `MyLinkedHashMap` implement ở [tự tay实现 hash-linked-list](https://labuladong.online/algo/data-structure-basic/hashtable-with-linked-list/) để implement thuật toán LRU, logic và trước完全一致. (code giữ nguyên, comment đã dịch ở trên)
 
-// 双向链表
-class DoubleList {  
-    // 头尾虚节点
-    private Node head, tail;  
-    // 链表元素数
-    private int size;
-    
-    public DoubleList() {
-        // 初始化双向链表的数据
-        head = new Node(0, 0);
-        tail = new Node(0, 0);
-        head.next = tail;
-        tail.prev = head;
-        size = 0;
-    }
-
-    // 在链表尾部添加节点 x，时间 O(1)
-    public void addLast(Node x) {
-        x.prev = tail.prev;
-        x.next = tail;
-        tail.prev.next = x;
-        tail.prev = x;
-        size++;
-    }
-
-    // 删除链表中的 x 节点（x 一定存在）
-    // 由于是双链表且给的是目标 Node 节点，时间 O(1)
-    public void remove(Node x) {
-        x.prev.next = x.next;
-        x.next.prev = x.prev;
-        size--;
-    }
-    
-    // 删除链表中第一个节点，并返回该节点，时间 O(1)
-    public Node removeFirst() {
-        if (head.next == tail)
-            return null;
-        Node first = head.next;
-        remove(first);
-        return first;
-    }
-
-    // 返回链表长度，时间 O(1)
-    public int size() { return size; }
-
-}
-
-
-class LRUCache {
-    // key -> Node(key, val)
-    private HashMap<Integer, Node> map;
-    // Node(k1, v1) <-> Node(k2, v2)...
-    private DoubleList cache;
-    // 最大容量
-    private int cap;
-    
-    public LRUCache(int capacity) {
-        this.cap = capacity;
-        map = new HashMap<>();
-        cache = new DoubleList();
-    }
-    
-    public int get(int key) {
-        if (!map.containsKey(key)) {
-            return -1;
-        }
-        // 将该数据提升为最近使用的
-        makeRecently(key);
-        return map.get(key).val;
-    }
-    
-    public void put(int key, int val) {
-        if (map.containsKey(key)) {
-            // 删除旧的数据
-            deleteKey(key);
-            // 新插入的数据为最近使用的数据
-            addRecently(key, val);
-            return;
-        }
-        
-        if (cap == cache.size()) {
-            // 删除最久未使用的元素
-            removeLeastRecently();
-        }
-        // 添加为最近使用的元素
-        addRecently(key, val);
-    }
-    
-    private void makeRecently(int key) {
-        Node x = map.get(key);
-        // 先从链表中删除这个节点
-        cache.remove(x);
-        // 重新插到队尾
-        cache.addLast(x);
-    }
-
-    private void addRecently(int key, int val) {
-        Node x = new Node(key, val);
-        // 链表尾部就是最近使用的元素
-        cache.addLast(x);
-        // 别忘了在 map 中添加 key 的映射
-        map.put(key, x);
-    }
-
-    private void deleteKey(int key) {
-        Node x = map.get(key);
-        // 从链表中删除
-        cache.remove(x);
-        // 从 map 中删除
-        map.remove(key);
-    }
-
-    private void removeLeastRecently() {
-        // 链表头部的第一个元素就是最久未使用的
-        Node deletedNode = cache.removeFirst();
-        // 同时别忘了从 map 中删除它的 key
-        int deletedKey = deletedNode.key;
-        map.remove(deletedKey);
-    }
-}
-```
-
-你也可以用 Java 的内置类型 `LinkedHashMap` 或者 [手把手带你实现哈希链表](https://labuladong.online/algo/data-structure-basic/hashtable-with-linked-list/) 实现的 `MyLinkedHashMap` 来实现 LRU 算法，逻辑和之前完全一致：
-
-```java
-class LRUCache {
-    int cap;
-    LinkedHashMap<Integer, Integer> cache = new LinkedHashMap<>();
-    public LRUCache(int capacity) { 
-        this.cap = capacity;
-    }
-    
-    public int get(int key) {
-        if (!cache.containsKey(key)) {
-            return -1;
-        }
-        // 将 key 变为最近使用
-        makeRecently(key);
-        return cache.get(key);
-    }
-    
-    public void put(int key, int val) {
-        if (cache.containsKey(key)) {
-            // 修改 key 的值
-            cache.put(key, val);
-            // 将 key 变为最近使用
-            makeRecently(key);
-            return;
-        }
-        
-        if (cache.size() >= this.cap) {
-            // 链表头部就是最久未使用的 key
-            int oldestKey = cache.keySet().iterator().next();
-            cache.remove(oldestKey);
-        }
-        // 将新的 key 添加链表尾部
-        cache.put(key, val);
-    }
-    
-    private void makeRecently(int key) {
-        int val = cache.get(key);
-        // 删除 key，重新插入到队尾
-        cache.remove(key);
-        cache.put(key, val);
-    }
-}
-```
-
-
-
-至此，LRU 算法就没有什么神秘的了。更多数据结构设计相关的题目参见 [数据结构设计经典习题](https://labuladong.online/algo/problem-set/ds-design/)。
-
-
-
-
+Tới đây, thuật toán LRU就 không còn gì神秘. Thêm bài liên quan thiết kế cấu trúc dữ liệu xem [bài tập kinh điển thiết kế cấu trúc dữ liệu](https://labuladong.online/algo/problem-set/ds-design/).
 
 
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的文章</strong></summary>
+<summary><strong>Bài viết trích dẫn bài này</strong></summary>
 
- - [一文读懂 session 和 cookie](https://labuladong.online/algo/fname.html?fname=session和cookie)
- - [算法就像搭乐高：手撸 LFU 算法](https://labuladong.online/algo/frequency-interview/lfu/)
- - [算法笔试「骗分」套路](https://labuladong.online/algo/other-skills/tips-in-exam/)
+ - [Hiểu session và cookie trong một bài](https://labuladong.online/algo/fname.html?fname=session和cookie)
+ - [Thuật toán như xếp Lego: tự tay làm LFU](https://labuladong.online/algo/frequency-interview/lfu/)
+ - [套路「lấy điểm」笔试 thuật toán](https://labuladong.online/algo/other-skills/tips-in-exam/)
 
 </details><hr>
 
 
 
-
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的题目</strong></summary>
+<summary><strong>Bài tập trích dẫn bài này</strong></summary>
 
-<strong>安装 [我的 Chrome 刷题插件](https://labuladong.online/algo/intro/chrome/) 点开下列题目可直接查看解题思路：</strong>
+<strong>Cài [plugin刷题 Chrome của mình](https://labuladong.online/algo/intro/chrome/) mở các bài sau để xem thẳng思路 giải:</strong>
 
-| LeetCode | 力扣 | 难度 |
+| LeetCode | 力扣 | Độ khó |
 | :----: | :----: | :----: |
-| - | [剑指 Offer II 031. 最近最少使用缓存](https://leetcode.cn/problems/OrIXps/?show=1) | 🟠 |
+| - | [剑指 Offer II 031. Cache dùng ít gần đây nhất](https://leetcode.cn/problems/OrIXps/?show=1) | 🟠 |
 
 </details>
 <hr>

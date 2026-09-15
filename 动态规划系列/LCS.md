@@ -1,77 +1,75 @@
-# 经典动态规划：最长公共子序列
+# Quy hoạch động kinh điển: Dãy con chung dài nhất (LCS)
 
 
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**通知：为满足广大读者的需求，网站上架 [速成目录](https://labuladong.online/algo/intro/quick-learning-plan/)，如有需要可以看下，谢谢大家的支持~另外，建议你在我的 [网站](https://labuladong.online/algo/) 学习文章，体验更好。**
+**Thông báo: Để đáp ứng nhu cầu của đông đảo bạn đọc, website đã ra mắt [Lộ trình học cấp tốc](https://labuladong.online/algo/intro/quick-learning-plan/), nếu cần bạn có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, bạn nên học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
 
 
-读完本文，你不仅学会了算法套路，还可以顺便解决如下题目：
+Đọc xong bài này, bạn không chỉ nắm được套路/mô-típ thuật toán, mà còn tiện thể giải được các bài sau:
 
-| LeetCode | 力扣 | 难度 |
+| LeetCode | Lực khấu (力扣) | Độ khó |
 | :----: | :----: | :----: |
-| [1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/) | [1143. 最长公共子序列](https://leetcode.cn/problems/longest-common-subsequence/) | 🟠 |
-| [583. Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings/) | [583. 两个字符串的删除操作](https://leetcode.cn/problems/delete-operation-for-two-strings/) | 🟠 |
-| [712. Minimum ASCII Delete Sum for Two Strings](https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/) | [712. 两个字符串的最小ASCII删除和](https://leetcode.cn/problems/minimum-ascii-delete-sum-for-two-strings/) | 🟠 |
+| [1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/) | [1143. Dãy con chung dài nhất](https://leetcode.cn/problems/longest-common-subsequence/) | 🟠 |
+| [583. Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings/) | [583. Thao tác xóa cho hai chuỗi](https://leetcode.cn/problems/delete-operation-for-two-strings/) | 🟠 |
+| [712. Minimum ASCII Delete Sum for Two Strings](https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/) | [712. Tổng ASCII xóa nhỏ nhất cho hai chuỗi](https://leetcode.cn/problems/minimum-ascii-delete-sum-for-two-strings/) | 🟠 |
 
 **-----------**
 
 
 
 > [!NOTE]
-> 阅读本文前，你需要先学习：
-> 
-> - [动态规划核心框架](https://labuladong.online/algo/essential-technique/dynamic-programming-framework/)
+> Trước khi đọc bài này, bạn cần học trước:
+>
+> - [Khung tư duy cốt lõi của quy hoạch động](https://labuladong.online/algo/essential-technique/dynamic-programming-framework/)
 
-不知道大家做算法题有什么感觉，我总结出来做算法题的技巧就是，把大的问题细化到一个点，先研究在这个小的点上如何解决问题，然后再通过递归/迭代的方式扩展到整个问题。
+Không biết mọi người làm bài thuật toán có cảm nhận gì, mình đúc kết技巧/mẹo làm bài thuật toán là:細化/thu nhỏ bài toán lớn về một điểm, nghiên cứu trước cách giải quyết tại điểm nhỏ đó, rồi mở rộng ra toàn bộ bài toán bằng đệ quy/lặp.
 
-比如说我们前文 [手把手带你刷二叉树第三期](https://labuladong.online/algo/data-structure/binary-tree-part3/)，解决二叉树的题目，我们就会把整个问题细化到某一个节点上，想象自己站在某个节点上，需要做什么，然后套二叉树递归框架就行了。
+Ví dụ như ở bài trước [Dẫn bạn刷/quét cây nhị phân kỳ 3](https://labuladong.online/algo/data-structure/binary-tree-part3/), khi giải bài cây nhị phân, ta sẽ thu nhỏ toàn bộ vấn đề về một node nào đó, tưởng tượng mình đang đứng tại node đó thì cần làm gì, rồi áp khung đệ quy cây nhị phân vào là xong.
 
-动态规划系列问题也是一样，尤其是子序列相关的问题。**本文从「最长公共子序列问题」展开，总结三道子序列问题**，解这道题仔细讲讲这种子序列问题的套路，你就能感受到这种思维方式了。
+Dạng bài quy hoạch động (DP) cũng vậy, nhất là các bài liên quan đến dãy con (subsequence). **Bài này xuất phát từ「Bài toán dãy con chung dài nhất」và tổng kết ba bài toán dãy con**, giải kỹ bài này về套路/mô-típ dạng bài dãy con, bạn sẽ cảm nhận được cách tư duy này.
 
-## 最长公共子序列
+## Dãy con chung dài nhất
 
-计算最长公共子序列（Longest Common Subsequence，简称 LCS）是一道经典的动态规划题目，力扣第 1143 题「最长公共子序列」就是这个问题：
+Tính dãy con chung dài nhất (Longest Common Subsequence, gọi tắt là LCS) là một bài quy hoạch động kinh điển, bài 1143「Dãy con chung dài nhất」trên LeetCode chính là bài này:
 
-给你输入两个字符串 `s1` 和 `s2`，请你找出他们俩的最长公共子序列，返回这个子序列的长度。函数签名如下：
+Cho đầu vào là hai chuỗi `s1` và `s2`, hãy tìm dãy con chung dài nhất của chúng và trả về độ dài của dãy con đó. Chữ ký hàm như sau:
 
 ```java
 int longestCommonSubsequence(String s1, String s2);
 ```
 
-比如说输入 `s1 = "zabcde", s2 = "acez"`，它俩的最长公共子序列是 `lcs = "ace"`，长度为 3，所以算法返回 3。
+Ví dụ nhập `s1 = "zabcde", s2 = "acez"`, dãy con chung dài nhất của chúng là `lcs = "ace"`, độ dài là 3, nên thuật toán trả về 3.
 
-如果没有做过这道题，一个最简单的暴力算法就是，把 `s1` 和 `s2` 的所有子序列都穷举出来，然后看看有没有公共的，然后在所有公共子序列里面再寻找一个长度最大的。
+Nếu chưa làm bài này bao giờ, một thuật toán暴力/brute-force đơn giản nhất là liệt kê tất cả các dãy con (subsequence) của `s1` và `s2`, rồi xem có dãy nào chung không, rồi trong tất cả các dãy con chung lại tìm một dãy dài nhất.
 
-显然，这种思路的复杂度非常高，你要穷举出所有子序列，这个复杂度就是指数级的，肯定不实际。
+Rõ ràng,思路/cách nghĩ này có độ phức tạp rất cao, bạn phải liệt kê mọi dãy con, độ phức tạp này là hàm mũ, chắc chắn không thực tế.
 
-正确的思路是不要考虑整个字符串，而是细化到 `s1` 和 `s2` 的每个字符。前文 [子序列解题模板](https://labuladong.online/algo/dynamic-programming/subsequence-problem/) 中总结的一个规律：
-
-
+思路 đúng là đừng xét cả chuỗi, mà hãy細化/thu nhỏ về từng ký tự của `s1` và `s2`. Một规律/quy luật đã tổng kết trong bài trước [Template giải bài toán dãy con](https://labuladong.online/algo/dynamic-programming/subsequence-problem/):
 
 
 
 
 
-**对于两个字符串求子序列的问题，都是用两个指针 `i` 和 `j` 分别在两个字符串上移动，大概率是动态规划思路**。
+**Với bài toán求/tìm dãy con trên hai chuỗi, đều dùng hai con trỏ `i` và `j` di chuyển lần lượt trên hai chuỗi, xác suất lớn là思路 quy hoạch động**.
 
-最长公共子序列的问题也可以遵循这个规律，我们可以先写一个 `dp` 函数：
+Bài toán dãy con chung dài nhất cũng tuân theo规律 này, ta có thể viết trước một hàm `dp`:
 
 ```java
-// 定义：计算 s1[i..] 和 s2[j..] 的最长公共子序列长度
+// Định nghĩa: tính độ dài dãy con chung dài nhất (LCS) của s1[i..] và s2[j..]
 int dp(String s1, int i, String s2, int j)
 ```
 
-根据这个 `dp` 函数的定义，那么我们想要的答案就是 `dp(s1, 0, s2, 0)`，且 base case 就是 `i == len(s1)` 或 `j == len(s2)` 时，因为这时候 `s1[i..]` 或 `s2[j..]` 就相当于空串了，最长公共子序列的长度显然是 0：
+Theo định nghĩa của hàm `dp` này, đáp án ta muốn chính là `dp(s1, 0, s2, 0)`, và base case là khi `i == len(s1)` hoặc `j == len(s2)`, vì lúc này `s1[i..]` hoặc `s2[j..]` tương đương với chuỗi rỗng, độ dài dãy con chung dài nhất hiển nhiên là 0:
 
 ```java
 int longestCommonSubsequence(String s1, String s2) {
     return dp(s1, 0, s2, 0);
 }
 
-// 定义：计算 s1[i..] 和 s2[j..] 的最长公共子序列长度
+// Định nghĩa: tính độ dài dãy con chung dài nhất của s1[i..] và s2[j..]
 int dp(String s1, int i, String s2, int j) {
     // base case
     if (i == s1.length() || j == s2.length()) {
@@ -81,22 +79,22 @@ int dp(String s1, int i, String s2, int j) {
 }
 ```
 
-**接下来，咱不要看 `s1` 和 `s2` 两个字符串，而是要具体到每一个字符，思考每个字符该做什么**。
+**Tiếp theo, đừng nhìn hai chuỗi `s1` và `s2` nữa, mà phải cụ thể đến từng ký tự, suy nghĩ mỗi ký tự nên làm gì**.
 
 ![](https://labuladong.online/algo/images/LCS/1.jpeg)
 
-我们只看 `s1[i]` 和 `s2[j]`，**如果 `s1[i] == s2[j]`，说明这个字符一定在 `lcs` 中**：
+Ta chỉ nhìn `s1[i]` và `s2[j]`, **nếu `s1[i] == s2[j]`,说明/ký tự này chắc chắn nằm trong `lcs`**:
 
 ![](https://labuladong.online/algo/images/LCS/2.jpeg)
 
-这样，就找到了一个 `lcs` 中的字符，根据 `dp` 函数的定义，我们可以完善一下代码：
+Như vậy, đã tìm được một ký tự trong `lcs`, theo định nghĩa hàm `dp`, ta có thể hoàn thiện code:
 
 ```java
-// 定义：计算 s1[i..] 和 s2[j..] 的最长公共子序列长度
+// Định nghĩa: tính độ dài dãy con chung dài nhất của s1[i..] và s2[j..]
 int dp(String s1, int i, String s2, int j) {
     if (s1.charAt(i) == s2.charAt(j)) {
-        // s1[i] 和 s2[j] 必然在 lcs 中，
-        // 加上 s1[i+1..] 和 s2[j+1..] 中的 lcs 长度，就是答案
+        // s1[i] và s2[j] chắc chắn nằm trong lcs,
+        // cộng thêm độ dài lcs trong s1[i+1..] và s2[j+1..] chính là đáp án
         return 1 + dp(s1, i + 1, s2, j + 1);
     } else {
         // ...
@@ -104,78 +102,78 @@ int dp(String s1, int i, String s2, int j) {
 }
 ```
 
-刚才说的 `s1[i] == s2[j]` 的情况，但如果 `s1[i] != s2[j]`，应该怎么办呢？
+Vừa rồi là trường hợp `s1[i] == s2[j]`, nhưng nếu `s1[i] != s2[j]` thì phải làm sao?
 
-**`s1[i] != s2[j]` 意味着，`s1[i]` 和 `s2[j]` 中至少有一个字符不在 `lcs` 中**：
+**`s1[i] != s2[j]`意味着/có nghĩa là, trong `s1[i]` và `s2[j]` ít nhất có một ký tự không nằm trong `lcs`**:
 
 ![](https://labuladong.online/algo/images/LCS/3.jpeg)
 
-如上图，总共可能有三种情况，我怎么知道具体是那种情况呢？
+Như hình trên, tổng cộng có thể có ba trường hợp, làm sao mình biết cụ thể là trường hợp nào?
 
-其实我们也不知道，那就把这三种情况的答案都算出来，取其中结果最大的那个呗，因为题目让我们算「最长」公共子序列的长度嘛。
+Thật ra ta cũng không biết, vậy thì tính hết đáp án của cả ba trường hợp, lấy kết quả lớn nhất trong đó, vì đề bài bắt ta tính độ dài dãy con chung「dài nhất」mà.
 
-这三种情况的答案怎么算？回想一下我们的 `dp` 函数定义，不就是专门为了计算它们而设计的嘛！
+Đáp án của ba trường hợp này tính thế nào? Nhớ lại định nghĩa hàm `dp` của ta, nó chẳng phải được thiết kế chuyên để tính chúng sao!
 
-代码可以再进一步：
+Code có thể tiến thêm một bước:
 
 ```java
-// 定义：计算 s1[i..] 和 s2[j..] 的最长公共子序列长度
+// Định nghĩa: tính độ dài dãy con chung dài nhất của s1[i..] và s2[j..]
 int dp(String s1, int i, String s2, int j) {
     if (s1.charAt(i) == s2.charAt(j)) {
         return 1 + dp(s1, i + 1, s2, j + 1);
     } else {
-        // s1[i] 和 s2[j] 中至少有一个字符不在 lcs 中，
-        // 穷举三种情况的结果，取其中的最大结果
+        // Trong s1[i] và s2[j] ít nhất có một ký tự không nằm trong lcs,
+        // liệt kê kết quả của ba trường hợp, lấy kết quả lớn nhất
         return max(
-            // 情况一、s1[i] 不在 lcs 中
+            // Trường hợp 1: s1[i] không nằm trong lcs
             dp(s1, i + 1, s2, j),
-            // 情况二、s2[j] 不在 lcs 中
+            // Trường hợp 2: s2[j] không nằm trong lcs
             dp(s1, i, s2, j + 1),
-            // 情况三、都不在 lcs 中
+            // Trường hợp 3: cả hai đều không nằm trong lcs
             dp(s1, i + 1, s2, j + 1)
         );
     }
 }
 ```
 
-这里就已经非常接近我们的最终答案了，**还有一个小的优化，情况三「`s1[i]` 和 `s2[j]` 都不在 lcs 中」其实可以直接忽略**。
+Tới đây đã rất gần đáp án cuối cùng rồi, **còn một优化/tối ưu nhỏ, trường hợp 3「cả `s1[i]` và `s2[j]` đều không nằm trong lcs」thật ra có thể bỏ qua trực tiếp**.
 
-因为我们在求最大值嘛，情况三在计算 `s1[i+1..]` 和 `s2[j+1..]` 的 `lcs` 长度，这个长度肯定是小于等于情况二 `s1[i..]` 和 `s2[j+1..]` 中的 `lcs` 长度的，因为 `s1[i+1..]` 比 `s1[i..]` 短嘛，那从这里面算出的 `lcs` 当然也不可能更长嘛。
+Vì ta đang求giá trị lớn nhất mà, trường hợp 3 tính độ dài `lcs` của `s1[i+1..]` và `s2[j+1..]`, độ dài này chắc chắn nhỏ hơn hoặc bằng độ dài `lcs` trong trường hợp 2 là `s1[i..]` và `s2[j+1..]`, vì `s1[i+1..]` ngắn hơn `s1[i..]` mà, thì `lcs` tính ra từ đó đương nhiên không thể dài hơn.
 
-同理，情况三的结果肯定也小于等于情况一。**说白了，情况三被情况一和情况二包含了**，所以我们可以直接忽略掉情况三，完整代码如下：
+Tương tự, kết quả trường hợp 3 chắc chắn cũng nhỏ hơn hoặc bằng trường hợp 1. **Nói thẳng ra, trường hợp 3 đã bị trường hợp 1 và trường hợp 2 bao hàm**, nên ta có thể bỏ qua trực tiếp trường hợp 3, code đầy đủ như sau:
 
 ```java
 class Solution {
-    // 备忘录，消除重叠子问题
+    // Bảng ghi nhớ (memo), loại bỏ bài toán con trùng lặp
     int[][] memo;
 
-    // 主函数
+    // Hàm chính
     public int longestCommonSubsequence(String s1, String s2) {
         int m = s1.length(), n = s2.length();
-        // 备忘录值为 -1 代表未曾计算
+        // Giá trị memo là -1 nghĩa là chưa từng tính
         memo = new int[m][n];
         for (int[] row : memo) 
             Arrays.fill(row, -1);
-        // 计算 s1[0..] 和 s2[0..] 的 lcs 长度
+        // Tính độ dài lcs của s1[0..] và s2[0..]
         return dp(s1, 0, s2, 0);
     }
 
-    // 定义：计算 s1[i..] 和 s2[j..] 的最长公共子序列长度
+    // Định nghĩa: tính độ dài dãy con chung dài nhất của s1[i..] và s2[j..]
     int dp(String s1, int i, String s2, int j) {
         // base case
         if (i == s1.length() || j == s2.length()) {
             return 0;
         }
-        // 如果之前计算过，则直接返回备忘录中的答案
+        // Nếu đã tính trước đó, trả về trực tiếp đáp án trong memo
         if (memo[i][j] != -1) {
             return memo[i][j];
         }
-        // 根据 s1[i] 和 s2[j] 的情况做选择
+        // Lựa chọn theo trường hợp của s1[i] và s2[j]
         if (s1.charAt(i) == s2.charAt(j)) {
-            // s1[i] 和 s2[j] 必然在 lcs 中
+            // s1[i] và s2[j] chắc chắn nằm trong lcs
             memo[i][j] = 1 + dp(s1, i + 1, s2, j + 1);
         } else {
-            // s1[i] 和 s2[j] 至少有一个不在 lcs 中
+            // s1[i] và s2[j] ít nhất có một ký tự không nằm trong lcs
             memo[i][j] = Math.max(
                 dp(s1, i + 1, s2, j),
                 dp(s1, i, s2, j + 1)
@@ -186,7 +184,7 @@ class Solution {
 }
 ```
 
-以上思路完全就是按照我们之前的爆文 [动态规划套路框架](https://labuladong.online/algo/essential-technique/dynamic-programming-framework/) 来的，应该是很容易理解的。至于为什么要加 `memo` 备忘录，我们之前写过很多次，为了照顾新来的读者，这里再简单重复一下，首先抽象出我们核心 `dp` 函数的递归框架：
+思路 trên hoàn toàn đi theo bài爆文/nổi tiếng trước đây của ta là [Khung套路/mô-típ quy hoạch động](https://labuladong.online/algo/essential-technique/dynamic-programming-framework/), hẳn là rất dễ hiểu. Còn vì sao phải thêm `memo` bảng ghi nhớ, trước đây ta đã viết nhiều lần, để照顾/chăm sóc bạn đọc mới tới, ở đây nhắc lại đơn giản một chút, trước hết抽象/trừu tượng hóa khung đệ quy của hàm `dp` cốt lõi:
 
 ```java
 int dp(int i, int j) {
@@ -196,29 +194,29 @@ int dp(int i, int j) {
 }
 ```
 
-你看，假设我想从 `dp(i, j)` 转移到 `dp(i+1, j+1)`，有不止一种方式，可以直接走 `#1`，也可以走 `#2 -> #3`，也可以走 `#3 -> #2`。
+Bạn xem, giả sử mình muốn từ `dp(i, j)` chuyển sang `dp(i+1, j+1)`, có không chỉ một cách, có thể đi thẳng `#1`, cũng có thể đi `#2 -> #3`, cũng có thể đi `#3 -> #2`.
 
-这就是重叠子问题，如果我们不用 `memo` 备忘录消除子问题，那么 `dp(i+1, j+1)` 就会被多次计算，这是没有必要的。
+Đây chính là bài toán con trùng lặp (overlapping subproblems), nếu ta không dùng `memo` để loại bỏ bài toán con, thì `dp(i+1, j+1)` sẽ bị tính nhiều lần, điều này là không cần thiết.
 
-至此，最长公共子序列问题就完全解决了，用的是自顶向下带备忘录的动态规划思路，我们当然也可以使用自底向上的迭代的动态规划思路，和我们的递归思路一样，关键是如何定义 `dp` 数组，我这里也写一下自底向上的解法吧：
+Tới đây, bài toán dãy con chung dài nhất đã được giải triệt để, dùng思路 quy hoạch động top-down kèm bảng ghi nhớ, đương nhiên ta cũng có thể dùng思路 quy hoạch động bottom-up dạng lặp, giống hệt思路 đệ quy của ta, mấu chốt là định nghĩa mảng `dp` thế nào, mình cũng viết luôn解法/cách giải bottom-up ở đây:
 
 ```java
 class Solution {
     public int longestCommonSubsequence(String s1, String s2) {
         int m = s1.length(), n = s2.length();
         int[][] dp = new int[m + 1][n + 1];
-        // 定义：s1[0..i-1] 和 s2[0..j-1] 的 lcs 长度为 dp[i][j]
-        // 目标：s1[0..m-1] 和 s2[0..n-1] 的 lcs 长度，即 dp[m][n]
+        // Định nghĩa: độ dài lcs của s1[0..i-1] và s2[0..j-1] là dp[i][j]
+        // Mục tiêu: độ dài lcs của s1[0..m-1] và s2[0..n-1], tức dp[m][n]
         // base case: dp[0][..] = dp[..][0] = 0
 
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
-                // 现在 i 和 j 从 1 开始，所以要减一
+                // Giờ i và j bắt đầu từ 1, nên phải trừ một
                 if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-                    // s1[i-1] 和 s2[j-1] 必然在 lcs 中
+                    // s1[i-1] và s2[j-1] chắc chắn nằm trong lcs
                     dp[i][j] = 1 + dp[i - 1][j - 1];
                 } else {
-                    // s1[i-1] 和 s2[j-1] 至少有一个不在 lcs 中
+                    // s1[i-1] và s2[j-1] ít nhất có một ký tự không nằm trong lcs
                     dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
                 }
             }
@@ -234,7 +232,7 @@ class Solution {
 <a href="https://labuladong.online/algo-visualize/leetcode/longest-common-subsequence/" target="_blank">
 <details style="max-width:90%;max-height:400px">
 <summary>
-<strong>🍭 代码可视化动画🍭</strong>
+<strong>🍭 Animation trực quan hóa code 🍭</strong>
 </summary>
 </details>
 </a>
@@ -242,75 +240,75 @@ class Solution {
 
 
 
-自底向上的解法中 `dp` 数组定义的方式和我们的递归解法有一点差异，不过思路和我们的递归解法完全相同，如果你看懂了递归解法，这个解法应该不难理解。
+解法 bottom-up中 định nghĩa mảng `dp` có hơi khác với解法 đệ quy của ta, nhưng思路 hoàn toàn giống解法 đệ quy, nếu bạn hiểu解法 đệ quy thì解法 này hẳn không khó hiểu.
 
-新手可能有一个注意不到的小细节： `s1.charAt(i - 1) == s2.charAt(j - 1)`，这里的字符串索引和 `dp` 数组索引并不一致，也称为**索引偏移**。回顾一下 `dp` 数组的定义：
+Người mới có thể có một chi tiết nhỏ không để ý: `s1.charAt(i - 1) == s2.charAt(j - 1)`, chỉ số chuỗi ở đây và chỉ số mảng `dp` không khớp nhau, còn gọi là **lệch chỉ số (index offset)**. Ôn lại định nghĩa mảng `dp`:
 
 ```java
-        // 定义：s1[0..i-1] 和 s2[0..j-1] 的 lcs 长度为 dp[i][j]
+        // Định nghĩa: độ dài lcs của s1[0..i-1] và s2[0..j-1] là dp[i][j]
 ```
 
-在第 `i` 轮循环中改变的是 `dp[i]` 的值，此时按照定义，需要比较的是 `s1` 的**第 i 个字符**，也即 `s1[i-1]`。`s2[j-1]` 也是同理。这种细节在字符串类动态规划中非常常见，需要多加留意。
+Ở vòng lặp thứ `i`, thứ bị thay đổi là giá trị `dp[i]`, lúc này theo định nghĩa, thứ cần so sánh là **ký tự thứ i** của `s1`,也就是/tức là `s1[i-1]`. `s2[j-1]` cũng tương tự. Chi tiết này rất hay gặp trong DP dạng chuỗi, cần留意/lưu ý thêm.
 
-另外，自底向上的解法可以通过我们前文讲过的 [动态规划空间压缩技巧](https://labuladong.online/algo/dynamic-programming/space-optimization/) 来进行优化，把空间复杂度压缩为 O(N)，这里由于篇幅所限，就不展开了。
+Ngoài ra,解法 bottom-up có thể优化 bằng [Kỹ thuật nén không gian DP](https://labuladong.online/algo/dynamic-programming/space-optimization/) đã讲/nói trong bài trước, nén độ phức tạp không gian xuống O(N), ở đây vì篇幅/giới hạn độ dài nên không展开/mở rộng.
 
-下面，来看两道和最长公共子序列相似的两道题目。
+Dưới đây, xem hai bài tương tự với dãy con chung dài nhất.
 
-## 字符串的删除操作
+## Thao tác xóa chuỗi
 
-这是力扣第 583 题「两个字符串的删除操作」，看下题目：
+Đây là bài 583「Thao tác xóa cho hai chuỗi」trên LeetCode, xem đề:
 
-给定两个单词 `s1` 和 `s2` ，返回使得 `s1` 和 `s2` 相同所需的最小步数。每步可以删除任意一个字符串中的一个字符。
+Cho hai từ `s1` và `s2`, trả về số bước tối thiểu để khiến `s1` và `s2` giống nhau. Mỗi bước có thể xóa một ký tự bất kỳ trong một chuỗi.
 
-函数签名如下：
+Chữ ký hàm như sau:
 
 ```java
 int minDistance(String s1, String s2);
 ```
 
-比如输入 `s1 = "sea" s2 = "eat"`，算法返回 2，第一步将 `"sea"` 变为 `"ea"` ，第二步将 `"eat"` 变为 `"ea"`。
+Ví dụ nhập `s1 = "sea" s2 = "eat"`, thuật toán trả về 2, bước một biến `"sea"` thành `"ea"`, bước hai biến `"eat"` thành `"ea"`.
 
-题目让我们计算将两个字符串变得相同的最少删除次数，那我们可以思考一下，最后这两个字符串会被删成什么样子？
+Đề bài bắt ta tính số lần xóa ít nhất để hai chuỗi trở nên giống nhau, vậy ta có thể nghĩ xem, cuối cùng hai chuỗi này sẽ bị xóa thành样子/hình dạng gì?
 
-删除的结果不就是它俩的最长公共子序列嘛！
+Kết quả sau khi xóa chẳng phải chính là dãy con chung dài nhất của chúng sao!
 
-那么，要计算删除的次数，就可以通过最长公共子序列的长度推导出来：
+Vậy, muốn tính số lần xóa, có thể suy ra từ độ dài dãy con chung dài nhất:
 
 ```java
 int minDistance(String s1, String s2) {
     int m = s1.length(), n = s2.length();
-    // 复用前文计算 lcs 长度的函数
+    // Tái sử dụng hàm tính độ dài lcs ở phần trước
     int lcs = longestCommonSubsequence(s1, s2);
     return m - lcs + n - lcs;
 }
 ```
 
-这道题就解决了！
+Bài này giải xong!
 
-## 最小 ASCII 删除和
+## Tổng ASCII xóa nhỏ nhất
 
-这是力扣第 712 题「两个字符串的最小 ASCII 删除和」，题目和上一道题目类似，只不过上道题要求删除次数最小化，这道题要求删掉的字符 ASCII 码之和最小化。
+Đây là bài 712「Tổng ASCII xóa nhỏ nhất cho hai chuỗi」trên LeetCode, đề tương tự bài trước, chỉ là bài trước yêu cầu tối thiểu hóa số lần xóa, bài này yêu cầu tối thiểu hóa tổng mã ASCII của các ký tự bị xóa.
 
-函数签名如下：
+Chữ ký hàm như sau:
 
 ```java
 int minimumDeleteSum(String s1, String s2)
 ```
 
-比如输入 `s1 = "sea", s2 = "eat"`，算法返回 231。
+Ví dụ nhập `s1 = "sea", s2 = "eat"`, thuật toán trả về 231.
 
-因为在 `"sea"` 中删除 `"s"`，在 `"eat"` 中删除 `"t"`，可使得两个字符串相等，且删掉字符的 ASCII 码之和最小，即 `s(115) + t(116) = 231`。
+Vì xóa `"s"` trong `"sea"`, xóa `"t"` trong `"eat"`, có thể khiến hai chuỗi bằng nhau, và tổng mã ASCII của ký tự bị xóa là nhỏ nhất, tức `s(115) + t(116) = 231`.
 
-**这道题不能直接复用计算最长公共子序列的函数，但是可以依照之前的思路，稍微修改 base case 和状态转移部分即可直接写出解法代码**：
+**Bài này không thể复用/tái sử dụng trực tiếp hàm tính dãy con chung dài nhất, nhưng có thể làm theo思路 trước đó, sửa nhẹ base case và phần chuyển trạng thái là viết thẳng được code解法**:
 
 ```java
 class Solution {
-    // 备忘录
+    // Bảng ghi nhớ
     int memo[][];
-    // 主函数
+    // Hàm chính
     public int minimumDeleteSum(String s1, String s2) {
         int m = s1.length(), n = s2.length();
-        // 备忘录值为 -1 代表未曾计算
+        // Giá trị memo là -1 nghĩa là chưa từng tính
         memo = new int[m][n];
         for (int[] row : memo) 
             Arrays.fill(row, -1);
@@ -318,19 +316,19 @@ class Solution {
         return dp(s1, 0, s2, 0);
     }
 
-    // 定义：将 s1[i..] 和 s2[j..] 删除成相同字符串，
-    // 最小的 ASCII 码之和为 dp(s1, i, s2, j)。
+    // Định nghĩa: xóa s1[i..] và s2[j..] thành chuỗi giống nhau,
+    // tổng mã ASCII nhỏ nhất là dp(s1, i, s2, j).
     int dp(String s1, int i, String s2, int j) {
         int res = 0;
         // base case
         if (i == s1.length()) {
-            // 如果 s1 到头了，那么 s2 剩下的都得删除
+            // Nếu s1 đã tới cuối, thì phần còn lại của s2 đều phải xóa
             for (; j < s2.length(); j++)
                 res += s2.charAt(j);
             return res;
         }
         if (j == s2.length()) {
-            // 如果 s2 到头了，那么 s1 剩下的都得删除
+            // Nếu s2 đã tới cuối, thì phần còn lại của s1 đều phải xóa
             for (; i < s1.length(); i++)
                 res += s1.charAt(i);
             return res;
@@ -341,10 +339,10 @@ class Solution {
         }
         
         if (s1.charAt(i) == s2.charAt(j)) {
-            // s1[i] 和 s2[j] 都是在 lcs 中的，不用删除
+            // s1[i] và s2[j] đều nằm trong lcs, không cần xóa
             memo[i][j] = dp(s1, i + 1, s2, j + 1);
         } else {
-            // s1[i] 和 s2[j] 至少有一个不在 lcs 中，删一个
+            // s1[i] và s2[j] ít nhất có một ký tự không nằm trong lcs, xóa một ký tự
             memo[i][j] = Math.min(
                 s1.charAt(i) + dp(s1, i + 1, s2, j),
                 s2.charAt(j) + dp(s1, i, s2, j + 1)
@@ -360,7 +358,7 @@ class Solution {
 <a href="https://labuladong.online/algo-visualize/leetcode/minimum-ascii-delete-sum-for-two-strings/" target="_blank">
 <details style="max-width:90%;max-height:400px">
 <summary>
-<strong>🍭 代码可视化动画🍭</strong>
+<strong>🍭 Animation trực quan hóa code 🍭</strong>
 </summary>
 </details>
 </a>
@@ -368,13 +366,13 @@ class Solution {
 
 
 
-base case 有一定区别，计算 `lcs` 长度时，如果一个字符串为空，那么 `lcs` 长度必然是 0；但是这道题如果一个字符串为空，另一个字符串必然要被全部删除，所以需要计算另一个字符串所有字符的 ASCII 码之和。
+base case có khác biệt nhất định, khi tính độ dài `lcs`, nếu một chuỗi rỗng thì độ dài `lcs`必然/chắc chắn là 0; nhưng bài này nếu một chuỗi rỗng, chuỗi còn lại必然 phải bị xóa toàn bộ, nên cần tính tổng mã ASCII của mọi ký tự trong chuỗi còn lại.
 
-关于状态转移，当 `s1[i]` 和 `s2[j]` 相同时不需要删除，不同时需要删除，所以可以利用 `dp` 函数计算两种情况，得出最优的结果。其他的大同小异，就不具体展开了。
+Về chuyển trạng thái, khi `s1[i]` và `s2[j]` giống nhau thì không cần xóa, khi khác nhau thì cần xóa, nên có thể利用/dùng hàm `dp` tính hai trường hợp,得出/đưa ra kết quả tối ưu. Các chỗ khác大同小异/tương tự nhau, không展开 cụ thể nữa.
 
-至此，三道子序列问题就解决完了，关键在于将问题细化到字符，根据每两个字符是否相同来判断他们是否在结果子序列中，从而避免了对所有子序列进行穷举。
+Tới đây, ba bài toán dãy con đã giải xong, mấu chốt là細化/thu nhỏ bài toán về ký tự, dựa vào mỗi cặp ký tự có giống nhau không để判断/phán đoán chúng có nằm trong dãy con kết quả không, từ đó tránh liệt kê mọi dãy con.
 
-这也算是在两个字符串中求子序列的常用思路吧，建议好好体会，多多练习~
+Đây cũng coi là思路 thường dùng khi求/tìm dãy con trong hai chuỗi,建议/khuyến nghị体会/ngẫm kỹ, luyện tập nhiều~
 
 
 
@@ -384,9 +382,9 @@ base case 有一定区别，计算 `lcs` 长度时，如果一个字符串为空
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的文章</strong></summary>
+<summary><strong>Các bài viết trích dẫn bài này</strong></summary>
 
- - [动态规划之子序列问题解题模板](https://labuladong.online/algo/dynamic-programming/subsequence-problem/)
+ - [Template giải bài toán dãy con trong DP](https://labuladong.online/algo/dynamic-programming/subsequence-problem/)
 
 </details><hr>
 
@@ -395,14 +393,14 @@ base case 有一定区别，计算 `lcs` 长度时，如果一个字符串为空
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的题目</strong></summary>
+<summary><strong>Các bài tập trích dẫn bài này</strong></summary>
 
-<strong>安装 [我的 Chrome 刷题插件](https://labuladong.online/algo/intro/chrome/) 点开下列题目可直接查看解题思路：</strong>
+<strong>Cài [plugin刷题/làm bài Chrome của mình](https://labuladong.online/algo/intro/chrome/) rồi mở các bài dưới đây để xem thẳng思路 giải:</strong>
 
-| LeetCode | 力扣 | 难度 |
+| LeetCode | Lực khấu | Độ khó |
 | :----: | :----: | :----: |
-| [97. Interleaving String](https://leetcode.com/problems/interleaving-string/?show=1) | [97. 交错字符串](https://leetcode.cn/problems/interleaving-string/?show=1) | 🟠 |
-| - | [剑指 Offer II 095. 最长公共子序列](https://leetcode.cn/problems/qJnOS7/?show=1) | 🟠 |
+| [97. Interleaving String](https://leetcode.com/problems/interleaving-string/?show=1) | [97. Chuỗi đan xen](https://leetcode.cn/problems/interleaving-string/?show=1) | 🟠 |
+| - | [Kiếm chỉ Offer II 095. Dãy con chung dài nhất](https://leetcode.cn/problems/qJnOS7/?show=1) | 🟠 |
 
 </details>
 <hr>

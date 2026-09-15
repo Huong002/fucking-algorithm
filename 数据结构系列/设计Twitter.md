@@ -1,84 +1,81 @@
-# 设计朋友圈时间线功能
+# Thiết kế chức năng timeline trang bạn bè
+
 
 
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**通知：为满足广大读者的需求，网站上架 [速成目录](https://labuladong.online/algo/intro/quick-learning-plan/)，如有需要可以看下，谢谢大家的支持~另外，建议你在我的 [网站](https://labuladong.online/algo/) 学习文章，体验更好。**
+**Thông báo: Theo nhu cầu của đông đảo độc giả, website đã ra mắt [Lộ trình速成](https://labuladong.online/algo/intro/quick-learning-plan/), ai cần có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, khuyên bạn học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
 
 
-读完本文，你不仅学会了算法套路，还可以顺便解决如下题目：
+Đọc xong bài này, bạn không chỉ học được套路thuật toán, mà còn tiện tay giải được các bài sau:
 
-| LeetCode | 力扣 | 难度 |
+| LeetCode | 力扣 | Độ khó |
 | :----: | :----: | :----: |
-| [355. Design Twitter](https://leetcode.com/problems/design-twitter/) | [355. 设计推特](https://leetcode.cn/problems/design-twitter/) | 🟠 |
+| [355. Design Twitter](https://leetcode.com/problems/design-twitter/) | [355. Thiết kế Twitter](https://leetcode.cn/problems/design-twitter/) | 🟠 |
 
 **-----------**
 
 
 
 > [!NOTE]
-> 阅读本文前，你需要先学习：
-> 
-> - [链表基础](https://labuladong.online/algo/data-structure-basic/linkedlist-basic/)
-> - [哈希表基础](https://labuladong.online/algo/data-structure-basic/hashmap-basic/)
-> - [二叉堆基础](https://labuladong.online/algo/data-structure-basic/binary-heap-basic/)
+> Trước khi đọc bài này, bạn cần học trước:
+>
+> - [Cơ bản về linked list](https://labuladong.online/algo/data-structure-basic/linkedlist-basic/)
+> - [Cơ bản về hash table](https://labuladong.online/algo/data-structure-basic/hashmap-basic/)
+> - [Cơ bản về binary heap](https://labuladong.online/algo/data-structure-basic/binary-heap-basic/)
 
-力扣第 355 「设计推特」不仅题目本身很有意思，而且把合并多个有序链表的算法和面向对象设计（OO design）结合起来了，很有实际意义，本文就带大家来看看这道题。
+Bài 355 trên LeetCode「Thiết kế Twitter」không chỉ bản thân đề rất hay, mà còn kết hợp thuật toán merge nhiều linked list có thứ tự và thiết kế hướng đối tượng (OO design), rất có ý nghĩa thực tế, bài này dẫn mọi người xem bài này.
 
-至于 Twitter 的什么功能跟算法有关系，等我们描述一下题目要求就知道了。
+Còn chức năng gì của Twitter liên quan thuật toán, đợi chúng ta mô tả yêu cầu đề là biết.
 
-## 一、题目及应用场景简介
+## Một, giới thiệu đề &场景ứng dụng
 
-Twitter 和微博功能差不多，我们主要要实现这样几个 API：
-
-
-
-
+Twitter và Weibo chức năng gần giống, chúng ta chủ yếu要cài đặt mấy API sau:
 
 ```java
 class Twitter {
 
-    // user 发表一条 tweet 动态
+    // user đăng một tweet
     public void postTweet(int userId, int tweetId) {}
     
-    // 返回该 user 关注的人（包括他自己）最近的动态 id
-    // 最多 10 条，而且这些动态必须按从新到旧的时间线顺序排列
+    // Trả về id động gần đây nhất của người mà user này follow (kể cả chính mình)
+    // Nhiều nhất 10条, mà các động này必须xếp theo timeline từ mới tới cũ
     public List<Integer> getNewsFeed(int userId) {}
     
-    // follower 关注 followee，如果 Id 不存在则新建
+    // follower follow followee, nếu Id không tồn tại则tạo mới
     public void follow(int followerId, int followeeId) {}
     
-    // follower 取关 followee，如果 Id 不存在则什么都不做
+    // follower unfollow followee, nếu Id không tồn tại则không làm gì
     public void unfollow(int followerId, int followeeId) {}
 }
 ```
 
-举个具体的例子，方便大家理解 API 的具体用法：
+Lấy một ví dụ cụ thể, tiện mọi người hiểu cách dùng cụ thể của API:
 
 ```java
 Twitter twitter = new Twitter();
 
 twitter.postTweet(1, 5);
-// 用户 1 发送了一条新推文 5
+// User 1 gửi một tweet mới 5
 
 twitter.getNewsFeed(1);
-// return [5]，因为自己是关注自己的
+// return [5], vì自己là follow chính mình
 
 twitter.follow(1, 2);
-// 用户 1 关注了用户 2
+// User 1 follow user 2
 
 twitter.postTweet(2, 6);
-// 用户2发送了一个新推文 (id = 6)
+// User 2 gửi một tweet mới (id = 6)
 
 twitter.getNewsFeed(1);
 // return [6, 5]
-// 解释：用户 1 关注了自己和用户 2，所以返回他们的最近推文
-// 而且 6 必须在 5 之前，因为 6 是最近发送的
+// Giải thích: user 1 follow chính mình và user 2, nên trả về tweet gần đây của họ
+// Mà 6必须ở trước 5, vì 6 gửi gần đây hơn
 
 twitter.unfollow(1, 2);
-// 用户 1 取消关注了用户 2
+// User 1 unfollow user 2
 
 twitter.getNewsFeed(1);
 // return [5]
@@ -86,21 +83,17 @@ twitter.getNewsFeed(1);
 
 
 
-这个场景在我们的现实生活中非常常见。拿朋友圈举例，比如我刚加到女神的微信，然后我去刷新一下我的朋友圈动态，那么女神的动态就会出现在我的动态列表，而且会和其他动态按时间排好序。只不过 Twitter 是单向关注，微信好友相当于双向关注。除非，被屏蔽...
+场景này trong đời thực của chúng ta rất thường gặp. Lấy vòng bạn bè ví dụ, như tôi vừa add WeChat của crush, rồi tôi去refresh động vòng bạn bè của mình, vậy động của crush sẽ xuất hiện trong danh sách động của tôi, mà còn xếp按thời gian với động khác. Chỉ là Twitter follow một chiều, bạn WeChat tương đương follow hai chiều. Trừ phi, bị chặn...
 
-这几个 API 中大部分都很好实现，最核心的功能难点应该是 `getNewsFeed`，因为返回的结果必须在时间上有序，但问题是用户的关注是动态变化的，怎么办？
+Trong mấy API này đa số đều dễ cài đặt, khó cốt lõi nhất phải là `getNewsFeed`, vì kết quả trả về必须có thứ tự về thời gian, nhưng vấn đề là follow của user biến động, làm sao?
 
-**这里就涉及到算法了**：如果我们把每个用户各自的推文存储在链表里，每个链表节点存储文章 `id` 和一个时间戳 `time`（记录发帖时间以便比较），而且这个链表是按 `time` 有序的，那么如果某个用户关注了 `k` 个用户，我们就可以用合并 `k` 个有序链表的算法合并出有序的推文列表，正确地 `getNewsFeed` 了！
+**Ở đây就liên quan thuật toán**: nếu chúng ta lưu tweet từng user trong linked list, mỗi Node linked list lưu `id` bài viết và một timestamp `time` (ghi thời gian đăng tiện so sánh), mà linked list này xếp按 `time` có thứ tự, vậy nếu một user follow `k` user, chúng ta có thể dùng thuật toán merge `k` linked list có thứ tự để merge ra danh sách tweet có thứ tự, đúng đắn `getNewsFeed`!
 
-具体的算法等会讲解。不过，就算我们掌握了算法，应该如何编程表示用户 `user` 和推文动态 `tweet` 才能把算法流畅地用出来呢？**这就涉及简单的面向对象设计了**，下面我们来由浅入深，一步一步进行设计。
+Thuật toán cụ thể等会讲解. Nhưng, dù chúng ta nắm thuật toán, phải biểu diễn lập trình user `user` và tweet `tweet` thế nào mới把thuật toán dùng mượt? **Đây就liên quan thiết kế hướng đối tượng đơn giản**, dưới đây chúng ta từ nông tới sâu, từng bước thiết kế.
 
-## 二、面向对象设计
+## Hai, thiết kế hướng đối tượng
 
-根据刚才的分析，我们需要一个 `User` 类，储存 `user` 信息，还需要一个 `Tweet` 类，储存推文信息，并且要作为链表的节点。所以我们先搭建一下整体的框架：
-
-
-
-
+Dựa vào phân tích vừa rồi, chúng ta cần một lớp `User`, lưu thông tin `user`, còn cần một lớp `Tweet`, lưu thông tin tweet, và要làm Node của linked list. Nên chúng ta dựng khung tổng thể trước:
 
 ```java
 class Twitter {
@@ -108,7 +101,7 @@ class Twitter {
     private static class Tweet {}
     private static class User {}
 
-    // 还有那几个 API 方法
+    // Còn mấy phương thức API đó
     public void postTweet(int userId, int tweetId) {}
     public List<Integer> getNewsFeed(int userId) {}
     public void follow(int followerId, int followeeId) {}
@@ -118,15 +111,11 @@ class Twitter {
 
 
 
-之所以要把 `Tweet` 和 `User` 类放到 `Twitter` 类里面，是因为 `Tweet` 类必须要用到一个全局时间戳 `timestamp`，而 `User` 类又需要用到 `Tweet` 类记录用户发送的推文，所以它们都作为内部类。不过为了清晰和简洁，下文会把每个内部类和 API 方法单独拿出来实现。
+Sở dĩ把lớp `Tweet` và `User`放vào trong lớp `Twitter`, vì lớp `Tweet`必须要dùng một timestamp toàn cục `timestamp`, mà lớp `User` lại cần dùng lớp `Tweet` ghi tweet user gửi, nên chúng đều làm inner class. Nhưng để rõ và gọn,下文sẽ把mỗi inner class và phương thức API拿ra cài đặt riêng.
 
-### Tweet 类的实现
+### Cài đặt lớp Tweet
 
-根据前面的分析，Tweet 类很容易实现：每个 Tweet 实例需要记录自己的 tweetId 和发表时间 time，而且作为链表节点，要有一个指向下一个节点的 next 指针。
-
-
-
-
+Dựa vào phân tích trước, lớp Tweet rất dễ cài đặt: mỗi instance Tweet cần ghi tweetId của mình và thời gian đăng time, mà làm Node linked list,要có con trỏ next指向Node tiếp theo.
 
 ```java
 class Tweet {
@@ -134,7 +123,7 @@ class Tweet {
     private int time;
     private Tweet next;
 
-    // 需要传入推文内容（id）和发文时间
+    // Cần truyền nội dung tweet (id) và thời gian đăng
     public Tweet(int id, int time) {
         this.id = id;
         this.time = time;
@@ -147,31 +136,27 @@ class Tweet {
 
 
 
-### User 类的实现
+### Cài đặt lớp User
 
-我们根据实际场景想一想，一个用户需要存储的信息有 userId，关注列表，以及该用户发过的推文列表。其中关注列表应该用集合（Hash Set）这种数据结构来存，因为不能重复，而且需要快速查找；推文列表应该由链表这种数据结构储存，以便于进行有序合并的操作。画个图理解一下：
+Chúng ta想theo场景thực tế, thông tin một user cần lưu có userId, danh sách follow, và danh sách tweet user này từng đăng. Trong đó danh sách follow phải dùng集合 (Hash Set) để存, vì không được trùng, mà cần tìm nhanh; danh sách tweet phải由linked list来lưu, tiện thao tác merge có thứ tự. Vẽ hình hiểu:
 
 ![](https://labuladong.online/algo/images/design-twitter/user.jpg)
 
-除此之外，根据面向对象的设计原则，「关注」「取关」和「发文」应该是 User 的行为，况且关注列表和推文列表也存储在 User 类中，所以我们也应该给 User 添加 follow，unfollow 和 post 这几个方法：
-
-
-
-
+Ngoài ra, theo nguyên tắc thiết kế hướng đối tượng,「follow」「unfollow」và「đăng bài」phải là hành vi của User, huống chi danh sách follow và danh sách tweet cũng lưu trong lớp User, nên chúng ta cũng phải thêm cho User mấy phương thức follow, unfollow và post:
 
 ```java
 // static int timestamp = 0
 class User {
     private int id;
     public Set<Integer> followed;
-    // 用户发表的推文链表头结点
+    // Node đầu linked list tweet user đăng
     public Tweet head;
 
     public User(int userId) {
         followed = new HashSet<>();
         this.id = userId;
         this.head = null;
-        // 关注一下自己
+        // Follow chính mình một chút
         follow(id);
     }
 
@@ -180,7 +165,7 @@ class User {
     }
 
     public void unfollow(int userId) {
-        // 不可以取关自己
+        // Không thể unfollow chính mình
         if (userId != this.id)
             followed.remove(userId);
     }
@@ -188,15 +173,15 @@ class User {
     public void post(int tweetId) {
         Tweet twt = new Tweet(tweetId, timestamp);
         timestamp++;
-        // 将新建的推文插入链表头
-        // 越靠前的推文 time 值越大
+        // Chèn tweet mới tạo vào đầu linked list
+        // Tweet càng靠trước giá trị time càng lớn
         twt.next = head;
         head = twt;
     }
 }
 ```
 
-###  几个 API 方法的实现
+### Cài đặt mấy phương thức API
 
 ```java
 class Twitter {
@@ -204,26 +189,26 @@ class Twitter {
     private static class Tweet {...}
     private static class User {...}
 
-    // 我们需要一个映射将 userId 和 User 对象对应起来
+    // Chúng ta cần một map把userId và đối tượng User对应起来
     private HashMap<Integer, User> userMap = new HashMap<>();
 
-    // user 发表一条 tweet 动态
+    // user đăng một tweet
     public void postTweet(int userId, int tweetId) {
-        // 若 userId 不存在，则新建
+        // Nếu userId không tồn tại,则tạo mới
         if (!userMap.containsKey(userId))
             userMap.put(userId, new User(userId));
         User u = userMap.get(userId);
         u.post(tweetId);
     }
     
-    // follower 关注 followee
+    // follower follow followee
     public void follow(int followerId, int followeeId) {
-        // 若 follower 不存在，则新建
+        // Nếu follower không tồn tại,则tạo mới
 		if(!userMap.containsKey(followerId)){
 			User u = new User(followerId);
 			userMap.put(followerId, u);
 		}
-        // 若 followee 不存在，则新建
+        // Nếu followee không tồn tại,则tạo mới
 		if(!userMap.containsKey(followeeId)){
 			User u = new User(followeeId);
 			userMap.put(followeeId, u);
@@ -231,7 +216,7 @@ class Twitter {
 		userMap.get(followerId).follow(followeeId);
     }
     
-    // follower 取关 followee，如果 Id 不存在则什么都不做
+    // follower unfollow followee, nếu Id không tồn tại则không làm gì
     public void unfollow(int followerId, int followeeId) {
         if (userMap.containsKey(followerId)) {
             User flwer = userMap.get(followerId);
@@ -239,58 +224,50 @@ class Twitter {
         }
     }
 
-    // 返回该 user 关注的人（包括他自己）最近的动态 id
-    // 最多 10 条，而且这些动态必须按从新到旧的时间线顺序排列
+    // Trả về id động gần đây nhất của người mà user này follow (kể cả chính mình)
+    // Nhiều nhất 10条, mà các động này必须xếp theo timeline từ mới tới cũ
     public List<Integer> getNewsFeed(int userId) {
-        // 需要理解算法，见下文
+        // Cần hiểu thuật toán, xem下文
     }
 }
 ```
 
 
 
-## 三、算法设计
+## Ba, thiết kế thuật toán
 
-实现合并 k 个有序链表的算法需要用到优先级队列（Priority Queue），这种数据结构是二叉堆最重要的应用。你可以理解为它可以对插入的元素自动排序，乱序的元素插入其中就被放到了正确的位置，可以按照从小到大（或从大到小）有序地取出元素。具体可以看这篇 [二叉堆实现优先级队列](https://labuladong.online/algo/data-structure-basic/binary-heap-implement/)。
-
-
-
+Cài đặt thuật toán merge k linked list có thứ tự cần dùng priority queue, cấu trúc dữ liệu này là ứng dụng quan trọng nhất của binary heap. Bạn có thể hiểu là nó có thể tự sắp xếp phần tử chèn vào, phần tử lộn xộn chèn vào就被放到vị trí đúng, có thể取出phần tử有序theo từ nhỏ tới lớn (hoặc từ lớn tới nhỏ). Cụ thể xem [Triển khai priority queue bằng binary heap](https://labuladong.online/algo/data-structure-basic/binary-heap-implement/).
 
 
 ```python
 PriorityQueue pq
-# 乱序插入
+# Chèn lộn xộn
 for i in {2,4,1,9,6}:
     pq.add(i)
 while pq not empty:
-    # 每次取出第一个（最小）元素
+    # Mỗi lần lấy phần tử đầu (nhỏ nhất)
     print(pq.pop())
 
-# 输出有序：1,2,4,6,9
+# Xuất có thứ tự: 1,2,4,6,9
 ```
 
 
-
-借助这种牛逼的数据结构支持，我们就很容易实现这个核心功能了。注意我们把优先级队列设为按 `time` 属性**从大到小降序排列**，因为 `time` 越大意味着时间越近，应该排在前面：
-
-
-
-
+Mượn cấu trúc dữ liệu牛này hỗ trợ, chúng ta rất dễ cài đặt chức năng cốt lõi này. Chú ý chúng ta đặt priority queue按thuộc tính `time` xếp **giảm dần từ lớn tới nhỏ**, vì `time` càng lớn意味着thời gian càng gần, phải xếp phía trước:
 
 ```java
 class Twitter {
-    // 为了节约篇幅，省略上文给出的代码部分...
+    // Để tiết kiệm篇幅,省略phần code đã cho ở trên...
 
     public List<Integer> getNewsFeed(int userId) {
         List<Integer> res = new ArrayList<>();
         if (!userMap.containsKey(userId)) return res;
-        // 关注列表的用户 Id
+        // Id user của danh sách follow
         Set<Integer> users = userMap.get(userId).followed;
-        // 自动通过 time 属性从大到小排序，容量为 users 的大小
+        // Tự động按thuộc tính time xếp từ lớn tới nhỏ,容量là kích thước users
         PriorityQueue<Tweet> pq = 
             new PriorityQueue<>(users.size(), (a, b)->(b.time - a.time));
 
-        // 先将所有链表头节点插入优先级队列
+        // Chèn trước mọi Node đầu linked list vào priority queue
         for (int id : users) {
             Tweet twt = userMap.get(id).head;
             if (twt == null) continue;
@@ -298,12 +275,12 @@ class Twitter {
         }
 
         while (!pq.isEmpty()) {
-            // 最多返回 10 条就够了
+            // Nhiều nhất trả về 10条là đủ
             if (res.size() == 10) break;
-            // 弹出 time 值最大的（最近发表的）
+            // Pop giá trị time lớn nhất (đăng gần nhất)
             Tweet twt = pq.poll();
             res.add(twt.id);
-            // 将下一篇 Tweet 插入进行排序
+            // Chèn Tweet tiếp theo vào để sắp xếp
             if (twt.next != null) 
                 pq.add(twt.next);
         }
@@ -314,12 +291,11 @@ class Twitter {
 
 
 
-这个过程是这样的，下面是我制作的一个 GIF 图描述合并链表的过程。假设有三个 Tweet 链表按 time 属性降序排列，我们把他们降序合并添加到 res 中。注意图中链表节点中的数字是 time 属性，不是 id 属性：
+Quá trình này như sau, dưới đây là GIF tôi làm mô tả quá trình merge linked list. Giả sử có ba linked list Tweet按thuộc tính time xếp giảm dần, chúng ta merge giảm dần thêm vào res. Chú ý số trong Node linked list ở hình là thuộc tính time, không phải thuộc tính id:
 
 ![](https://labuladong.online/algo/images/design-twitter/merge.gif)
 
-至此，这道一个极其简化的 Twitter 时间线功能就设计完毕了，更多数据结构设计相关的题目参见 [数据结构设计经典习题](https://labuladong.online/algo/problem-set/ds-design/)。
-
+Đến đây, chức năng timeline Twitter极其đơn giản hóa này thiết kế xong, thêm nhiều bài liên quan thiết kế cấu trúc dữ liệu xem [Bài tập kinh điển về thiết kế cấu trúc dữ liệu](https://labuladong.online/algo/problem-set/ds-design/).
 
 
 
@@ -328,12 +304,11 @@ class Twitter {
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的文章</strong></summary>
+<summary><strong>Bài viết trích dẫn bài này</strong></summary>
 
- - [【强化练习】优先级队列经典习题](https://labuladong.online/algo/problem-set/binary-heap/)
+ - [【Luyện tập tăng cường】Bài tập kinh điển về priority queue](https://labuladong.online/algo/problem-set/binary-heap/)
 
 </details><hr>
-
 
 
 

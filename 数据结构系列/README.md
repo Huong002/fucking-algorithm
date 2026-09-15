@@ -1,7 +1,7 @@
-# 数据结构系列
+# Chuỗi bài Cấu trúc dữ liệu
 
-这一章主要是一些特殊的数据结构设计，比如单调栈解决 Next Greater Number，单调队列解决滑动窗口问题；还有常用数据结构的操作，比如链表、树、二叉堆。
+Chương này chủ yếu giới thiệu một số thiết kế cấu trúc dữ liệu đặc biệt, ví dụ dùng ngăn xếp đơn điệu (monotonic stack) để giải bài Next Greater Number, dùng hàng đợi đơn điệu (monotonic queue) để giải bài toán cửa sổ trượt (Sliding Window); cùng các thao tác trên cấu trúc dữ liệu thường dùng như danh sách liên kết, cây, binary heap.
 
-欢迎关注我的公众号 labuladong，查看全部文章：
+Mời theo dõi tài khoản công chúng labuladong để xem toàn bộ bài viết:
 
-![labuladong二维码](../pictures/qrcode.jpg)
+![Mã QR labuladong](../pictures/qrcode.jpg)

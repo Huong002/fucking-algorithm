@@ -1,97 +1,85 @@
-# BFS 算法解题套路框架
-
-
+# Khung套路 giải đề bằng thuật toán BFS
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**通知：为满足广大读者的需求，网站上架 [速成目录](https://labuladong.online/algo/intro/quick-learning-plan/)，如有需要可以看下，谢谢大家的支持~另外，建议你在我的 [网站](https://labuladong.online/algo/) 学习文章，体验更好。**
+**Thông báo: Theo nhu cầu của đông đảo độc giả, website đã ra mắt [Lộ trình速 thành](https://labuladong.online/algo/intro/quick-learning-plan/), nếu cần bạn có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, mình khuyên bạn học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
+Đọc xong bài này, bạn không chỉ học được套路 thuật toán, mà còn tiện thể giải được các bài sau:
 
-
-读完本文，你不仅学会了算法套路，还可以顺便解决如下题目：
-
-| LeetCode | 力扣 | 难度 |
+| LeetCode | Lực khấu | Độ khó |
 | :----: | :----: | :----: |
-| [752. Open the Lock](https://leetcode.com/problems/open-the-lock/) | [752. 打开转盘锁](https://leetcode.cn/problems/open-the-lock/) | 🟠 |
-| [773. Sliding Puzzle](https://leetcode.com/problems/sliding-puzzle/) | [773. 滑动谜题](https://leetcode.cn/problems/sliding-puzzle/) | 🔴 |
+| [752. Open the Lock](https://leetcode.com/problems/open-the-lock/) | [752. Mở khóa bàn xoay](https://leetcode.cn/problems/open-the-lock/) | 🟠 |
+| [773. Sliding Puzzle](https://leetcode.com/problems/sliding-puzzle/) | [773. Câu đố trượt](https://leetcode.cn/problems/sliding-puzzle/) | 🔴 |
 
 **-----------**
 
-
-
 > [!NOTE]
-> 阅读本文前，你需要先学习：
-> 
-> - [二叉树的递归/层序遍历](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
-> - [多叉树的递归/层序遍历](https://labuladong.online/algo/data-structure-basic/n-ary-tree-traverse-basic/)
-> - [图结构的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/)
+> Trước khi đọc bài này, bạn cần học trước:
+>
+> - [Duyệt đệ quy/duyệt tầng của cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
+> - [Duyệt đệ quy/duyệt tầng của cây đa phân](https://labuladong.online/algo/data-structure-basic/n-ary-tree-traverse-basic/)
+> - [Duyệt DFS/BFS của cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/)
 
-我多次强调，DFS/回溯/BFS 这类算法，本质上就是把具体的问题抽象成树结构，然后遍历这棵树进行暴力穷举，所以这些穷举算法的代码本质上就是树的遍历代码。
+Tôi nhiều lần nhấn mạnh, thuật toán DFS/quay lui/BFS loại này, bản chất chính là把 vấn đề cụ thể trừu tượng thành cấu trúc cây, rồi duyệt cây này tiến hành bạo lực穷举, nên code của những thuật toán穷举 này bản chất chính là code duyệt cây.
 
-梳理一下这里面的因果关系：
+Chải lại quan hệ nhân quả trong đó:
 
-DFS/回溯算法的本质就是递归遍历一棵穷举树（多叉树），而多叉树的递归遍历又是从二叉树的递归遍历衍生出来的。所以我说 DFS/回溯算法的本质是二叉树的递归遍历。
+Bản chất của thuật toán DFS/quay lui chính là đệ quy duyệt một cây穷举 (cây đa phân), mà duyệt đệ quy cây đa phân lại衍生 từ duyệt đệ quy cây nhị phân. Nên tôi nói bản chất của thuật toán DFS/quay lui là duyệt đệ quy cây nhị phân.
 
-BFS 算法的本质就是遍历一幅图，下面你就会看到了，BFS 的算法框架就是 [图结构的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/) 中遍历图节点的算法代码。
+Bản chất của thuật toán BFS chính là duyệt một đồ thị, dưới đây bạn sẽ thấy, khung thuật toán BFS chính là code thuật toán duyệt nút đồ thị trong [Duyệt DFS/BFS của cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/).
 
-而图的遍历算法其实就是多叉树的遍历算法加了个 `visited` 数组防止死循环；多叉树的遍历算法又是从二叉树遍历算法衍生出来的。所以我说 BFS 算法的本质就是二叉树的层序遍历。
+Mà thuật toán duyệt đồ thị thực ra chính là thuật toán duyệt cây đa phân thêm một mảng `visited`防 vòng lặp chết; thuật toán duyệt cây đa phân lại衍生 từ thuật toán duyệt cây nhị phân. Nên tôi nói bản chất của thuật toán BFS chính là duyệt tầng của cây nhị phân.
 
-为啥 BFS 算法经常用来求解最短路径问题？我在 [二叉树的递归/层序遍历](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/) 中用二叉树的最小深度这道例题详细说明过。
+Tại sao thuật toán BFS thường dùng để求解 vấn đề đường đi ngắn nhất? Tôi trong [Duyệt đệ quy/duyệt tầng của cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/) từng dùng ví dụ độ sâu nhỏ nhất của cây nhị phân说明 chi tiết.
 
-其实所谓的最短路径，都可以类比成二叉树最小深度这类问题（寻找距离根节点最近的叶子节点），递归遍历必须要遍历整棵树的所有节点才能找到目标节点，而层序遍历不需要遍历所有节点就能搞定，所以层序遍历适合解决这类最短路径问题。
+Thực ra cái gọi là đường đi ngắn nhất, đều có thể类比 thành loại vấn đề độ sâu nhỏ nhất của cây nhị phân (tìm nút lá gần nút gốc nhất), duyệt đệ quy必须要 duyệt mọi nút của cả cây mới能 tìm được nút mục tiêu, mà duyệt tầng không cần duyệt mọi nút là搞定 được, nên duyệt tầng phù hợp giải loại vấn đề đường đi ngắn nhất này.
 
-这么梳理应该够清楚了吧？
+Chải như vậy hẳn够 rõ了吧?
 
-所以阅读本文前，需要确保你学过前面的 [二叉树的递归/层序遍历](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)、[多叉树的递归/层序遍历](https://labuladong.online/algo/data-structure-basic/n-ary-tree-traverse-basic/) 和 [图结构的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/)，先把这几种基本数据结构的遍历算法玩明白，其他的算法都会很容易理解。
+Nên trước khi đọc bài này, cần đảm bảo bạn đã học [Duyệt đệ quy/duyệt tầng của cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)、[Duyệt đệ quy/duyệt tầng của cây đa phân](https://labuladong.online/algo/data-structure-basic/n-ary-tree-traverse-basic/) và [Duyệt DFS/BFS của cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/) phía trước,先把 thuật toán duyệt của mấy cấu trúc dữ liệu cơ bản này chơi明白, thuật toán khác都会 rất dễ hiểu.
 
-**本文的重点在于，教会你如何对具体的算法问题进行抽象和转化，然后套用 BFS 算法框架进行求解**。
+**Trọng điểm của bài này nằm ở, dạy bạn với vấn đề thuật toán cụ thể tiến hành trừu tượng và chuyển hóa thế nào, rồi套 khung thuật toán BFS tiến hành求解**.
 
-在真实的面试笔试题目中，一般不是直接让你遍历树/图这种标准数据结构，而是给你一个具体的场景题，你需要把具体的场景抽象成一个标准的图/树结构，然后利用 BFS 算法穷举得出答案。
+Trong đề thi viết phỏng vấn thực tế, thường không phải trực tiếp bắt bạn duyệt cấu trúc dữ liệu chuẩn như cây/đồ thị, mà cho bạn một đề cảnh cụ thể, bạn cần把 cảnh cụ thể trừu tượng thành một cấu trúc đồ thị/cây chuẩn, rồi lợi dụng thuật toán BFS穷举得出 đáp án.
 
-比方说给你一个迷宫游戏，请你计算走到出口的最小步数？如果这个迷宫还包含传送门，可以瞬间传送到另一个位置，那么最小步数又是多少？
+Ví như cho bạn một game mê cung, hãy tính số bước ít nhất đi đến lối ra? Nếu mê cung này còn chứa cổng dịch chuyển, có thể瞬間 dịch chuyển sang vị trí khác, vậy số bước ít nhất lại là bao nhiêu?
 
-再比如说两个单词，要求你通过某些替换，把其中一个变成另一个，每次可以替换/删除/插入一个字符，最少要操作几次？
+Lại ví như hai từ, yêu cầu bạn thông qua thay thế nào đó,把 một cái biến thành cái còn lại, mỗi lần có thể thay/xóa/chèn một ký tự, ít nhất要 thao tác mấy lần?
 
-再比如说连连看游戏，两个方块消除的条件不仅仅是图案相同，还得保证两个方块之间的最短连线不能多于两个拐点。你玩连连看，点击两个坐标，游戏是如何判断它俩的最短连线有几个拐点的？
+Lại ví như game nối hình, điều kiện hai ô消除 không chỉ图案 giống nhau, còn得 đảm bảo连线 ngắn nhất giữa hai ô không được nhiều hơn hai góc ngoặt. Bạn chơi nối hình, bấm hai tọa độ, game判断连线 ngắn nhất của chúng có mấy góc ngoặt thế nào?
 
-你看上面这些例子，是不是感觉和我们前面学习的树/图结构完全扯不上关系？但实际上只要稍加抽象，它们就是树/图结构的遍历，实在是太简单枯燥了。
+Bạn xem mấy ví dụ trên, có phải cảm giác và cấu trúc cây/đồ thị chúng ta học trước đó hoàn toàn扯不上 quan hệ? Nhưng thực tế chỉ cần稍加 trừu tượng, chúng chính là duyệt cấu trúc cây/đồ thị, thực sự quá đơn giản枯燥.
 
-下面用几道例题来讲解 BFS 的套路框架，以后再也不要觉得这类问题难解决了。
+Dưới đây dùng几道 ví dụ để讲解套路 khung BFS, sau này再也 đừng thấy loại vấn đề này khó giải.
 
+## Một, khung thuật toán
 
+Khung thuật toán BFS thực ra chính là code BFS duyệt cấu trúc đồ thị cho trong [Duyệt DFS/BFS của cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/), tổng cộng có ba cách viết.
 
+Với vấn đề thuật toán BFS thực tế, cách viết thứ nhất đơn giản nhất, nhưng局限性太大, không常用; cách viết thứ hai常用 nhất, đề thuật toán BFS độ khó trung bình cơ bản đều có thể dùng cách viết này giải; cách viết thứ ba hơi phức tạp, nhưng linh hoạt nhất, có thể會 trong một số vấn đề BFS难度较大 dùng đến. Trong [Chương bài tập thuật toán BFS](https://labuladong.online/algo/problem-set/bfs/) tiếp theo, sẽ có một số đề难度 lớn hơn dùng cách viết thứ ba, đến lúc đó bạn có thể tự thử.
 
-
-
-
-## 一、算法框架
-
-BFS 的算法框架其实就是 [图结构的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/) 中给出的 BFS 遍历图结构的代码，共有三种写法。
-
-对于实际的 BFS 算法问题，第一种写法最简单，但局限性太大，不常用；第二种写法最常用，中等难度的 BFS 算法题基本都可以用这种写法解决；第三种写法稍微复杂一点，但灵活性最高，可能会在一些难度较大的的 BFS 问题中用到。在下一章的 [BFS 算法习题章节](https://labuladong.online/algo/problem-set/bfs/) 中，会有一些难度更大的题目使用第三种写法，到时候你可以自己尝试。
-
-本文的例题都是中等难度，所以本文给出的解法都以第二种写法为准：
+Ví dụ của bài này đều độ khó trung bình, nên解法 bài này给出 đều以 cách viết thứ hai làm chuẩn:
 
 ```java
-// 从 s 开始 BFS 遍历图的所有节点，且记录遍历的步数
-// 当走到目标节点 target 时，返回步数
+// Từ s bắt đầu BFS duyệt mọi nút của đồ thị, mà ghi lại số bước duyệt
+// Khi đi đến nút mục tiêu target时, trả về số bước
 int bfs(int s, int target) {
     boolean[] visited = new boolean[graph.size()];
     Queue<Integer> q = new LinkedList<>();
     q.offer(s);
     visited[s] = true;
-    // 记录从 s 开始走到当前节点的步数
+    // Ghi số bước từ s đi đến nút hiện tại
     int step = 0;
     while (!q.isEmpty()) {
         int sz = q.size();
         for (int i = 0; i < sz; i++) {
             int cur = q.poll();
             System.out.println("visit " + cur + " at step " + step);
-            // 判断是否到达终点
+            // 判断 có đến终点 không
             if (cur == target) {
                 return step;
             }
-            // 将邻居节点加入队列，向四周扩散搜索
+            // 把 nút 이웃加入 hàng đợi,扩散 tìm kiếm ra xung quanh
             for (int to : neighborsOf(cur)) {
                 if (!visited[to]) {
                     q.offer(to);
@@ -101,89 +89,73 @@ int bfs(int s, int target) {
         }
         step++;
     }
-    // 如果走到这里，说明在图中没有找到目标节点
+    // Nếu đi đến đây,说明 trong đồ thị không tìm được nút mục tiêu
     return -1;
 }
 ```
 
-上面这个代码框架几乎就是从 [图结构的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/) 中复制过来的，只不过添加了一个 `target` 参数，当第一次走到 `target` 时，直接结束算法并返回走过的步数。
+Code khung trên gần như chính là từ [Duyệt DFS/BFS của cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/) copy qua, chỉ có điều thêm một tham số `target`, khi lần đầu đi đến `target`时, trực tiếp kết thúc thuật toán并 trả về số bước đã đi.
 
-下面我们用几个具体的例题来看看如何运用这个框架。
+Dưới đây chúng ta dùng vài ví dụ cụ thể xem运用 khung này thế nào.
 
-## 二、773. 滑动谜题
+## Hai, 773. Câu đố trượt
 
-力扣第 773 题「滑动谜题」就是一个可以运用 BFS 框架解决的题目，题目的要求如下：
+LeetCode 773 「Câu đố trượt」 chính là một đề có thể vận dụng khung BFS giải quyết, yêu cầu của đề như sau:
 
-给你一个 2x3 的滑动拼图，用一个 2x3 的数组 `board` 表示。拼图中有数字 0~5 六个数，其中**数字 0 就表示那个空着的格子**，你可以移动其中的数字，当 `board` 变为 `[[1,2,3],[4,5,0]]` 时，赢得游戏。
+Cho bạn một ghép hình trượt 2x3, dùng một mảng 2x3 `board` biểu thị. Trong ghép hình có sáu số 0~5, trong đó **số 0就 biểu thị ô trống đó**, bạn có thể di chuyển số trong đó, khi `board` biến thành `[[1,2,3],[4,5,0]]`时, thắng game.
 
-请你写一个算法，计算赢得游戏需要的最少移动次数，如果不能赢得游戏，返回 -1。
+Hãy viết một thuật toán, tính số lần di chuyển ít nhất cần để thắng game, nếu không thể thắng game, trả về -1.
 
-比如说输入的二维数组 `board = [[4,1,2],[5,0,3]]`，算法应该返回 5：
+Ví như mảng hai chiều nhập `board = [[4,1,2],[5,0,3]]`, thuật toán hẳn trả về 5:
 
 ![](https://labuladong.online/algo/images/sliding_puzzle/5.jpeg)
 
-如果输入的是 `board = [[1,2,3],[5,4,0]]`，则算法返回 -1，因为这种局面下无论如何都不能赢得游戏。
+Nếu nhập là `board = [[1,2,3],[5,4,0]]`,则 thuật toán trả về -1, vì trong cục diện này dù thế nào cũng không thể thắng game.
 
-我感觉这题还挺有意思的，小时候玩过类似的拼图游戏，比如华容道：
+Tôi cảm thấy bài này挺 thú vị, hồi nhỏ từng chơi game ghép hình tương tự, ví như Hoa Dung Đạo:
 
 ![](https://labuladong.online/algo/images/sliding_puzzle/2.jpeg)
 
-你需要移动这些方块，想办法让曹操从初始位置移动到最下方的出口位置。
+Bạn cần di chuyển những ô này, nghĩ cách让 Tào Tháo từ vị trí ban đầu di chuyển đến vị trí lối ra dưới cùng nhất.
 
-华容道应该比这道题更难一些，因为力扣的这道题中每个方块的大小可以看作是相同的，而华容道中每个方块的大小还不一样。
+Hoa Dung Đạo hẳn比 bài này khó hơn, vì trong bài này của Lực khấu kích thước mỗi ô có thể coi là giống nhau, mà trong Hoa Dung Đạo kích thước mỗi ô còn không giống nhau.
 
-回到这道题，我们如何把这道题抽象成树/图的结构，从而用 BFS 算法框架来解决呢？
+Trở lại bài này, chúng ta把 bài này trừu tượng thành cấu trúc cây/đồ thị thế nào, từ đó dùng khung thuật toán BFS giải?
 
-其实棋盘的初始状态就可以认为是起点：
-
-
-
-
+Thực ra trạng thái ban đầu của bàn cờ là có thể coi là điểm bắt đầu:
 
 ```
 [[2,4,1],
  [5,0,3]]
 ```
 
-
-
-我们最终的目标状态是把棋盘变成这样：
-
-
-
-
+Trạng thái mục tiêu cuối cùng của chúng ta là把 bàn cờ biến thành như sau:
 
 ```
 [[1,2,3],
  [4,5,0]]
 ```
 
+Vậy đây là có thể coi là终点.
 
+Bây giờ vấn đề này chẳng phải trở thành một vấn đề đồ thị sao? Đề hỏi thực ra chính là đường đi ngắn nhất từ điểm bắt đầu đến终点 cần bao nhiêu嘛.
 
-那么这就可以认为是终点。
-
-现在这个问题不就成为了一个图的问题了吗？题目问的其实就是从起点到终点所需的最短路径是多少嘛。
-
-起点的邻居节点是谁？把数字 0 和上下左右的数字进行交换，其实就是起点的四个邻居节点嘛（由于本题中棋盘的大小是 2x3，所以索引边界内的实际邻居节点会小于四个）：
+Nút 이웃 của điểm bắt đầu là ai? 把 số 0 và số trên-dưới-trái-phải tiến hành hoán đổi, thực ra chính là bốn nút 이웃 của điểm bắt đầu嘛 (do trong bài này kích thước bàn cờ là 2x3, nên nút 이웃 thực tế trong biên chỉ số sẽ nhỏ hơn bốn):
 
 ![](https://labuladong.online/algo/images/sliding_puzzle/3.jpeg)
 
-以此类推，这四个邻居节点还有各自的四个邻居节点，那这不就是一幅图结构吗？
+Cứ thế, bốn nút 이웃 này còn có各自 bốn nút 이웃, vậy đây chẳng phải就是 một cấu trúc đồ thị sao?
 
-那么我从起点开始使用 BFS 算法遍历这幅图，第一次到达终点时，走过的步数就是答案。
+Vậy tôi từ điểm bắt đầu dùng thuật toán BFS duyệt đồ thị này, lần đầu đến终点时, số bước đã đi chính là đáp án.
 
-伪码如下：
-
-
-
-
+Mã giả như sau:
 
 ```java
 int bfs(int[][] board, int[][] target) {
     Queue<int[][]> q = new LinkedList<>();
     HashSet visited = new HashSet<>();
 
-    // 将起点加入队列
+    // 把 điểm bắt đầu加入 hàng đợi
     q.offer(board);
     visited.add(board);
 
@@ -192,11 +164,11 @@ int bfs(int[][] board, int[][] target) {
         int sz = q.size();
         for (int i = 0; i < sz; i++) {
             int[][] cur = q.poll();
-            // 判断是否到达终点
+            // 判断 có đến终点 không
             if (cur == target) {
                 return step;
             }
-            // 将当前节点的邻居节点加入队列
+            // 把 nút 이웃 của nút hiện tại加入 hàng đợi
             for (int[][] neighbor : getNeighbors(cur)) {
                 if (!visited.contains(neighbor)) {
                     q.offer(neighbor);
@@ -210,26 +182,24 @@ int bfs(int[][] board, int[][] target) {
 }
 
 List<int[][]> getNeighbors(int[][] board) {
-    // 将 board 中的数字 0 和上下左右的数字进行交换，得到 4 个邻居节点
+    // 把 số 0 trong board và số trên-dưới-trái-phải tiến hành hoán đổi,得到 4 nút 이웃
 }
 ```
 
+Với bài này, cấu trúc đồ thị chúng ta trừu tượng ra cũng sẽ chứa chu trình, nên cần một mảng `visited` ghi nút đã đi qua, tránh thành vòng dẫn đến lặp vô hạn.
 
+Ví như tôi từ nút `[[2,4,1],[5,0,3]]` bắt đầu, số 0 dời sang phải得到 nút mới `[[2,4,1],[5,3,0]]`, nhưng số 0 trong nút mới này cũng có thể dời sang trái, lại sẽ về `[[2,4,1],[5,0,3]]`, chuyện này thực ra chính là thành vòng. Chúng ta cũng cần một tập băm `visited` để ghi nút đã đi qua,防 thành vòng dẫn đến lặp vô hạn.
 
-对于这道题，我们抽象出来的图结构也是会包含环的，所以需要一个 `visited` 数组记录已经走过的节点，避免成环导致死循环。
+Còn một vấn đề, `board` trong bài này là một mảng hai chiều, chúng ta trong [Nguyên lý bảng băm/tập băm](https://labuladong.online/algo/data-structure-basic/hashmap-basic/) từng giới thiệu, mảng hai chiều loại cấu trúc dữ liệu可变 không thể trực tiếp加入 tập băm.
 
-比如说我从 `[[2,4,1],[5,0,3]]` 节点开始，数字 0 向右移动得到新节点 `[[2,4,1],[5,3,0]]`，但是这个新节点中的 0 也可以向左移动的，又会回到 `[[2,4,1],[5,0,3]]`，这其实就是成环。我们也需要一个 `visited` 哈希集合来记录已经走过的节点，防止成环导致的死循环。
+Nên chúng ta còn要用 chút技巧, nghĩ cách把 mảng hai chiều chuyển thành một kiểu bất biến mới能存 vào tập băm. Giải pháp thường gặp là把 mảng hai chiều序列化 thành một chuỗi, như vậy là có thể trực tiếp存 vào tập băm.
 
-还有一个问题，这道题中 `board` 是一个二维数组，我们在 [哈希表/哈希集合原理](https://labuladong.online/algo/data-structure-basic/hashmap-basic/) 中介绍过，二维数组这种可变数据结构是无法直接加入哈希集合的。
+**Trong đó比较 có技巧 điểm nằm ở, mảng hai chiều có khái niệm 「trên-dưới-trái-phải」, nén thành chuỗi một chiều后, còn怎么把 số 0 và số trên-dưới-trái-phải tiến hành hoán đổi**?
 
-所以我们还要再用一点技巧，想办法把二维数组转化成一个不可变类型才能存到哈希集合中。常见的解决方案是把二维数组序列化成一个字符串，这样就可以直接存入哈希集合了。
-
-**其中比较有技巧性的点在于，二维数组有「上下左右」的概念，压缩成一维的字符串后后，还怎么把数字 0 和上下左右的数字进行交换**？
-
-对于这道题，题目说输入的数组大小都是 2 x 3，所以我们可以直接手动写出来这个映射：
+Với bài này, đề nói kích thước mảng nhập đều là 2 x 3, nên chúng ta có thể trực tiếp viết tay ra ánh xạ này:
 
 ```java
-// 记录一维字符串的相邻索引
+// Ghi lại chỉ số kề nhau của chuỗi một chiều
 int[][] neighbor = new int[][]{
     {1, 3},
     {0, 4, 2},
@@ -240,17 +210,17 @@ int[][] neighbor = new int[][]{
 };
 ```
 
-**这个映射的含义就是，在一维字符串中，索引 `i` 在二维数组中的的相邻索引为 `neighbor[i]`**：
+**Hàm ý của ánh xạ này chính là, trong chuỗi một chiều, chỉ số kề trong mảng hai chiều của chỉ số `i` là `neighbor[i]`**:
 
 ![](https://labuladong.online/algo/images/sliding_puzzle/4.jpeg)
 
-:::: details 如果是 `m x n` 的二维数组，怎么办？
+:::: details Nếu là mảng hai chiều `m x n`, làm sao?
 
-对于一个 `m x n` 的二维数组，手写它的一维索引映射肯定不现实了，需要用代码生成它的一维索引映射。
+Với một mảng hai chiều `m x n`, viết tay ánh xạ chỉ số một chiều của nó肯定 không thực tế, cần dùng code sinh ánh xạ chỉ số một chiều của nó.
 
-观察上图就能发现，如果二维数组中的某个元素 `e` 在一维数组中的索引为 `i`，那么 `e` 的左右相邻元素在一维数组中的索引就是 `i - 1` 和 `i + 1`，而 `e` 的上下相邻元素在一维数组中的索引就是 `i - n` 和 `i + n`，其中 `n` 为二维数组的列数。
+Quan sát hình trên là có thể phát hiện, nếu một phần tử `e` nào đó trong mảng hai chiều có chỉ số trong mảng một chiều là `i`, vậy chỉ số trong mảng một chiều của phần tử kề trái-phải của `e` chính là `i - 1` và `i + 1`, mà chỉ số trong mảng một chiều của phần tử kề trên-dưới của `e` chính là `i - n` và `i + n`, trong đó `n` là số cột của mảng hai chiều.
 
-这样，对于 `m x n` 的二维数组，我们可以写一个函数来生成它的 `neighbor` 索引映射：
+Như vậy, với mảng hai chiều `m x n`, chúng ta có thể viết một hàm để sinh ánh xạ `neighbor` của nó:
 
 ```java
 int[][] generateNeighborMapping(int m, int n) {
@@ -258,19 +228,19 @@ int[][] generateNeighborMapping(int m, int n) {
     for (int i = 0; i < m * n; i++) {
         List<Integer> neighbors = new ArrayList<>();
 
-        // 如果不是第一列，有左侧邻居
+        // Nếu không phải cột đầu, có 이웃 trái
         if (i % n != 0) neighbors.add(i - 1);
-        
-        // 如果不是最后一列，有右侧邻居
+
+        // Nếu không phải cột cuối, có 이웃 phải
         if (i % n != n - 1) neighbors.add(i + 1);
-        
-        // 如果不是第一行，有上方邻居
+
+        // Nếu không phải hàng đầu, có 이웃 trên
         if (i - n >= 0) neighbors.add(i - n);
-        
-        // 如果不是最后一行，有下方邻居
+
+        // Nếu không phải hàng cuối, có 이웃 dưới
         if (i + n < m * n) neighbors.add(i + n);
 
-        // Java 语言特性，将 List 类型转为 int[] 数组
+        // Đặc tính ngôn ngữ Java, chuyển kiểu List thành mảng int[]
         neighbor[i] = neighbors.stream().mapToInt(Integer::intValue).toArray();
     }
     return neighbor;
@@ -279,15 +249,13 @@ int[][] generateNeighborMapping(int m, int n) {
 
 ::::
 
-
-
-这样，无论数字 0 在哪里，都可以通过这个索引映射得到它的相邻索引进行交换了。下面是完整的代码实现：
+Như vậy, dù số 0 ở đâu, đều có thể thông qua ánh xạ chỉ số này得到 chỉ số kề để hoán đổi. Dưới đây là cài đặt code đầy đủ:
 
 ```java
 class Solution {
     public int slidingPuzzle(int[][] board) {
         String target = "123450";
-        // 将 2x3 的数组转化成字符串作为 BFS 的起点
+        // Chuyển mảng 2x3 thành chuỗi làm điểm bắt đầu BFS
         String start = "";
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
@@ -295,10 +263,10 @@ class Solution {
             }
         }
 
-        // ****** BFS 算法框架开始 ******
+        // ****** Khung thuật toán BFS bắt đầu ******
         Queue<String> q = new LinkedList<>();
         HashSet<String> visited = new HashSet<>();
-        // 从起点开始 BFS 搜索
+        // Từ điểm bắt đầu BFS tìm kiếm
         q.offer(start);
         visited.add(start);
 
@@ -307,13 +275,13 @@ class Solution {
             int sz = q.size();
             for (int i = 0; i < sz; i++) {
                 String cur = q.poll();
-                // 判断是否达到目标局面
+                // 判断 có đạt cục diện mục tiêu không
                 if (target.equals(cur)) {
                     return step;
                 }
-                // 将数字 0 和相邻的数字交换位置
+                // Hoán đổi số 0 và số kề nhau
                 for (String neighborBoard : getNeighbors(cur)) {
-                    // 防止走回头路
+                    // 防 đi đường quay lại
                     if (!visited.contains(neighborBoard)) {
                         q.offer(neighborBoard);
                         visited.add(neighborBoard);
@@ -322,12 +290,12 @@ class Solution {
             }
             step++;
         }
-        // ****** BFS 算法框架结束 ******
+        // ****** Khung thuật toán BFS kết thúc ******
         return -1;
     }
 
     private List<String> getNeighbors(String board) {
-        // 记录一维字符串的相邻索引
+        // Ghi lại chỉ số kề nhau của chuỗi một chiều
         int[][] mapping = new int[][]{
                 {1, 3},
                 {0, 4, 2},
@@ -355,53 +323,50 @@ class Solution {
 }
 ```
 
-
 <hr/>
 <a href="https://labuladong.online/algo-visualize/leetcode/sliding-puzzle/" target="_blank">
 <details style="max-width:90%;max-height:400px">
 <summary>
-<strong>🌈 代码可视化动画🌈</strong>
+<strong>🌈 Hình động可视 hóa code 🌈</strong>
 </summary>
 </details>
 </a>
 <hr/>
 
+Bài này就 giải xong. Bạn sẽ phát hiện bản thân thuật toán BFS cách viết đều là套路 cố định, điểm khó của bài này thực ra nằm ở把 đề chuyển thành mô hình BFS穷举, rồi dùng phương pháp hợp lý把 mảng đa chiều chuyển thành chuỗi, để tập băm ghi nút đã thăm.
 
+Dưới đây xem thêm một đạo đề cảnh thực tế.
 
-这道题就解决了。你会发现 BFS 算法本身的写法都是固定的套路，这道题的难点其实在于将题目转化为 BFS 穷举的模型，然后用合理的方法将多维数组转化成字符串，以便哈希集合记录访问过的节点。
+## Ba, số lần ít nhất để mở khóa mật mã
 
-下面再看一道实际场景题。
-
-## 三、解开密码锁的最少次数
-
-来看力扣第 752 题「打开转盘锁」，比较有意思：
+Xem LeetCode 752 「Mở khóa bàn xoay」,比较 thú vị:
 
 <Problem slug="open-the-lock" />
 
-函数签名如下：
+Chữ ký hàm như sau:
 
 ```java
 int openLock(String[] deadends, String target)
 ```
 
-题目中描述的就是我们生活中常见的那种密码锁，如果没有任何约束，最少的拨动次数很好算。比方说想拨到 `"1234"`，那一个个数字拨动就可以了，最少的拨动次数就是 `1 + 2 + 3 + 4 = 10` 次。
+Trong đề mô tả chính là loại khóa mật mã thường gặp trong đời sống chúng ta, nếu không có bất kỳ ràng buộc nào, số lần拨 ít nhất rất dễ tính. Ví như muốn拨 đến `"1234"`, vậy từng số拨動 là được, số lần拨 ít nhất chính là `1 + 2 + 3 + 4 = 10` lần.
 
-但现在的难点就在于，在拨动密码锁的过程中不能出现 `deadends`，这样就有一些难度了。如果遇到了 `deadends`，你该怎么处理，才能使得总的拨动次数最少呢？
+Nhưng điểm khó bây giờ就在于, trong quá trình拨 khóa mật mã không thể xuất hiện `deadends`, như vậy就有 chút độ khó. Nếu gặp `deadends`, bạn该 xử lý thế nào, mới khiến tổng số lần拨 ít nhất?
 
-千万不要陷入细节，尝试去想各种具体的情况。要知道算法的本质就是穷举，我们直接从 `"0000"` 开始暴力穷举，把所有可能的拨动情况都穷举出来，难道还怕找不到最少的拨动次数么？
+Ngàn vạn đừng rơi vào chi tiết, thử nghĩ đủ loại tình huống cụ thể.要 biết bản chất của thuật toán chính là穷举, chúng ta trực tiếp từ `"0000"` bắt đầu bạo lực穷举,把 mọi tình huống拨 có thể đều穷举 ra, chẳng lẽ còn sợ không tìm được số lần拨 ít nhất sao?
 
-**第一步，我们不管所有的限制条件，不管 `deadends` 和 `target` 的限制，就思考一个问题：如果让你设计一个算法，穷举所有可能的密码组合，你怎么做**？
+**Bước một, chúng ta不管 mọi điều kiện giới hạn,不管 giới hạn của `deadends` và `target`,就 suy nghĩ một vấn đề: nếu让 bạn thiết kế một thuật toán,穷举 mọi tổ hợp mật mã có thể, bạn làm sao**?
 
-就从 `"0000"` 开始，如果你只转一下锁，有几种可能？总共有 4 个位置，每个位置可以向上转，也可以向下转，也就是可以穷举出 `"1000", "9000", "0100", "0900"...` 共 8 种密码。
+就 từ `"0000"` bắt đầu, nếu bạn chỉ xoay một cái, có mấy khả năng? Tổng cộng có 4 vị trí, mỗi vị trí có thể xoay lên, cũng có thể xoay xuống, cũng chính là có thể穷举 ra `"1000", "9000", "0100", "0900"...` tổng 8 loại mật mã.
 
-然后，再以这 8 种密码作为基础，其中每个密码又可以转动一下衍生出 8 种密码，以此类推...
+Rồi, lại以 8 loại mật mã này làm cơ sở, trong đó mỗi mật mã lại có thể xoay một cái衍生 ra 8 loại mật mã, cứ thế...
 
-心里那棵递归树出来没有？应该是一棵八叉树，每个节点都有 8 个子节点，向下衍生。
+Cây đệ quy trong lòng ra chưa? Hẳn là một cây tám phân, mỗi nút đều có 8 nút con,衍生 xuống dưới.
 
-下面这段伪码就描述了上述思路，用层序遍历一棵八叉树：
+Đoạn mã giả dưới就 mô tả思路 trên, dùng duyệt tầng một cây tám phân:
 
 ```java
-// 将 s[j] 向上拨动一次
+// 把 s[j]拨 lên một lần
 String plusOne(String s, int j) {
     char[] ch = s.toCharArray();
     if (ch[j] == '9')
@@ -410,7 +375,7 @@ String plusOne(String s, int j) {
         ch[j] += 1;
     return new String(ch);
 }
-// 将 s[i] 向下拨动一次
+// 把 s[i]拨 xuống một lần
 String minusOne(String s, int j) {
     char[] ch = s.toCharArray();
     if (ch[j] == '0')
@@ -420,7 +385,7 @@ String minusOne(String s, int j) {
     return new String(ch);
 }
 
-// BFS 框架，寻找最少的拨动次数
+// Khung BFS, tìm số lần拨 ít nhất
 void BFS(String target) {
     Queue<String> q = new LinkedList<>();
     q.offer("0000");
@@ -429,24 +394,24 @@ void BFS(String target) {
 
     while (!q.isEmpty()) {
         int sz = q.size();
-        // 将当前队列中的所有节点向周围扩散
+        // 把 mọi nút trong hàng đợi hiện tại扩散 ra xung quanh
         for (int i = 0; i < sz; i++) {
             String cur = q.poll();
-            // 判断是否到达终点
+            // 判断 có đến终点 không
             if (cur.equals(target)) {
                 return step;
             }
 
-            // 一个密码可以衍生出 8 种相邻的密码
+            // Một mật mã có thể衍生 ra 8 mật mã kề nhau
             for (String neighbor : getNeighbors(cur)) {
                 q.offer(neighbor);
             }
         }
-        // 在这里增加步数
+        // Ở đây tăng số bước
         step++;
     }
 }
-// 将 s 的每一位向上拨动一次或向下拨动一次，8 种相邻密码
+// 把 mỗi位 của s拨 lên một lần hoặc拨 xuống một lần, 8 mật mã kề nhau
 List<String> getNeighbors(String s) {
     List<String> neighbors = new ArrayList<>();
     for (int i = 0; i < 4; i++) {
@@ -457,47 +422,47 @@ List<String> getNeighbors(String s) {
 }
 ```
 
-这个代码已经可以穷举所有可能的密码组合了，但是还有些问题需要解决。
+Code này đã có thể穷举 mọi tổ hợp mật mã có thể, nhưng còn có vấn đề cần giải.
 
-1、会走回头路，我们可以从 `"0000"` 拨到 `"1000"`，但是等从队列拿出 `"1000"` 时，还会拨出一个 `"0000"`，这样的话会产生死循环。
+1、Sẽ đi đường quay lại, chúng ta có thể từ `"0000"`拨 đến `"1000"`, nhưng等 từ hàng đợi lấy ra `"1000"`时, còn会拨 ra một `"0000"`, như vậy会 sinh vòng lặp chết.
 
-这个问题很好解决，其实就是成环了嘛，我们用一个 `visited` 集合记录已经穷举过的密码，再次遇到时，不要再加到队列里就行了。
+Vấn đề này rất dễ giải, thực ra chính là thành vòng嘛, chúng ta dùng một tập `visited` ghi mật mã đã穷举 qua, lần nữa gặp时, đừng加入 hàng đợi là được.
 
-2、没有对 `deadends` 进行处理，按道理这些「死亡密码」是不能出现的。
+2、Chưa xử lý `deadends`,按道理 những 「mật mã chết」 này không thể xuất hiện.
 
-这个问题也好处理，额外用一个 `deadends` 集合记录这些死亡密码，凡是遇到这些密码，不要加到队列里就行了。
+Vấn đề này cũng dễ xử lý, dùng thêm một tập `deadends` ghi những mật mã chết này, phàm gặp những mật mã này, đừng加入 hàng đợi là được.
 
-或者还可以更简单一些，直接把 `deadends` 中的死亡密码作为 `visited` 集合的初始元素，这样也可以达到目的。
+Hoặc còn có thể đơn giản hơn, trực tiếp把 mật mã chết trong `deadends` làm phần tử ban đầu của tập `visited`, như vậy cũng có thể đạt mục đích.
 
-下面是完整的代码实现：
+Dưới đây là cài đặt code đầy đủ:
 
 ```java
 class Solution {
     public int openLock(String[] deadends, String target) {
-        // 记录需要跳过的死亡密码
+        // Ghi mật mã chết cần bỏ qua
         Set<String> deads = new HashSet<>();
         for (String s : deadends) deads.add(s);
         if (deads.contains("0000")) return -1;
 
-        // 记录已经穷举过的密码，防止走回头路
+        // Ghi mật mã đã穷举 qua,防 đi đường quay lại
         Set<String> visited = new HashSet<>();
         Queue<String> q = new LinkedList<>();
-        // 从起点开始启动广度优先搜索
+        // Từ điểm bắt đầu khởi động tìm kiếm theo chiều rộng
         int step = 0;
         q.offer("0000");
         visited.add("0000");
-        
+
         while (!q.isEmpty()) {
             int sz = q.size();
-            // 将当前队列中的所有节点向周围扩散
+            // 把 mọi nút trong hàng đợi hiện tại扩散 ra xung quanh
             for (int i = 0; i < sz; i++) {
                 String cur = q.poll();
-                
-                // 判断是否到达终点
+
+                // 判断 có đến终点 không
                 if (cur.equals(target))
                     return step;
-                
-                // 将一个节点的合法相邻节点加入队列
+
+                // 把 nút 이웃 hợp lệ của một nút加入 hàng đợi
                 for (String neighbor : getNeighbors(cur)) {
                     if (!visited.contains(neighbor) && !deads.contains(neighbor)) {
                         q.offer(neighbor);
@@ -505,14 +470,14 @@ class Solution {
                     }
                 }
             }
-            // 在这里增加步数
+            // Ở đây tăng số bước
             step++;
         }
-        // 如果穷举完都没找到目标密码，那就是找不到了
+        // Nếu穷举 hết cũng không tìm được mật mã mục tiêu, chính là không tìm được
         return -1;
     }
 
-    // 将 s[j] 向上拨动一次
+    // 把 s[j]拨 lên một lần
     String plusOne(String s, int j) {
         char[] ch = s.toCharArray();
         if (ch[j] == '9')
@@ -522,7 +487,7 @@ class Solution {
         return new String(ch);
     }
 
-    // 将 s[i] 向下拨动一次
+    // 把 s[i]拨 xuống một lần
     String minusOne(String s, int j) {
         char[] ch = s.toCharArray();
         if (ch[j] == '0')
@@ -532,7 +497,7 @@ class Solution {
         return new String(ch);
     }
 
-    // 将 s 的每一位向上拨动一次或向下拨动一次，8 种相邻密码
+    // 把 mỗi位 của s拨 lên một lần hoặc拨 xuống một lần, 8 mật mã kề nhau
     List<String> getNeighbors(String s) {
         List<String> neighbors = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
@@ -544,41 +509,41 @@ class Solution {
 }
 ```
 
-## 四、双向 BFS 优化
+## Bốn, tối ưu BFS hai chiều
 
-下面再介绍一种 BFS 算法的优化思路：**双向 BFS**，可以提高 BFS 搜索的效率。
+Dưới đây giới thiệu thêm một思路 tối ưu của thuật toán BFS: **BFS hai chiều**, có thể nâng cao hiệu suất tìm kiếm BFS.
 
-你把这种技巧当做扩展阅读就行，在一般的面试笔试题中，普通的 BFS 算法已经够用了，如果遇到超时无法通过，或者面试官的追问，可以考虑解法是否需要双向 BFS 优化。
+Bạn把技巧 này coi như đọc mở rộng là được, trong đề thi viết phỏng vấn thường, thuật toán BFS thường đã够 dùng, nếu gặp超时 không qua được, hoặc truy vấn của người phỏng vấn, có thể xét解法 có cần tối ưu BFS hai chiều không.
 
-双向 BFS 就是从标准的 BFS 算法衍生出来的：
+BFS hai chiều chính là衍生 từ thuật toán BFS chuẩn:
 
-**传统的 BFS 框架是从起点开始向四周扩散，遇到终点时停止；而双向 BFS 则是从起点和终点同时开始扩散，当两边有交集的时候停止**。
+**Khung BFS truyền thống là từ điểm bắt đầu扩散 ra xung quanh, khi gặp终点时 dừng; mà BFS hai chiều则是 từ điểm bắt đầu và终点 đồng thời bắt đầu扩散, khi hai bên có giao nhau时 dừng**.
 
-为什么这样能够能够提升效率呢？
+Tại sao như vậy能够 nâng cao hiệu suất?
 
-就好比有 A 和 B 两个人，传统 BFS 就相当于 A 出发去找 B，而 B 待在原地不动；双向 BFS 则是 A 和 B 一起出发，双向奔赴。那当然第二种情况下 A 和 B 可以更快相遇。
+Giống như có hai người A và B, BFS truyền thống就相当于 A xuất phát đi tìm B, mà B đứng yên tại chỗ không động; BFS hai chiều则是 A và B cùng xuất phát,双向奔赴. Vậy đương nhiên trường hợp thứ hai A và B có thể gặp nhau nhanh hơn.
 
 ![](https://labuladong.online/algo/images/bfs/1.jpeg)
 
 ![](https://labuladong.online/algo/images/bfs/2.jpeg)
 
-图示中的树形结构，如果终点在最底部，按照传统 BFS 算法的策略，会把整棵树的节点都搜索一遍，最后找到 `target`；而双向 BFS 其实只遍历了半棵树就出现了交集，也就是找到了最短距离。
+Cấu trúc cây trong hình, nếu终点 ở dưới cùng nhất,按 chiến lược thuật toán BFS truyền thống, sẽ把 nút của cả cây tìm kiếm一遍, cuối cùng tìm được `target`; mà BFS hai chiều thực ra chỉ duyệt nửa cây就 xuất hiện giao nhau, cũng chính là tìm được khoảng cách ngắn nhất.
 
-当然从 Big O 表示法分析算法复杂度的话，这两种 BFS 在最坏情况下都可能遍历完所有节点，所以理论时间复杂度都是 $O(N)$，但实际运行中双向 BFS 确实会更快一些。
+Đương nhiên từ ký hiệu Big O phân tích độ phức tạp thuật toán, hai loại BFS này trong trường hợp xấu nhất đều có thể duyệt hết mọi nút, nên độ phức tạp thời gian lý thuyết đều là $O(N)$, nhưng chạy thực tế BFS hai chiều确实会 nhanh hơn.
 
-::: info 双向 BFS 的局限性
+::: info Hạn chế của BFS hai chiều
 
-**你必须知道终点在哪里，才能使用双向 BFS 进行优化**。
+**Bạn必须 biết终点 ở đâu, mới能 dùng BFS hai chiều tối ưu**.
 
-对于 BFS 算法，我们肯定是知道起点的，但是终点具体是什么，我们在一开始可能并不知道。
+Với thuật toán BFS, chúng ta肯定 biết điểm bắt đầu, nhưng终点 cụ thể là gì, lúc đầu chúng ta có thể并不知道.
 
-比如上面的密码锁问题和滑动拼图问题，题目都明确给出了终点，都可以用双向 BFS 进行优化。
+Ví như vấn đề khóa mật mã và ghép hình trượt trên, đề đều cho明确终点, đều có thể dùng BFS hai chiều tối ưu.
 
-但比如我们在 [二叉树的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/) 中讨论的二叉树最小高度的问题，起点是根节点，终点是距离根节点最近的叶子节点，你在算法开始时并不知道终点具体在哪里，所以就没办法使用双向 BFS 进行优化。
+Nhưng ví như vấn đề chiều cao nhỏ nhất của cây nhị phân chúng ta thảo luận trong [Duyệt DFS/BFS của cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/), điểm bắt đầu là nút gốc,终点 là nút lá gần nút gốc nhất, lúc thuật toán bắt đầu bạn并不知道终点 cụ thể ở đâu, nên就没 cách dùng BFS hai chiều tối ưu.
 
 :::
 
-下面我们就以密码锁问题为例，看看如何将普通 BFS 算法优化为双向 BFS 算法，直接看代码吧：
+Dưới đây chúng ta lấy vấn đề khóa mật mã làm ví dụ, xem làm sao把 thuật toán BFS thường tối ưu thành thuật toán BFS hai chiều, xem trực tiếp code吧:
 
 ```java
 class Solution {
@@ -589,11 +554,11 @@ class Solution {
         if (deads.contains("0000")) return -1;
         if (target.equals("0000")) return 0;
 
-        // 用集合不用队列，可以快速判断元素是否存在
+        // Dùng tập hợp không dùng hàng đợi, có thể nhanh判斷 phần tử tồn tại không
         Set<String> q1 = new HashSet<>();
         Set<String> q2 = new HashSet<>();
         Set<String> visited = new HashSet<>();
-        
+
         int step = 0;
         q1.add("0000");
         visited.add("0000");
@@ -601,17 +566,17 @@ class Solution {
         visited.add(target);
 
         while (!q1.isEmpty() && !q2.isEmpty()) {
-            // 在这里增加步数
+            // Ở đây tăng số bước
             step++;
 
-            // 哈希集合在遍历的过程中不能修改，所以用 newQ1 存储邻居节点
+            // Tập băm trong quá trình duyệt không thể sửa, nên dùng newQ1 lưu nút 이웃
             Set<String> newQ1 = new HashSet<>();
 
-            // 获取 q1 中的所有节点的邻居
+            // Lấy nút 이웃 của mọi nút trong q1
             for (String cur : q1) {
-                // 将一个节点的未遍历相邻节点加入集合
+                // 把 nút 이웃 chưa duyệt của một nút加入 tập hợp
                 for (String neighbor : getNeighbors(cur)) {
-                    // 判断是否到达终点
+                    // 判断 có đến终点 không
                     if (q2.contains(neighbor)) {
                         return step;
                     }
@@ -621,9 +586,9 @@ class Solution {
                     }
                 }
             }
-            // newQ1 存储着 q1 的邻居节点
+            // newQ1 lưu nút 이웃 của q1
             q1 = newQ1;
-            // 因为每次 BFS 都是扩散 q1，所以把元素数量少的集合作为 q1
+            // Vì mỗi lần BFS đều扩散 q1, nên把 tập hợp số lượng phần tử ít làm q1
             if (q1.size() > q2.size()) {
                 Set<String> temp = q1;
                 q1 = q2;
@@ -633,7 +598,7 @@ class Solution {
         return -1;
     }
 
-    // 将 s[j] 向上拨动一次
+    // 把 s[j]拨 lên một lần
     String plusOne(String s, int j) {
         char[] ch = s.toCharArray();
         if (ch[j] == '9')
@@ -643,7 +608,7 @@ class Solution {
         return new String(ch);
     }
 
-    // 将 s[i] 向下拨动一次
+    // 把 s[i]拨 xuống một lần
     String minusOne(String s, int j) {
         char[] ch = s.toCharArray();
         if (ch[j] == '0')
@@ -664,87 +629,74 @@ class Solution {
 }
 ```
 
-双向 BFS 还是遵循 BFS 算法框架的，但是有几个细节区别：
+BFS hai chiều vẫn循 khung thuật toán BFS, nhưng có vài khác biệt chi tiết:
 
-1、不再使用队列存储元素，而是改用 [哈希集合](https://labuladong.online/algo/data-structure-basic/hash-set/)，方便快速判两个集合是否有交集。
+1、Không dùng hàng đợi lưu phần tử nữa, mà đổi dùng [tập băm](https://labuladong.online/algo/data-structure-basic/hash-set/), tiện nhanh判 hai tập hợp có giao nhau không.
 
-2、调整了 return step 的位置。因为双向 BFS 中不再是简单地判断是否到达终点，而是判断两个集合是否有交集，所以要在计算出邻居节点时就进行判断。
+2、Điều chỉnh vị trí return step. Vì trong BFS hai chiều không còn đơn giản判断 có đến终点 không, mà判断 hai tập hợp có giao nhau không, nên要在 tính ra nút 이웃时就 tiến hành判断.
 
-3、还有一个优化点，每次都保持 `q1` 是元素数量较小的集合，这样可以一定程度减少搜索次数。
+3、Còn một điểm tối ưu, mỗi lần đều giữ `q1` là tập hợp số lượng phần tử ít hơn, như vậy có thể nhất định程度 giảm số lần tìm kiếm.
 
-因为按照 BFS 的逻辑，队列（集合）中的元素越多，扩散邻居节点之后新的队列（集合）中的元素就越多；在双向 BFS 算法中，如果我们每次都选择一个较小的集合进行扩散，那么占用的空间增长速度就会慢一些，效率就会高一些。
+Vì按 logic BFS, phần tử trong hàng đợi (tập hợp) càng nhiều, sau khi扩散 nút 이웃 thì phần tử trong hàng đợi (tập hợp) mới càng nhiều; trong thuật toán BFS hai chiều, nếu mỗi lần chúng ta đều chọn một tập hợp ít hơn tiến hành扩散, vậy速度 tăng trưởng chiếm không gian就会 chậm hơn, hiệu suất就会 cao hơn.
 
-不过话说回来，**无论传统 BFS 还是双向 BFS，无论做不做优化，从 Big O 衡量标准来看，时间复杂度都是一样的**，只能说双向 BFS 是一种进阶技巧，算法运行的速度会相对快一点，掌握不掌握其实都无所谓。
+Có điều nói lại, **dù BFS truyền thống hay BFS hai chiều, dù làm tối ưu hay không, từ tiêu chuẩn Big O đo, độ phức tạp thời gian đều giống nhau**, chỉ能 nói BFS hai chiều là một技巧 nâng cao,速度 chạy thuật toán sẽ相对 nhanh hơn, nắm hay không nắm thực ra đều无所谓.
 
-最关键的还是要把 BFS 通用框架记下来，并且做到熟练运用，后面有 [BFS 习题章节](https://labuladong.online/algo/problem-set/bfs/)，请你尝试运用本文的技巧，解决其中的题目。
-
-
-
-
-
-
+Then chốt nhất vẫn要把 khung通用 BFS记下来,並做到熟练运用, phía sau có [Chương bài tập BFS](https://labuladong.online/algo/problem-set/bfs/), hãy bạn thử vận dụng技巧 của bài này, giải đề trong đó.
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的文章</strong></summary>
+<summary><strong>Bài viết trích dẫn bài này</strong></summary>
 
- - [Prim 最小生成树算法](https://labuladong.online/algo/data-structure/prim/)
- - [【强化练习】BFS 经典习题 I](https://labuladong.online/algo/problem-set/bfs/)
- - [【强化练习】BFS 经典习题 II](https://labuladong.online/algo/problem-set/bfs-ii/)
- - [【强化练习】回溯算法经典习题 II](https://labuladong.online/algo/problem-set/backtrack-ii/)
- - [【强化练习】并查集经典习题](https://labuladong.online/algo/problem-set/union-find/)
- - [【强化练习】运用层序遍历解题 I](https://labuladong.online/algo/problem-set/binary-tree-level-i/)
- - [【强化练习】运用层序遍历解题 II](https://labuladong.online/algo/problem-set/binary-tree-level-ii/)
- - [二分图判定算法](https://labuladong.online/algo/data-structure/bipartite-graph/)
- - [二叉树基础及常见类型](https://labuladong.online/algo/data-structure-basic/binary-tree-basic/)
- - [二叉树的递归/层序遍历](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
- - [二叉树系列算法核心纲领](https://labuladong.online/algo/essential-technique/binary-tree-summary/)
- - [学习数据结构和算法的框架思维](https://labuladong.online/algo/essential-technique/algorithm-summary/)
- - [旅游省钱大法：加权最短路径](https://labuladong.online/algo/dynamic-programming/cheap-travel/)
- - [环检测及拓扑排序算法](https://labuladong.online/algo/data-structure/topological-sort/)
- - [用算法打败算法](https://labuladong.online/algo/fname.html?fname=PDF中的算法)
- - [算法学习和心流体验](https://labuladong.online/algo/fname.html?fname=心流)
+ - [Thuật toán cây khung nhỏ nhất Prim](https://labuladong.online/algo/data-structure/prim/)
+ - [【Luyện tập】Bài tập kinh điển BFS I](https://labuladong.online/algo/problem-set/bfs/)
+ - [【Luyện tập】Bài tập kinh điển BFS II](https://labuladong.online/algo/problem-set/bfs-ii/)
+ - [【Luyện tập】Bài tập kinh điển quay lui II](https://labuladong.online/algo/problem-set/backtrack-ii/)
+ - [【Luyện tập】Bài tập kinh điển hợp nhất-tìm kiếm](https://labuladong.online/algo/problem-set/union-find/)
+ - [【Luyện tập】Vận dụng duyệt tầng giải đề I](https://labuladong.online/algo/problem-set/binary-tree-level-i/)
+ - [【Luyện tập】Vận dụng duyệt tầng giải đề II](https://labuladong.online/algo/problem-set/binary-tree-level-ii/)
+ - [Thuật toán判定 đồ thị hai phía](https://labuladong.online/algo/data-structure/bipartite-graph/)
+ - [Cơ bản và loại thường gặp của cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-basic/)
+ - [Duyệt đệ quy/duyệt tầng của cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
+ - [Cương领 cốt lõi loạt thuật toán cây nhị phân](https://labuladong.online/algo/essential-technique/binary-tree-summary/)
+ - [Học tư duy khung của cấu trúc dữ liệu và thuật toán](https://labuladong.online/algo/essential-technique/algorithm-summary/)
+ - [Mẹo tiết kiệm tiền du lịch: Đường đi ngắn nhất có trọng số](https://labuladong.online/algo/dynamic-programming/cheap-travel/)
+ - [Phát hiện chu trình và thuật toán sắp xếp topo](https://labuladong.online/algo/data-structure/topological-sort/)
+ - [Dùng thuật toán đánh bại thuật toán](https://labuladong.online/algo/fname.html?fname=PDF中的算法)
+ - [Học thuật toán và trải nghiệm dòng chảy](https://labuladong.online/algo/fname.html?fname=心流)
 
 </details><hr>
 
-
-
-
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的题目</strong></summary>
+<summary><strong>Bài tập trích dẫn bài này</strong></summary>
 
-<strong>安装 [我的 Chrome 刷题插件](https://labuladong.online/algo/intro/chrome/) 点开下列题目可直接查看解题思路：</strong>
+<strong>Cài [plugin刷 đề Chrome của tôi](https://labuladong.online/algo/intro/chrome/) bấm vào các đề sau có thể xem trực tiếp思路 giải:</strong>
 
-| LeetCode | 力扣 | 难度 |
+| LeetCode | Lực khấu | Độ khó |
 | :----: | :----: | :----: |
-| [1091. Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/?show=1) | [1091. 二进制矩阵中的最短路径](https://leetcode.cn/problems/shortest-path-in-binary-matrix/?show=1) | 🟠 |
-| [111. Minimum Depth of Binary Tree](https://leetcode.com/problems/minimum-depth-of-binary-tree/?show=1) | [111. 二叉树的最小深度](https://leetcode.cn/problems/minimum-depth-of-binary-tree/?show=1) | 🟢 |
-| [117. Populating Next Right Pointers in Each Node II](https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/?show=1) | [117. 填充每个节点的下一个右侧节点指针 II](https://leetcode.cn/problems/populating-next-right-pointers-in-each-node-ii/?show=1) | 🟠 |
-| [127. Word Ladder](https://leetcode.com/problems/word-ladder/?show=1) | [127. 单词接龙](https://leetcode.cn/problems/word-ladder/?show=1) | 🔴 |
-| [1926. Nearest Exit from Entrance in Maze](https://leetcode.com/problems/nearest-exit-from-entrance-in-maze/?show=1) | [1926. 迷宫中离入口最近的出口](https://leetcode.cn/problems/nearest-exit-from-entrance-in-maze/?show=1) | 🟠 |
-| [2850. Minimum Moves to Spread Stones Over Grid](https://leetcode.com/problems/minimum-moves-to-spread-stones-over-grid/?show=1) | [2850. 将石头分散到网格图的最少移动次数](https://leetcode.cn/problems/minimum-moves-to-spread-stones-over-grid/?show=1) | 🟠 |
-| [286. Walls and Gates](https://leetcode.com/problems/walls-and-gates/?show=1)🔒 | [286. 墙与门](https://leetcode.cn/problems/walls-and-gates/?show=1)🔒 | 🟠 |
-| [310. Minimum Height Trees](https://leetcode.com/problems/minimum-height-trees/?show=1) | [310. 最小高度树](https://leetcode.cn/problems/minimum-height-trees/?show=1) | 🟠 |
-| [329. Longest Increasing Path in a Matrix](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/?show=1) | [329. 矩阵中的最长递增路径](https://leetcode.cn/problems/longest-increasing-path-in-a-matrix/?show=1) | 🔴 |
-| [365. Water and Jug Problem](https://leetcode.com/problems/water-and-jug-problem/?show=1) | [365. 水壶问题](https://leetcode.cn/problems/water-and-jug-problem/?show=1) | 🟠 |
-| [431. Encode N-ary Tree to Binary Tree](https://leetcode.com/problems/encode-n-ary-tree-to-binary-tree/?show=1)🔒 | [431. 将 N 叉树编码为二叉树](https://leetcode.cn/problems/encode-n-ary-tree-to-binary-tree/?show=1)🔒 | 🔴 |
-| [433. Minimum Genetic Mutation](https://leetcode.com/problems/minimum-genetic-mutation/?show=1) | [433. 最小基因变化](https://leetcode.cn/problems/minimum-genetic-mutation/?show=1) | 🟠 |
-| [490. The Maze](https://leetcode.com/problems/the-maze/?show=1)🔒 | [490. 迷宫](https://leetcode.cn/problems/the-maze/?show=1)🔒 | 🟠 |
-| [505. The Maze II](https://leetcode.com/problems/the-maze-ii/?show=1)🔒 | [505. 迷宫 II](https://leetcode.cn/problems/the-maze-ii/?show=1)🔒 | 🟠 |
-| [542. 01 Matrix](https://leetcode.com/problems/01-matrix/?show=1) | [542. 01 矩阵](https://leetcode.cn/problems/01-matrix/?show=1) | 🟠 |
-| [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/?show=1) | [547. 省份数量](https://leetcode.cn/problems/number-of-provinces/?show=1) | 🟠 |
-| [863. All Nodes Distance K in Binary Tree](https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/?show=1) | [863. 二叉树中所有距离为 K 的结点](https://leetcode.cn/problems/all-nodes-distance-k-in-binary-tree/?show=1) | 🟠 |
-| [994. Rotting Oranges](https://leetcode.com/problems/rotting-oranges/?show=1) | [994. 腐烂的橘子](https://leetcode.cn/problems/rotting-oranges/?show=1) | 🟠 |
-| - | [剑指 Offer II 109. 开密码锁](https://leetcode.cn/problems/zlDJc7/?show=1) | 🟠 |
+| [1091. Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/?show=1) | [1091. Đường đi ngắn nhất trong ma trận nhị phân](https://leetcode.cn/problems/shortest-path-in-binary-matrix/?show=1) | 🟠 |
+| [111. Minimum Depth of Binary Tree](https://leetcode.com/problems/minimum-depth-of-binary-tree/?show=1) | [111. Độ sâu nhỏ nhất của cây nhị phân](https://leetcode.cn/problems/minimum-depth-of-binary-tree/?show=1) | 🟢 |
+| [117. Populating Next Right Pointers in Each Node II](https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/?show=1) | [117. Điền con trỏ nút phải tiếp theo của mỗi nút II](https://leetcode.cn/problems/populating-next-right-pointers-in-each-node-ii/?show=1) | 🟠 |
+| [127. Word Ladder](https://leetcode.com/problems/word-ladder/?show=1) | [127. Nối từ](https://leetcode.cn/problems/word-ladder/?show=1) | 🔴 |
+| [1926. Nearest Exit from Entrance in Maze](https://leetcode.com/problems/nearest-exit-from-entrance-in-maze/?show=1) | [1926. Lối ra gần入口 nhất trong mê cung](https://leetcode.cn/problems/nearest-exit-from-entrance-in-maze/?show=1) | 🟠 |
+| [2850. Minimum Moves to Spread Stones Over Grid](https://leetcode.com/problems/minimum-moves-to-spread-stones-over-grid/?show=1) | [2850. Số lần di chuyển ít nhất để rải đá khắp lưới](https://leetcode.cn/problems/minimum-moves-to-spread-stones-over-grid/?show=1) | 🟠 |
+| [286. Walls and Gates](https://leetcode.com/problems/walls-and-gates/?show=1)🔒 | [286. Tường và cổng](https://leetcode.cn/problems/walls-and-gates/?show=1)🔒 | 🟠 |
+| [310. Minimum Height Trees](https://leetcode.com/problems/minimum-height-trees/?show=1) | [310. Cây chiều cao nhỏ nhất](https://leetcode.cn/problems/minimum-height-trees/?show=1) | 🟠 |
+| [329. Longest Increasing Path in a Matrix](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/?show=1) | [329. Đường tăng dài nhất trong ma trận](https://leetcode.cn/problems/longest-increasing-path-in-a-matrix/?show=1) | 🔴 |
+| [365. Water and Jug Problem](https://leetcode.com/problems/water-and-jug-problem/?show=1) | [365. Vấn đề ấm nước](https://leetcode.cn/problems/water-and-jug-problem/?show=1) | 🟠 |
+| [431. Encode N-ary Tree to Binary Tree](https://leetcode.com/problems/encode-n-ary-tree-to-binary-tree/?show=1)🔒 | [431. Mã hóa cây N phân thành cây nhị phân](https://leetcode.cn/problems/encode-n-ary-tree-to-binary-tree/?show=1)🔒 | 🔴 |
+| [433. Minimum Genetic Mutation](https://leetcode.com/problems/minimum-genetic-mutation/?show=1) | [433. Đột biến gen nhỏ nhất](https://leetcode.cn/problems/minimum-genetic-mutation/?show=1) | 🟠 |
+| [490. The Maze](https://leetcode.com/problems/the-maze/?show=1)🔒 | [490. Mê cung](https://leetcode.cn/problems/the-maze/?show=1)🔒 | 🟠 |
+| [505. The Maze II](https://leetcode.com/problems/the-maze-ii/?show=1)🔒 | [505. Mê cung II](https://leetcode.cn/problems/the-maze-ii/?show=1)🔒 | 🟠 |
+| [542. 01 Matrix](https://leetcode.com/problems/01-matrix/?show=1) | [542. Ma trận 01](https://leetcode.cn/problems/01-matrix/?show=1) | 🟠 |
+| [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/?show=1) | [547. Số lượng tỉnh](https://leetcode.cn/problems/number-of-provinces/?show=1) | 🟠 |
+| [863. All Nodes Distance K in Binary Tree](https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/?show=1) | [863. Mọi nút cách K trong cây nhị phân](https://leetcode.cn/problems/all-nodes-distance-k-in-binary-tree/?show=1) | 🟠 |
+| [994. Rotting Oranges](https://leetcode.com/problems/rotting-oranges/?show=1) | [994. Cam thối](https://leetcode.cn/problems/rotting-oranges/?show=1) | 🟠 |
+| - | [Kiếm chỉ Offer II 109. Mở khóa mật mã](https://leetcode.cn/problems/zlDJc7/?show=1) | 🟠 |
 
 </details>
 <hr>
 
-
-
 **＿＿＿＿＿＿＿＿＿＿＿＿＿**
-
-
 
 ![](https://labuladong.online/algo/images/souyisou2.png)

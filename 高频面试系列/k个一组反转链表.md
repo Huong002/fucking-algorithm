@@ -1,4 +1,4 @@
-# 如何k个一组反转链表
+# Đảo linked list theo nhóm k
 
 <p align='center'>
 <a href="https://github.com/labuladong/fucking-algorithm" target="view_window"><img alt="GitHub" src="https://img.shields.io/github/stars/labuladong/fucking-algorithm?label=Stars&style=flat-square&logo=GitHub"></a>
@@ -9,162 +9,162 @@
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**通知：[新版网站会员](https://labuladong.online/algo/intro/site-vip/) 即将涨价；已支持老用户续费~另外，建议你在我的 [网站](https://labuladong.online/algo/) 学习文章，体验更好。**
+**Thông báo: [Hội viên web bản mới](https://labuladong.online/algo/intro/site-vip/) sắp tăng giá; đã hỗ trợ gia hạn user cũ~ Ngoài ra, bạn nên học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
 
 
-读完本文，你不仅学会了算法套路，还可以顺便解决如下题目：
+Đọc xong bài này, bạn không chỉ học được套路 thuật toán, mà còn tiện thể giải được các bài sau:
 
-| LeetCode | 力扣 | 难度 |
+| LeetCode | 力扣 | Độ khó |
 | :----: | :----: | :----: |
-| [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/) | [25. K 个一组翻转链表](https://leetcode.cn/problems/reverse-nodes-in-k-group/) | 🔴
+| [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/) | [25. Đảo linked list theo nhóm K](https://leetcode.cn/problems/reverse-nodes-in-k-group/) | 🔴 |
 
 **-----------**
 
-之前的文章 [递归反转链表的一部分](https://labuladong.online/algo/data-structure/reverse-linked-list-recursion/) 讲了如何递归地反转一部分链表，有读者就问如何迭代地反转链表，那么这篇文章的第一部分就会讲一讲如何用迭代方式解决反转单链表的问题。
+Bài trước [đệ quy đảo một phần linked list](https://labuladong.online/algo/data-structure/reverse-linked-list-recursion/)讲 cách đệ quy đảo một phần linked list, có bạn hỏi đảo linked list bằng lặp thế nào, vậy phần một bài này sẽ讲 đảo linked list đơn bằng lặp.
 
-有了这个反转函数之后，我们还是会用递归的方式解决力扣第 25 题「K 个一组翻转链表」，所以检验你递归思维的时候到了，准备好了吗？
+Có hàm đảo này xong, ta vẫn sẽ dùng cách đệ quy giải LeetCode 25 「đảo linked list theo nhóm K」, nên lúc kiểm tra tư duy đệ quy của bạn tới, chuẩn bị xong chưa?
 
-先看下题目，不难理解：
+Xem trước đề, không khó hiểu:
 
 <Problem slug="reverse-nodes-in-k-group" />
 
-这个问题经常在面经中看到，而且力扣上难度是 Hard，它真的有那么难吗？
+Vấn đề này hay thấy trong面经, mà độ khó trên LeetCode là Hard, nó thật难 vậy sao?
 
-对于基本数据结构的算法问题其实都不难，只要结合特点一点点拆解分析，一般都没啥难点。下面我们就来拆解一下这个问题。
+Với bài thuật toán cấu trúc dữ liệu cơ bản其实都不难, chỉ cần结合 đặc điểm拆解 phân tích từng chút,一般都没难点. Dưới đây ta拆解 vấn đề này.
 
-### 一、分析问题
+### Một, phân tích vấn đề
 
-首先，前文 [学习数据结构的框架思维](https://labuladong.online/algo/essential-technique/abstraction-of-algorithm/) 提到过，链表是一种兼具递归和迭代性质的数据结构，认真思考一下可以发现**这个问题具有递归性质**。
+Trước, bài trước [tư duy framework học cấu trúc dữ liệu](https://labuladong.online/algo/essential-technique/abstraction-of-algorithm/)提到, linked list là cấu trúc dữ liệu兼具 tính đệ quy và lặp, nghĩ kỹ phát hiện **vấn đề này có tính đệ quy**.
 
-什么叫递归性质？直接上图理解，比如说我们对这个链表调用 `reverseKGroup(head, 2)`，即以 2 个节点为一组反转链表：
+Cái gì叫 tính đệ quy? Lên图 hiểu thẳng, ví dụ ta gọi `reverseKGroup(head, 2)` với linked list này, tức đảo linked list theo nhóm 2 node:
 
 ![](https://labuladong.online/algo/images/kgroup/1.jpg)
 
-如果我设法把前 2 个节点反转，那么后面的那些节点怎么处理？后面的这些节点也是一条链表，而且规模（长度）比原来这条链表小，这就叫**子问题**。
+Nếu tôi设法 đảo 2 node đầu, thì những node sau xử sao? Những node sau này cũng là một linked list, mà quy mô (độ dài) nhỏ hơn linked list gốc này, đây就叫 **bài toán con**.
 
 ![](https://labuladong.online/algo/images/kgroup/2.jpg)
 
-我们可以把原先的 `head` 指针移动到后面这一段链表的开头，然后继续递归调用 `reverseKGroup(head, 2)`，因为子问题（后面这部分链表）和原问题（整条链表）的结构完全相同，这就是所谓的递归性质。
+Ta có thể di con trỏ `head` gốc tới đầu đoạn linked list sau này, rồi tiếp tục gọi đệ quy `reverseKGroup(head, 2)`, vì bài toán con (phần linked list sau) và bài gốc (cả linked list) cấu trúc完全 giống, đây chính là tính đệ quy.
 
-发现了递归性质，就可以得到大致的算法流程：
+Phát hiện tính đệ quy, là được流程 thuật toán đại khái:
 
-**1、先反转以 `head` 开头的 `k` 个元素**。
+**1, Trước đảo `k` phần tử đầu `head`**.
 
 ![](https://labuladong.online/algo/images/kgroup/3.jpg)
 
-**2、将第 `k + 1` 个元素作为 `head` 递归调用 `reverseKGroup` 函数**。
+**2, Lấy phần tử thứ `k + 1` làm `head` gọi đệ quy hàm `reverseKGroup`**.
 
 ![](https://labuladong.online/algo/images/kgroup/4.jpg)
 
-**3、将上述两个过程的结果连接起来**。
+**3, Nối kết quả hai quá trình trên lại**.
 
 ![](https://labuladong.online/algo/images/kgroup/5.jpg)
 
-整体思路就是这样了，最后一点值得注意的是，递归函数都有个 base case，对于这个问题是什么呢？
+思路 tổng就是 vậy, cuối đáng chú ý là, hàm đệ quy đều có base case, với vấn đề này là gì?
 
-题目说了，如果最后的元素不足 `k` 个，就保持不变。这就是 base case，待会会在代码里体现。
+Đề nói, nếu phần tử cuối không đủ `k`,就 giữ nguyên. Đây chính là base case, lát sẽ thể hiện trong code.
 
-### 二、代码实现
+### Hai, implement code
 
-首先，我们要实现一个 `reverse` 函数反转一个区间之内的元素。在此之前我们再简化一下，给定链表头结点，如何反转整个链表？
+Trước, ta要 implement một hàm `reverse` đảo phần tử trong một khoảng. Trước đó ta简化 một chút, cho node đầu linked list, đảo cả linked list thế nào?
 
 <!-- muliti_language -->
 ```java
-// 反转以 a 为头结点的链表
+// 反转以 a 为头结点的链表 -> Đảo linked list lấy a làm node đầu
 ListNode reverse(ListNode a) {
     ListNode pre, cur, nxt;
     pre = null; cur = a; nxt = a;
     while (cur != null) {
         nxt = cur.next;
-        // 逐个结点反转
+        // 逐个结点反转 -> Đảo từng node
         cur.next = pre;
-        // 更新指针位置
+        // 更新指针位置 -> Cập nhật vị trí con trỏ
         pre = cur;
         cur = nxt;
     }
-    // 返回反转后的头结点
+    // 返回反转后的头结点 -> Trả về node đầu sau đảo
     return pre;
 }
 ```
 
-算法执行的过程如下 GIF 所示：：
+Quá trình chạy thuật toán như GIF sau::
 
 ![](https://labuladong.online/algo/images/kgroup/8.gif)
 
-这次使用迭代思路来实现的，借助动画理解应该很容易。
+Lần này dùng思路 lặp để implement,靠 animation hiểu hẳn rất dễ.
 
-「反转以 `a` 为头结点的链表」其实就是「反转 `a` 到 null 之间的结点」，那么如果让你「反转 `a` 到 `b` 之间的结点」，你会不会？
+「Đảo linked list lấy `a` làm node đầu」其实 chính là 「đảo node giữa `a` tới null」, vậy nếu bắt bạn 「đảo node giữa `a` tới `b`」, bạn biết không?
 
-只要更改函数签名，并把上面的代码中 `null` 改成 `b` 即可：
+Chỉ cần sửa chữ ký hàm, và把 `null` trong code trên thành `b` là được:
 
 <!-- muliti_language -->
 ```java
-/** 反转区间 [a, b) 的元素，注意是左闭右开 */
+/** 反转区间 [a, b) 的元素，注意是左闭右开 -> Đảo phần tử khoảng [a, b), chú ý左闭右开 */
 ListNode reverse(ListNode a, ListNode b) {
     ListNode pre, cur, nxt;
     pre = null; cur = a; nxt = a;
-    // while 终止的条件改一下就行了
+    // while 终止的条件改一下就行了 -> Sửa điều kiện dừng while là được
     while (cur != b) {
         nxt = cur.next;
         cur.next = pre;
         pre = cur;
         cur = nxt;
     }
-    // 返回反转后的头结点
+    // 返回反转后的头结点 -> Trả về node đầu sau đảo
     return pre;
 }
 ```
 
-现在我们迭代实现了反转部分链表的功能，接下来就按照之前的逻辑编写 `reverseKGroup` 函数即可：
+Giờ ta lặp implement chức năng đảo một phần linked list, tiếp就按 logic trước viết hàm `reverseKGroup` là được:
 
 <!-- muliti_language -->
 ```java
 ListNode reverseKGroup(ListNode head, int k) {
     if (head == null) return null;
-    // 区间 [a, b) 包含 k 个待反转元素
+    // 区间 [a, b) 包含 k 个待反转元素 -> Khoảng [a, b) chứa k phần tử chờ đảo
     ListNode a, b;
     a = b = head;
     for (int i = 0; i < k; i++) {
-        // 不足 k 个，不需要反转，base case
+        // 不足 k 个，不需要反转，base case -> Không đủ k, không cần đảo, base case
         if (b == null) return head;
         b = b.next;
     }
-    // 反转前 k 个元素
+    // 反转前 k 个元素 -> Đảo k phần tử đầu
     ListNode newHead = reverse(a, b);
-    // 递归反转后续链表并连接起来
+    // 递归反转后续链表并连接起来 -> Đệ quy đảo linked list sau và nối lại
     a.next = reverseKGroup(b, k);
     return newHead;
 }
 ```
 
-解释一下 `for` 循环之后的几句代码，注意 `reverse` 函数是反转区间 `[a, b)`，所以情形是这样的：
+Giải thích mấy dòng code sau vòng `for`, chú ý hàm `reverse` đảo khoảng `[a, b)`, nên tình hình thế này:
 
 ![](https://labuladong.online/algo/images/kgroup/6.jpg)
 
-递归部分就不展开了，整个函数递归完成之后就是这个结果，完全符合题意：
+Phần đệ quy就不展开, cả hàm đệ quy xong就是 kết quả này,完全符合 đề:
 
 ![](https://labuladong.online/algo/images/kgroup/7.jpg)
 
 <visual slug='reverse-nodes-in-k-group'/>
 
-### 三、最后说两句
+### Ba, nói hai câu cuối
 
-从阅读量上看，基本数据结构相关的算法文章看的人都不多，我想说这是要吃亏的。
+Xét lượng đọc, bài thuật toán liên quan cấu trúc dữ liệu cơ bản người xem都不多, tôi muốn nói đây là要吃亏.
 
-大家喜欢看动态规划相关的问题，可能因为面试很常见，但就我个人理解，很多算法思想都是源于数据结构的。我们公众号的成名之作之一，[学习数据结构的框架思维](https://labuladong.online/algo/essential-technique/abstraction-of-algorithm/) 就提过，什么动规、回溯、分治算法，其实都是树的遍历，树这种结构它不就是个多叉链表吗？你能处理基本数据结构的问题，解决一般的算法问题应该也不会太费事。
+Mọi người thích xem vấn đề quy hoạch động, có thể vì phỏng vấn rất hay gặp, nhưng theo hiểu cá nhân tôi, nhiều tư tưởng thuật toán đều源于 cấu trúc dữ liệu. Tác phẩm thành danh之一 của公众号 ta, [tư duy framework học cấu trúc dữ liệu](https://labuladong.online/algo/essential-technique/abstraction-of-algorithm/)就提过, cái gì动规,回溯,分治 thuật toán,其实 đều là duyệt cây, cấu trúc cây này nó chẳng phải là một linked list đa chạc sao? Bạn能 xử vấn đề cấu trúc dữ liệu cơ bản, giải bài thuật toán一般 hẳn cũng không quá费事.
 
-那么如何分解问题、发现递归性质呢？这个只能多练习，我在数据结构精品课中讲解了 [单链表的递归实现](https://aep.h5.xeknow.com/s/1RQzXc)，应该能够让你进一步加深对递归的理解。
+Vậy phân解 vấn đề, phát hiện tính đệ quy thế nào? Cái này chỉ能多 luyện, tôi ở khóa精品 cấu trúc dữ liệu讲 [implement đệ quy linked list đơn](https://aep.h5.xeknow.com/s/1RQzXc), hẳn giúp bạn加深 hiểu đệ quy thêm.
 
 
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的文章</strong></summary>
+<summary><strong>Bài viết trích dẫn bài này</strong></summary>
 
- - [东哥带你刷二叉树（思路篇）](https://labuladong.online/algo/data-structure/binary-tree-part1/)
- - [算法笔试「骗分」套路](https://labuladong.online/algo/other-skills/tips-in-exam/)
- - [递归魔法：反转单链表](https://labuladong.online/algo/data-structure/reverse-linked-list-recursion/)
+ - [Đông ca带 bạn刷 cây nhị phân (思路篇)](https://labuladong.online/algo/data-structure/binary-tree-part1/)
+ - [套路「lấy điểm」笔试 thuật toán](https://labuladong.online/algo/other-skills/tips-in-exam/)
+ - [Ma thuật đệ quy: đảo linked list đơn](https://labuladong.online/algo/data-structure/reverse-linked-list-recursion/)
 
 </details><hr>
 
@@ -173,13 +173,13 @@ ListNode reverseKGroup(ListNode head, int k) {
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的题目</strong></summary>
+<summary><strong>Bài tập trích dẫn bài này</strong></summary>
 
-<strong>安装 [我的 Chrome 刷题插件](https://labuladong.online/algo/intro/chrome/) 点开下列题目可直接查看解题思路：</strong>
+<strong>Cài [plugin刷题 Chrome của mình](https://labuladong.online/algo/intro/chrome/) mở các bài sau để xem thẳng思路 giải:</strong>
 
 | LeetCode | 力扣 |
 | :----: | :----: |
-| [24. Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/?show=1) | [24. 两两交换链表中的节点](https://leetcode.cn/problems/swap-nodes-in-pairs/?show=1) |
+| [24. Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/?show=1) | [24. Đổi hai hai node trong linked list](https://leetcode.cn/problems/swap-nodes-in-pairs/?show=1) |
 
 </details>
 <hr>
@@ -188,13 +188,13 @@ ListNode reverseKGroup(ListNode head, int k) {
 
 **＿＿＿＿＿＿＿＿＿＿＿＿＿**
 
-**《labuladong 的算法笔记》已经出版，关注公众号查看详情；后台回复「**全家桶**」可下载配套 PDF 和刷题全家桶**：
+**《Ghi chép thuật toán của labuladong》 đã xuất bản, follow公众号 xem chi tiết; trả lời后台 「**全家桶**」 có thể tải PDF配套 và全家桶刷题**:
 
 ![](https://labuladong.online/algo/images/souyisou2.png)
 
-======其他语言代码======
+======Code ngôn ngữ khác======
 
-[25.K个一组翻转链表](https://leetcode-cn.com/problems/reverse-nodes-in-k-group)
+[25.Đảo linked list theo nhóm K](https://leetcode-cn.com/problems/reverse-nodes-in-k-group)
 
 ### javascript
 
@@ -208,7 +208,7 @@ ListNode reverseKGroup(ListNode head, int k) {
  */
 
 
-// 示例一：反转以a为头结点的链表
+// 示例一：反转以a为头结点的链表 -> Ví dụ một: đảo linked list lấy a làm node đầu
 let reverse = function (a) {
     let pre, cur, nxt;
     pre = null;
@@ -216,30 +216,30 @@ let reverse = function (a) {
     nxt = a;
     while (cur != null) {
         nxt = cur.next;
-        // 逐个结点反转
+        // 逐个结点反转 -> Đảo từng node
         cur.next = pre;
-        // 更新指针位置
+        // 更新指针位置 -> Cập nhật vị trí con trỏ
         pre = cur;
         cur = nxt;
     }
-    // 返回反转后的头结点
+    // 返回反转后的头结点 -> Trả về node đầu sau đảo
     return pre;
 }
 
-/** 反转区间 [a, b) 的元素，注意是左闭右开 */
+/** 反转区间 [a, b) 的元素，注意是左闭右开 -> Đảo phần tử khoảng [a, b), chú ý左闭右开 */
 let reverse = (a, b) => {
     let pre, cur, nxt;
     pre = null;
     cur = a;
     nxt = a;
-    // while 终止的条件改一下就行了
+    // while 终止的条件改一下就行了 -> Sửa điều kiện dừng while là được
     while (cur !== b) {
         nxt = cur.next;
         cur.next = pre;
         pre = cur;
         cur = nxt;
     }
-    // 返回反转后的头结点
+    // 返回反转后的头结点 -> Trả về node đầu sau đảo
     return pre;
 }
 
@@ -251,21 +251,20 @@ let reverse = (a, b) => {
  */
 let reverseKGroup = (head, k) => {
     if (head == null) return null;
-    // 区间 [a, b) 包含 k 个待反转元素
+    // 区间 [a, b) 包含 k 个待反转元素 -> Khoảng [a, b) chứa k phần tử chờ đảo
     let a, b;
     a = b = head;
     for (let i = 0; i < k; i++) {
-        // 不足k个，不需反转，base case
+        // 不足k个，不需反转，base case -> Không đủ k, không cần đảo, base case
         if(b==null) return head;
         b = b.next;
     }
 
-    // 反转前k个元素
+    // 反转前k个元素 -> Đảo k phần tử đầu
     let newHead = reverse(a,b);
 
-    // 递归反转后续链表并连接起来
+    // 递归反转后续链表并连接起来 -> Đệ quy đảo linked list sau và nối lại
     a.next = reverseKGroup(b,k);
     return newHead;
 }
 ```
-

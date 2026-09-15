@@ -1,10 +1,11 @@
-# Dijkstra 算法模板及应用
+# Template thuật toán Dijkstra & ứng dụng
+
 
 
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**通知：为满足广大读者的需求，网站上架 [速成目录](https://labuladong.online/algo/intro/quick-learning-plan/)，如有需要可以看下，谢谢大家的支持~另外，建议你在我的 [网站](https://labuladong.online/algo/) 学习文章，体验更好。**
+**Thông báo: Theo nhu cầu của đông đảo độc giả, website đã ra mắt [Lộ trình速成](https://labuladong.online/algo/intro/quick-learning-plan/), ai cần có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, khuyên bạn học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
 
 
@@ -13,32 +14,32 @@
 
 
 > [!NOTE]
-> 阅读本文前，你需要先学习：
-> 
-> - [图结构基础及通用实现](https://labuladong.online/algo/data-structure-basic/graph-basic/)
-> - [二叉树的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
-> - [图结构的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/)
+> Trước khi đọc bài này, bạn cần học trước:
+>
+> - [Cơ bản cấu trúc đồ thị & cài đặt tổng quát](https://labuladong.online/algo/data-structure-basic/graph-basic/)
+> - [Duyệt DFS/BFS cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
+> - [Duyệt DFS/BFS cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/)
 
 > [!IMPORTANT]
-> Dijkstra 算法是一种用于计算图中单源最短路径的算法，本质上是一个经过特殊改造的 BFS 算法，改造点有两个：
-> 
-> 1、使用 [优先级队列](https://labuladong.online/algo/data-structure-basic/binary-heap-implement/)，而不是普通队列进行 BFS 算法。
-> 
-> 2、添加了一个备忘录，记录起点到每个可达节点的最短路径权重和。
+> Thuật toán Dijkstra là thuật toán tính đường ngắn nhất đơn nguồn trong đồ thị, bản chất là một thuật toán BFS改造đặc biệt, có hai điểm改造:
+>
+> 1、Dùng [hàng đợi ưu tiên](https://labuladong.online/algo/data-structure-basic/binary-heap-implement/), chứ không phải hàng đợi thường để chạy thuật toán BFS.
+>
+> 2、Thêm một memo, ghi tổng trọng số đường ngắn nhất từ起点tới mỗi Node tới được.
 
-学习 Dijkstra 最短路径算法之前，你需要先了解 [图结构基础及通用代码实现](https://labuladong.online/algo/data-structure-basic/graph-basic/)，下面的讲解中，我会用到图结构 `Graph` 的通用 API。
+Trước khi học thuật toán đường ngắn nhất Dijkstra, bạn cần hiểu [Cơ bản cấu trúc đồ thị & cài đặt code tổng quát](https://labuladong.online/algo/data-structure-basic/graph-basic/) trước, trong讲解dưới đây, tôi sẽ dùng API tổng quát của cấu trúc đồ thị `Graph`.
 
-另外，你必须要理解 [二叉树的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/) 以及 [图结构的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/) 中 BFS 遍历的基本原理，因为 Dijkstra 算法本质上就是一个经过特殊改造的 BFS 算法。
+Ngoài ra, bạn必须要hiểu [Duyệt DFS/BFS cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/) và [Duyệt DFS/BFS cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/) về nguyên lý cơ bản duyệt BFS, vì thuật toán Dijkstra bản chất chính là một thuật toán BFS改造đặc biệt.
 
-在讲解二叉树和图结构的 BFS 遍历算法时，我同时给出了三种 BFS 算法的写法，如果忘了可以回去复习一下。
+Khi讲解thuật toán duyệt BFS của cây nhị phân và cấu trúc đồ thị, tôi đồng thời给ra ba cách viết thuật toán BFS, nếu quên có thể về ôn lại.
 
-其中第三种 BFS 算法相对复杂一些，但是最灵活，因为它新建了一个 `State` 类，允许每个节点独立维护一些额外信息。
+Trong đó cách viết BFS thứ ba相对phức tạp, nhưng linh hoạt nhất, vì nó tạo mới một lớp `State`, cho phép mỗi Node维护độc lập ít thông tin thêm.
 
-具体代码如下：
+Code cụ thể như sau:
 
 ```java
-// 多叉树的层序遍历
-// 每个节点自行维护 State 类，记录深度等信息
+// Duyệt层序cây đa chạc
+// Mỗi Node tự维护lớp State, ghi độ sâu等thông tin
 class State {
     Node node;
     int depth;
@@ -54,14 +55,14 @@ void levelOrderTraverse(Node root) {
         return;
     }
     Queue<State> q = new LinkedList<>();
-    // 记录当前遍历到的层数（根节点视为第 1 层）
+    // Ghi tầng hiện duyệt tới (Node gốc xem là tầng 1)
     q.offer(new State(root, 1));
 
     while (!q.isEmpty()) {
         State state = q.poll();
         Node cur = state.node;
         int depth = state.depth;
-        // 访问 cur 节点，同时知道它所在的层数
+        // Truy cập Node cur, đồng thời biết tầng nó ở
         System.out.println("depth = " + depth + ", val = " + cur.val);
 
         for (Node child : cur.children) {
@@ -71,12 +72,12 @@ void levelOrderTraverse(Node root) {
 }
 
 
-// 图结构的 BFS 遍历，从节点 s 开始进行 BFS，且记录路径的权重和
-// 每个节点自行维护 State 类，记录从 s 走来的权重和
+// Duyệt BFS cấu trúc đồ thị, bắt đầu từ Node s, và ghi tổng trọng số đường đi
+// Mỗi Node tự维护lớp State, ghi tổng trọng số đi từ s tới
 class State {
-    // 当前节点 ID
+    // ID Node hiện tại
     int node;
-    // 从起点 s 到当前节点的权重和
+    // Tổng trọng số từ起点s tới Node hiện tại
     int weight;
 
     public State(int node, int weight) {
@@ -108,60 +109,54 @@ void bfs(Graph graph, int s) {
 }
 ```
 
-这种写法对于树结构来说有些多此一举，但是对于加权图来说，就非常有用了。
+Cách viết này với cấu trúc cây có hơi thừa, nhưng với đồ thị có trọng số,就非常hữu dụng.
 
 <visual slug="graph-node-bfs-traverse3" >
 
-在这个可视化面板中，我创建了一幅加权图。你可以多次点击 <code type="click">console.log</code> 这一行代码，注意命令行的输出，这种写法可以在遍历节点的同时得知起点到当前节点的路径和：
+Trong panel trực quan này, tôi tạo một đồ thị có trọng số. Bạn có thể click nhiều lần dòng code <code type="click">console.log</code>, chú ý output dòng lệnh, cách viết này có thể đồng thời biết tổng đường đi từ起点tới Node hiện tại khi duyệt Node:
 
 </visual>
 
-我们即将实现的 Dijkstra 算法就是基于这个算法的改进，每个节点都需要记录从起点到自己的最短路径权重和，再结合 [优先级队列](https://labuladong.online/algo/data-structure-basic/binary-heap-implement/) 这种能够动态排序的数据结构，就可以高效地计算出最短路径了。
+Thuật toán Dijkstra chúng ta sắp cài đặt chính là cải tiến dựa trên thuật toán này, mỗi Node đều cần ghi tổng trọng số đường ngắn nhất từ起点tới mình, kết hợp cấu trúc dữ liệu sắp xếp động [hàng đợi ưu tiên](https://labuladong.online/algo/data-structure-basic/binary-heap-implement/), là có thể tính hiệu quả đường ngắn nhất.
 
-下面来具体介绍 Dijkstra 算法的通用代码实现。
-
-
+Dưới đây giới thiệu cụ thể cài đặt code tổng quát thuật toán Dijkstra.
 
 
 
 
 
-## Dijkstra 函数签名
 
-首先，我们可以写一个 Dijkstra 算法的通用函数签名：
+## Chữ ký hàm Dijkstra
+
+Trước hết, chúng ta có thể viết một chữ ký hàm tổng quát của thuật toán Dijkstra:
 
 ```java
-// 输入一幅图和一个起点 start，计算 start 到其他节点的最短距离
+// Nhập một đồ thị và một起点start, tính khoảng cách ngắn nhất từ start tới Node khác
 int[] dijkstra(int start, Graph graph);
 ```
 
-输入是一幅图 `graph` 和一个起点 `start`，返回是一个记录最短路径权重的数组，比方下面这个例子：
-
-
-
-
+Nhập là một đồ thị `graph` và một起点 `start`, trả về là một mảng ghi trọng số đường ngắn nhất, ví dụ dưới đây:
 
 ```java
 int[] distTo = dijkstra(3, graph);
 ```
 
 
+Mảng `distTo` lưu tổng đường ngắn nhất lấy Node `3` làm起点tới Node khác, ví dụ tổng trọng số đường ngắn nhất từ起点 `3` tới Node `6` chính là `distTo[6]`.
 
-`distTo` 数组中存储节点 `3` 作为起点到其他节点的最小路径和，比如从起点 `3` 到节点 `6` 的最短路径权重和就是 `distTo[6]`。
+Vì bản chất chính là BFS嘛, nên thuật toán Dijkstra chuẩn sẽ duyệt bắt đầu từ起点 `start`, tính hết đường ngắn nhất tới mọi Node khác tới được.
 
-因为是本质上就是 BFS 嘛，所以标准的 Dijkstra 算法会从起点 `start` 开始遍历，把到所有其他可达节点的最短路径都算出来。
+Dĩ nhiên, nếu nhu cầu của bạn chỉ tính đường ngắn nhất từ起点 `start` tới một终点 `end` nào đó, vậy sửa chút trên thuật toán Dijkstra chuẩn là có thể hoàn thành nhu cầu này hiệu quả hơn, cái này chúng ta nói sau.
 
-当然，如果你的需求只是计算从起点 `start` 到某一个终点 `end` 的最短路径，那么在标准 Dijkstra 算法上稍作修改就可以更高效地完成这个需求，这个我们后面再说。
+## Lớp `State`
 
-## `State` 类
-
-我们也需要一个 `State` 类来辅助 BFS 算法的运行，清晰起见，我们用 `id` 变量记录当前节点 ID，用 `distFromStart` 变量记录从起点到当前节点的距离。
+Chúng ta cũng cần một lớp `State` phụ trợ chạy thuật toán BFS, rõ ràng起见, chúng ta dùng biến `id` ghi ID Node hiện tại, dùng biến `distFromStart` ghi khoảng cách từ起点tới Node hiện tại.
 
 ```java
 class State {
-    // 图节点的 id
+    // id của Node đồ thị
     int id;
-    // 从 start 节点到当前节点的距离
+    // Khoảng cách từ Node start tới Node hiện tại
     int distFromStart;
 
     State(int id, int distFromStart) {
@@ -171,41 +166,41 @@ class State {
 }
 ```
 
-## `distTo` 记录最短路径
+## `distTo` ghi đường ngắn nhất
 
-加权图中的 Dijkstra 算法和无权图中的普通 BFS 算法不同，在 Dijkstra 算法中，你第一次经过某个节点时的路径权重，不见得就是最小的，所以对于同一个节点，我们可能会经过多次，而且每次的 `distFromStart` 可能都不一样，比如下图：
+Thuật toán Dijkstra trong đồ thị có trọng số khác thuật toán BFS thường trong đồ thị không trọng số, trong thuật toán Dijkstra, trọng số đường đi lần đầu bạn đi qua một Node, không hẳn就是nhỏ nhất, nên với cùng một Node, chúng ta có thể đi qua nhiều lần, mà mỗi lần `distFromStart` có thể đều khác, ví dụ hình dưới:
 
 ![](https://labuladong.online/algo/images/dijkstra/3.jpeg)
 
-我会经过节点 `5` 三次，每次的 `distFromStart` 值都不一样，那我取 `distFromStart` 最小的那次，不就是从起点 `start` 到节点 `5` 的最短路径权重了么？
+Tôi sẽ đi qua Node `5` ba lần, mỗi lần giá trị `distFromStart` đều khác, vậy tôi lấy lần nhỏ nhất của `distFromStart`, không phải chính là trọng số đường ngắn nhất từ起点 `start` tới Node `5` sao?
 
-所以我们需要一个 `distTo` 数组来记录从起点 `start` 到每个节点的最短路径权重和，起到一个备忘录的作用。
+Nên chúng ta cần một mảng `distTo` để ghi tổng trọng số đường ngắn nhất từ起点 `start` tới mỗi Node, đóng vai trò memo.
 
-当重复遍历到同一个节点时，我们可以比较一下当前的 `distFromStart` 和 `distTo` 中的值，如果当前的更小，就更新 `distTo`，反之，就不用再往后继续遍历了。
+Khi lặp lại duyệt tới cùng một Node, chúng ta có thể so sánh `distFromStart` hiện tại và giá trị trong `distTo`, nếu hiện tại nhỏ hơn,就cập nhật `distTo`, ngược lại,就不用tiếp tục duyệt往后nữa.
 
-## 代码实现
+## Cài đặt code
 
-Dijkstra 的伪码逻辑如下：
+Logic伪码Dijkstra như sau:
 
 ```java
-// 输入一幅图和一个起点 start，计算 start 到其他节点的最短距离
+// Nhập một đồ thị và một起点start, tính khoảng cách ngắn nhất từ start tới Node khác
 int[] dijkstra(int start, Graph graph) {
-    // 图中节点的个数
+    // Số Node trong đồ thị
     int V = graph.size();
-    // 记录最短路径的权重，你可以理解为 dp table
-    // 定义：distTo[i] 的值就是节点 start 到达节点 i 的最短路径权重
+    // Ghi trọng số đường ngắn nhất, bạn có thể hiểu là dp table
+    // Định nghĩa: giá trị distTo[i] chính là trọng số đường ngắn nhất từ Node start tới Node i
     int[] distTo = new int[V];
-    // 求最小值，所以 dp table 初始化为正无穷
+    //求giá trị nhỏ nhất, nên dp table khởi tạo là vô cùng dương
     Arrays.fill(distTo, Integer.MAX_VALUE);
-    // base case，start 到 start 的最短距离就是 0
+    // base case, khoảng cách ngắn nhất từ start tới start chính là 0
     distTo[start] = 0;
 
-    // 优先级队列，distFromStart 较小的排在前面
+    // Hàng đợi ưu tiên, distFromStart nhỏ xếp trước
     Queue<State> pq = new PriorityQueue<>((a, b) -> {
         return a.distFromStart - b.distFromStart;
     });
 
-    // 从起点 start 开始进行 BFS
+    // Bắt đầu BFS từ起点start
     pq.offer(new State(start, 0));
 
     while (!pq.isEmpty()) {
@@ -214,17 +209,17 @@ int[] dijkstra(int start, Graph graph) {
         int curDistFromStart = curState.distFromStart;
 
         if (curDistFromStart > distTo[curNodeID]) {
-            // 已经有一条更短的路径到达 curNode 节点了
+            // Đã có một đường ngắn hơn tới Node curNode
             continue;
         }
-        // 将 curNode 的相邻节点装入队列
+        // Cho Node kề của curNode vào hàng đợi
         for (int nextNodeID : graph.neighbors(curNodeID)) {
-            // 看看从 curNode 达到 nextNode 的距离是否会更短
+            // Xem khoảng cách từ curNode tới nextNode có ngắn hơn không
             int distToNextNode = distTo[curNodeID] + graph.weight(curNodeID, nextNodeID);
             if (distTo[nextNodeID] > distToNextNode) {
-                // 更新 dp table
+                // Cập nhật dp table
                 distTo[nextNodeID] = distToNextNode;
-                // 将这个节点以及距离放入队列
+                // Cho Node này và khoảng cách vào hàng đợi
                 pq.offer(new State(nextNodeID, distToNextNode));
             }
         }
@@ -233,69 +228,64 @@ int[] dijkstra(int start, Graph graph) {
 }
 ```
 
-对比普通的 BFS 算法，你可能会有以下疑问：
+So với thuật toán BFS thường, bạn có thể có thắc mắc sau:
 
-**1、没有 `visited` 集合记录已访问的节点，所以一个节点会被访问多次，会被多次加入队列，那会不会导致队列永远不为空，造成死循环**？
+**1、Không có集合 `visited` ghi Node đã thăm, nên một Node sẽ被thăm nhiều lần,被加入hàng đợi nhiều lần, vậy có khiến hàng đợi mãi không rỗng, gây vòng lặp vô hạn không**?
 
-**2、为什么用优先级队列 `PriorityQueue` 而不是 `LinkedList` 实现的普通队列？为什么要按照 `distFromStart` 的值来排序**？
+**2、Tại sao dùng hàng đợi ưu tiên `PriorityQueue` chứ không phải hàng đợi thường cài đặt bằng `LinkedList`? Tại sao要按giá trị `distFromStart` để sắp xếp**?
 
-**3、如果我只想计算起点 `start` 到某一个终点 `end` 的最短路径，是否可以修改算法，提升一些效率**？
+**3、Nếu tôi chỉ muốn tính đường ngắn nhất từ起点 `start` tới một终点 `end` nào đó, có thể sửa thuật toán, nâng ít hiệu suất không**?
 
-我们先回答第一个问题，为什么这个算法不用 `visited` 集合也不会死循环。
+Chúng ta trả lời câu đầu trước, tại sao thuật toán này không dùng集合 `visited` cũng không vòng lặp vô hạn.
 
-对于这类问题，我教你一个思考方法：
+Với类vấn đề này, tôi dạy bạn một cách nghĩ:
 
-循环结束的条件是队列为空，那么你就要注意看什么时候往队列里放元素（调用 `offer` 方法），再注意看什么时候从队列往外拿元素（调用 `poll` 方法）。
+Điều kiện kết thúc vòng lặp là hàng đợi rỗng, vậy bạn就要注意xem khi nào放phần tử vào hàng đợi (gọi phương thức `offer`), lại chú ý xem khi nào lấy phần tử ra khỏi hàng đợi (gọi phương thức `poll`).
 
-`while` 循环每执行一次，都会往外拿一个元素，但想往队列里放元素，可就有很多限制了，必须满足下面这个条件：
+Vòng `while` mỗi lần chạy, đều lấy ra một phần tử, nhưng muốn放phần tử vào hàng đợi,可是có rất nhiều giới hạn,必须满足điều kiện sau:
 
 ```java
-// 看看从 curNode 达到 nextNode 的距离是否会更短
+// Xem khoảng cách từ curNode tới nextNode có ngắn hơn không
 if (distTo[nextNodeID] > distToNextNode) {
-    // 更新 dp table
+    // Cập nhật dp table
     distTo[nextNodeID] = distToNextNode;
     pq.offer(new State(nextNodeID, distToNextNode));
 }
 ```
 
-这也是为什么我说 `distTo` 数组可以理解成我们熟悉的 dp table，因为这个算法逻辑就是在不断的最小化 `distTo` 数组中的元素：
+Đây cũng là lý do tôi nói mảng `distTo` có thể hiểu thành dp table quen thuộc, vì logic thuật toán này chính là不断最小hóa phần tử trong mảng `distTo`:
 
-如果你能让到达 `nextNodeID` 的距离更短，那就更新 `distTo[nextNodeID]` 的值，让你入队，否则的话对不起，不让入队。
+Nếu bạn能làm khoảng cách tới `nextNodeID` ngắn hơn,就cập nhật giá trị `distTo[nextNodeID]`, cho bạn入队, nếu không thì xin lỗi, không cho入队.
 
-**因为两个节点之间的最短距离（路径权重）肯定是一个确定的值，不可能无限减小下去，所以队列一定会空，队列空了之后，`distTo` 数组中记录的就是从 `start` 到其他节点的「最短距离」**。
+**Vì khoảng cách ngắn nhất (trọng số đường) giữa hai Node肯定là một giá trị xác định, không thể giảm vô hạn xuống, nên hàng đợi肯定sẽ rỗng, sau khi hàng đợi rỗng, trong mảng `distTo` ghi chính là「khoảng cách ngắn nhất」từ `start` tới Node khác**.
 
-接下来解答第二个问题，为什么要用 `PriorityQueue` 而不是 `LinkedList` 实现的普通队列？
+Tiếp theo giải câu hai, tại sao要用 `PriorityQueue` chứ không phải hàng đợi thường cài đặt bằng `LinkedList`?
 
-如果你非要用普通队列，其实也没问题的，你可以直接把 `PriorityQueue` 改成 `LinkedList`，也能得到正确答案，但是效率会低很多。
+Nếu bạn nhất định dùng hàng đợi thường, thực ra cũng không vấn đề, bạn có thể đổi thẳng `PriorityQueue` thành `LinkedList`, cũng ra đáp án đúng, nhưng hiệu suất sẽ thấp hơn nhiều.
 
-**Dijkstra 算法使用优先级队列，主要是为了效率上的优化，类似一种贪心算法的思路**。
+**Thuật toán Dijkstra dùng hàng đợi ưu tiên, chủ yếu để tối ưu hiệu suất,类似một思路thuật toán tham lam**.
 
-为什么说是一种贪心思路呢，比如说下面这种情况，你想计算从起点 `start` 到终点 `end` 的最短路径权重：
-
-
-
-
+Tại sao nói là思路tham lam? Ví dụ tình huống sau, bạn muốn tính tổng trọng số đường ngắn nhất từ起点 `start` tới终点 `end`:
 
 ![](https://labuladong.online/algo/images/dijkstra/4.jpeg)
 
 
+Giả sử hiện bạn chỉ duyệt mấy Node này trong đồ thị, vậy bước tiếp bạn chuẩn bị duyệt Node nào? Ba đường này đều có thể thành một phần của đường ngắn nhất, **nhưng bạn thấy đường nào có「tiềm năng」hơn thành một phần trong đường ngắn nhất**?
 
-假设你当前只遍历了图中的这几个节点，那么你下一步准备遍历那个节点？这三条路径都可能成为最短路径的一部分，**但你觉得哪条路径更有「潜力」成为最短路径中的一部分**？
+Xét từ tình huống hiện tại, hiển nhiên đường màu cam khả năng lớn hơn嘛, nên chúng ta hy vọng Node `2` xếp靠trước trong hàng đợi,被lấy ra ưu tiên duyệt往后.
 
-从目前的情况来看，显然橙色路径的可能性更大嘛，所以我们希望节点 `2` 排在队列靠前的位置，优先被拿出来向后遍历。
+Nên chúng ta dùng `PriorityQueue` làm hàng đợi, để Node có giá trị `distFromStart` nhỏ xếp trước, đây就类似思路tham lam講trước đây [thuật toán tham lam](https://labuladong.online/algo/essential-technique/greedy/) nói tới, có thể tối ưu hiệu suất thuật toán ở mức lớn.
 
-所以我们使用 `PriorityQueue` 作为队列，让 `distFromStart` 的值较小的节点排在前面，这就类似我们之前讲 [贪心算法](https://labuladong.online/algo/essential-technique/greedy/) 说到的贪心思路，可以很大程度上优化算法的效率。
+Mọi người phải nghe thuật toán Bellman-Ford, thuật toán này là thuật toán đường ngắn nhất tổng quát hơn, vì nó có thể xử lý đồ thị带cạnh trọng số âm, logic thuật toán Bellman-Ford rất giống thuật toán Dijkstra, dùng chính là hàng đợi thường, bài này提một câu, sau có thời gian viết cụ thể.
 
-大家应该听过 Bellman-Ford 算法，这个算法是一种更通用的最短路径算法，因为它可以处理带有负权重边的图，Bellman-Ford 算法逻辑和 Dijkstra 算法非常类似，用到的就是普通队列，本文就提一句，后面有空再具体写。
+Tiếp theo nói câu ba, nếu chỉ quan tâm đường ngắn nhất từ起点 `start` tới một终点 `end` nào đó, có thể sửa code nâng hiệu suất thuật toán không.
 
-接下来说第三个问题，如果只关心起点 `start` 到某一个终点 `end` 的最短路径，是否可以修改代码提升算法效率。
+肯定có thể, vì thuật toán Dijkstra chuẩn sẽ tính đường ngắn nhất từ `start` tới mọi Node khác, bạn chỉ muốn tính tới `end`, tương đương giảm lượng tính, dĩ nhiên có thể nâng hiệu suất.
 
-肯定可以的，因为我们标准 Dijkstra 算法会算出 `start` 到所有其他节点的最短路径，你只想计算到 `end` 的最短路径，相当于减少计算量，当然可以提升效率。
-
-需要在代码中做的修改也非常少，只要改改函数签名，再加个 if 判断就行了：
+Sửa cần làm trong code cũng rất ít, chỉ cần改chữ ký hàm, thêm判断if là được:
 
 ```java
-// 输入起点 start 和终点 end，计算起点到终点的最短距离
+// Nhập起点start và终点end, tính khoảng cách ngắn nhất từ起点tới终点
 int dijkstra(int start, int end, List<Integer>[] graph) {
 
     // ...
@@ -305,7 +295,7 @@ int dijkstra(int start, int end, List<Integer>[] graph) {
         int curNodeID = curState.id;
         int curDistFromStart = curState.distFromStart;
 
-        // 在这里加一个判断就行了，其他代码不用改
+        // Thêm判断ở đây là được, code khác不用改
         if (curNodeID == end) {
             return curDistFromStart;
         }
@@ -317,44 +307,43 @@ int dijkstra(int start, int end, List<Integer>[] graph) {
         // ...
     }
 
-    // 如果运行到这里，说明从 start 无法走到 end
+    // Nếu chạy tới đây,说明từ start không đi được tới end
     return Integer.MAX_VALUE;
 }
 ```
 
-因为优先级队列自动排序的性质，**每次**从队列里面拿出来的都是 `distFromStart` 值最小的，所以当你**第一次**从队列中拿出终点 `end` 时，此时的 `distFromStart` 对应的值就是从 `start` 到 `end` 的最短距离。
+Vì tính chất tự sắp xếp của hàng đợi ưu tiên, **mỗi lần** lấy ra từ hàng đợi đều là nhỏ nhất của giá trị `distFromStart`, nên khi bạn **lần đầu** lấy终点 `end` ra khỏi hàng đợi, giá trị `distFromStart` lúc này tương ứng chính là khoảng cách ngắn nhất từ `start` tới `end`.
 
-这个算法较之前的实现提前 return 了，所以效率有一定的提高。
+Thuật toán này return sớm hơn cài đặt trước, nên hiệu suất nâng nhất định.
 
-这是 Dijkstra 算法的可视化面板，你可以点击其中的代码，查看算法的执行过程：
+Đây là panel trực quan của thuật toán Dijkstra, bạn có thể click code trong đó, xem quá trình chạy thuật toán:
 
 
 <hr/>
 <a href="https://labuladong.online/algo-visualize/tutorial/dijkstra-example/" target="_blank">
 <details style="max-width:90%;max-height:400px">
 <summary>
-<strong>🌟 代码可视化动画🌟</strong>
+<strong>🌟 Animation trực quan hóa code🌟</strong>
 </summary>
 </details>
 </a>
 <hr/>
 
-## 时间复杂度分析
+## Phân tích độ phức tạp thời gian
 
-Dijkstra 算法的时间复杂度是多少？你去网上查，可能会告诉你是 $O(ElogV)$，其中 `E` 代表图中边的条数，`V` 代表图中节点的个数。
+Độ phức tạp thời gian của thuật toán Dijkstra là bao nhiêu? Bạn lên mạng tra, có thể nói với bạn là $O(ElogV)$, trong đó `E` đại diện số cạnh trong đồ thị, `V` đại diện số Node trong đồ thị.
 
-因为理想情况下优先级队列中最多装 `V` 个节点，对优先级队列的操作次数和 `E` 成正比，所以整体的时间复杂度就是 $O(ElogV)$。
+Vì lý tưởng hàng đợi ưu tiên nhiều nhất chứa `V` Node, số lần thao tác hàng đợi ưu tiên tỉ lệ thuận với `E`, nên độ phức tạp thời gian tổng thể chính là $O(ElogV)$.
 
-不过这是理想情况，Dijkstra 算法的代码实现有很多版本，不同编程语言或者不同数据结构 API 都会导致算法的时间复杂度发生一些改变。
+Nhưng đây là lý tưởng, cài đặt code thuật toán Dijkstra có rất nhiều phiên bản, ngôn ngữ lập trình khác nhau hoặc API cấu trúc dữ liệu khác nhau đều khiến độ phức tạp thời gian của thuật toán thay đổi ít.
 
-比如本文实现的 Dijkstra 算法，使用了 Java 的 `PriorityQueue` 这个数据结构，这个容器类底层使用二叉堆实现，但没有提供通过索引操作队列中元素的 API，所以队列中会有重复的节点，最多可能有 `E` 个节点存在队列中。
+Ví dụ thuật toán Dijkstra cài đặt ở bài này, dùng cấu trúc dữ liệu `PriorityQueue` của Java, lớp container này底层dùng binary heap cài đặt, nhưng không cung cấp API thao tác phần tử trong hàng đợi qua index, nên hàng đợi sẽ có Node trùng, nhiều nhất có thể `E` Node tồn tại trong hàng đợi.
 
-所以本文实现的 Dijkstra 算法复杂度并不是理想情况下的 $O(ElogV)$，而是 $O(ElogE)$，可能会略大一些，因为图中边的条数一般是大于节点的个数的。
+Nên độ phức tạp thuật toán Dijkstra cài đặt ở bài này không phải $O(ElogV)$ lý tưởng, mà là $O(ElogE)$, có thể略lớn hơn, vì số cạnh trong đồ thị thường lớn hơn số Node.
 
-不过就对数函数来说，就算真数大一些，对数函数的结果也大不了多少，所以这个算法实现的实际运行效率也是很高的，以上只是理论层面的时间复杂度分析，供大家参考。
+Nhưng với hàm log mà nói, dù真数lớn hơn, kết quả hàm log cũng không lớn hơn bao nhiêu, nên hiệu suất chạy thực tế của cài đặt thuật toán này cũng rất cao, trên chỉ là phân tích độ phức tạp thời gian层面lý thuyết,供mọi người tham khảo.
 
-在下一节 [Dijkstra 算法习题](https://labuladong.online/algo/problem-set/dijkstra/) 中，我们会用 Dijkstra 算法解决一些具体的算法问题。
-
+Ở mục tiếp [Bài tập thuật toán Dijkstra](https://labuladong.online/algo/problem-set/dijkstra/) , chúng ta sẽ dùng thuật toán Dijkstra giải vài bài thuật toán cụ thể.
 
 
 
@@ -363,20 +352,20 @@ Dijkstra 算法的时间复杂度是多少？你去网上查，可能会告诉�
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的文章</strong></summary>
+<summary><strong>Bài viết trích dẫn bài này</strong></summary>
 
- - [Kruskal 最小生成树算法](https://labuladong.online/algo/data-structure/kruskal/)
- - [Prim 最小生成树算法](https://labuladong.online/algo/data-structure/prim/)
- - [【强化练习】BFS 经典习题 II](https://labuladong.online/algo/problem-set/bfs-ii/)
- - [【强化练习】Dijkstra 算法经典习题](https://labuladong.online/algo/problem-set/dijkstra/)
- - [二分图判定算法](https://labuladong.online/algo/data-structure/bipartite-graph/)
- - [二叉树的递归/层序遍历](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
- - [二叉树系列算法核心纲领](https://labuladong.online/algo/essential-technique/binary-tree-summary/)
- - [图结构基础及通用代码实现](https://labuladong.online/algo/data-structure-basic/graph-basic/)
- - [图结构的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/)
- - [学习数据结构和算法的框架思维](https://labuladong.online/algo/essential-technique/algorithm-summary/)
- - [旅游省钱大法：加权最短路径](https://labuladong.online/algo/dynamic-programming/cheap-travel/)
- - [环检测及拓扑排序算法](https://labuladong.online/algo/data-structure/topological-sort/)
+ - [Thuật toán cây khung nhỏ nhất Kruskal](https://labuladong.online/algo/data-structure/kruskal/)
+ - [Thuật toán cây khung nhỏ nhất Prim](https://labuladong.online/algo/data-structure/prim/)
+ - [【Luyện tập tăng cường】Bài tập kinh điển BFS II](https://labuladong.online/algo/problem-set/bfs-ii/)
+ - [【Luyện tập tăng cường】Bài tập kinh điển thuật toán Dijkstra](https://labuladong.online/algo/problem-set/dijkstra/)
+ - [Thuật toán判定đồ thị hai phần](https://labuladong.online/algo/data-structure/bipartite-graph/)
+ - [Duyệt đệ quy/duyệt層序cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
+ - [Cương lĩnh cốt lõi thuật toán series cây nhị phân](https://labuladong.online/algo/essential-technique/binary-tree-summary/)
+ - [Cơ bản cấu trúc đồ thị & cài đặt code tổng quát](https://labuladong.online/algo/data-structure-basic/graph-basic/)
+ - [Duyệt DFS/BFS cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/)
+ - [Tư duy khung học cấu trúc dữ liệu và thuật toán](https://labuladong.online/algo/essential-technique/algorithm-summary/)
+ - [Đại pháp tiết kiệm tiền du lịch: đường ngắn nhất có trọng số](https://labuladong.online/algo/dynamic-programming/cheap-travel/)
+ - [Phát hiện vòng & thuật toán sắp xếp topo](https://labuladong.online/algo/data-structure/topological-sort/)
 
 </details><hr>
 
@@ -385,20 +374,20 @@ Dijkstra 算法的时间复杂度是多少？你去网上查，可能会告诉�
 
 <hr>
 <details class="hint-container details">
-<summary><strong>引用本文的题目</strong></summary>
+<summary><strong>Bài tập trích dẫn bài này</strong></summary>
 
-<strong>安装 [我的 Chrome 刷题插件](https://labuladong.online/algo/intro/chrome/) 点开下列题目可直接查看解题思路：</strong>
+<strong>Cài [plugin刷题 Chrome của mình](https://labuladong.online/algo/intro/chrome/) mở các bài dưới đây có thể xem trực tiếp思路giải:</strong>
 
-| LeetCode | 力扣 | 难度 |
+| LeetCode | 力扣 | Độ khó |
 | :----: | :----: | :----: |
-| [1514. Path with Maximum Probability](https://leetcode.com/problems/path-with-maximum-probability/?show=1) | [1514. 概率最大的路径](https://leetcode.cn/problems/path-with-maximum-probability/?show=1) | 🟠 |
-| [1631. Path With Minimum Effort](https://leetcode.com/problems/path-with-minimum-effort/?show=1) | [1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/?show=1) | 🟠 |
-| [286. Walls and Gates](https://leetcode.com/problems/walls-and-gates/?show=1)🔒 | [286. 墙与门](https://leetcode.cn/problems/walls-and-gates/?show=1)🔒 | 🟠 |
-| [310. Minimum Height Trees](https://leetcode.com/problems/minimum-height-trees/?show=1) | [310. 最小高度树](https://leetcode.cn/problems/minimum-height-trees/?show=1) | 🟠 |
-| [329. Longest Increasing Path in a Matrix](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/?show=1) | [329. 矩阵中的最长递增路径](https://leetcode.cn/problems/longest-increasing-path-in-a-matrix/?show=1) | 🔴 |
-| [505. The Maze II](https://leetcode.com/problems/the-maze-ii/?show=1)🔒 | [505. 迷宫 II](https://leetcode.cn/problems/the-maze-ii/?show=1)🔒 | 🟠 |
-| [542. 01 Matrix](https://leetcode.com/problems/01-matrix/?show=1) | [542. 01 矩阵](https://leetcode.cn/problems/01-matrix/?show=1) | 🟠 |
-| [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/?show=1) | [743. 网络延迟时间](https://leetcode.cn/problems/network-delay-time/?show=1) | 🟠 |
+| [1514. Path with Maximum Probability](https://leetcode.com/problems/path-with-maximum-probability/?show=1) | [1514. Đường có xác suất lớn nhất](https://leetcode.cn/problems/path-with-maximum-probability/?show=1) | 🟠 |
+| [1631. Path With Minimum Effort](https://leetcode.com/problems/path-with-minimum-effort/?show=1) | [1631. Đường tốn ít thể lực nhất](https://leetcode.cn/problems/path-with-minimum-effort/?show=1) | 🟠 |
+| [286. Walls and Gates](https://leetcode.com/problems/walls-and-gates/?show=1)🔒 | [286. Tường và cổng](https://leetcode.cn/problems/walls-and-gates/?show=1)🔒 | 🟠 |
+| [310. Minimum Height Trees](https://leetcode.com/problems/minimum-height-trees/?show=1) | [310. Cây chiều cao nhỏ nhất](https://leetcode.cn/problems/minimum-height-trees/?show=1) | 🟠 |
+| [329. Longest Increasing Path in a Matrix](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/?show=1) | [329. Đường tăng dài nhất trong ma trận](https://leetcode.cn/problems/longest-increasing-path-in-a-matrix/?show=1) | 🔴 |
+| [505. The Maze II](https://leetcode.com/problems/the-maze-ii/?show=1)🔒 | [505. Mê cung II](https://leetcode.cn/problems/the-maze-ii/?show=1)🔒 | 🟠 |
+| [542. 01 Matrix](https://leetcode.com/problems/01-matrix/?show=1) | [542. Ma trận 01](https://leetcode.cn/problems/01-matrix/?show=1) | 🟠 |
+| [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/?show=1) | [743. Thời gian trễ mạng](https://leetcode.cn/problems/network-delay-time/?show=1) | 🟠 |
 
 </details>
 <hr>

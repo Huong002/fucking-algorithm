@@ -1,30 +1,30 @@
-# 一文读懂 session 和 cookie
+# Hiểu hết session và cookie trong một bài
 
 
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**通知：为满足广大读者的需求，网站上架 [速成目录](https://labuladong.online/algo/intro/quick-learning-plan/)，如有需要可以看下，谢谢大家的支持~另外，建议你在我的 [网站](https://labuladong.online/algo/) 学习文章，体验更好。**
+**Thông báo: Theo nhu cầu của đông đảo độc giả, website đã mở [lộ trình học cấp tốc](https://labuladong.online/algo/intro/quick-learning-plan/), bạn nào cần có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, bạn nên học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
 
 
 **-----------**
 
-cookie 大家应该都熟悉，比如说登录某些网站一段时间后，就要求你重新登录；再比如有的同学很喜欢玩爬虫技术，有时候网站就是可以拦截住你的爬虫，这些都和 cookie 有关。如果你明白了服务器后端对于 cookie 和 session 的处理逻辑，就可以解释这些现象，甚至钻一些空子无限白嫖，待我慢慢道来。
+cookie mọi người chắc đều quen, ví dụ login vài web một thời gian thì bắt login lại; ví dụ có bạn rất thích chơi爬虫, đôi khi web chính là chặn được爬虫 của bạn, những cái này đều liên quan cookie. Nếu bạn hiểu logic xử lý cookie và session ở backend server, là giải thích được các hiện tượng này, thậm chí钻空子白嫖 vô hạn, để tôi慢慢道来.
 
-### 一、session 和 cookie 简介
+### Một, giới thiệu session và cookie
 
-cookie 的出现是因为 HTTP 是无状态的一种协议，换句话说，服务器记不住你，可能你每刷新一次网页，就要重新输入一次账号密码进行登录。这显然是让人无法接受的，cookie 的作用就好比服务器给你贴个标签，然后你每次向服务器再发请求时，服务器就能够 cookie 认出你。
+cookie xuất hiện vì HTTP là một loại giao thức无状态, nói cách khác, server không nhớ bạn, có thể bạn mỗi lần refresh web là phải nhập lại tài khoản mật khẩu để login. Điều này rõ ràng không thể chấp nhận, tác dụng cookie好比 server dán cho bạn cái nhãn, rồi mỗi lần bạn gửi request tới server, server就能 qua cookie nhận ra bạn.
 
-抽象地概括一下：**一个 cookie 可以认为是一个「变量」，形如 `name=value`，存储在浏览器；一个 session 可以理解为一种数据结构，多数情况是「映射」（键值对），存储在服务器上**。
+Trừu tượng概括 một chút: **một cookie có thể coi là một 「biến」, dạng `name=value`, lưu ở trình duyệt; một session có thể hiểu là một cấu trúc dữ liệu, đa số là 「ánh xạ」 (key-value), lưu ở server**.
 
-注意，我说的是「一个」cookie 可以认为是一个变量，但是服务器可以一次设置多个 cookie，所以有时候说 cookie 是「一组」键值对儿，这也可以说得通。
+Chú ý, tôi nói 「một」 cookie có thể coi là một biến, nhưng server có thể设置 nhiều cookie một lần, nên đôi khi nói cookie là 「một nhóm」 cặp key-value, cũng nói通 được.
 
-cookie 可以在服务器端通过 HTTP 的 SetCookie 字段设置 cookie，比如我用 Go 语言写的一个简单服务：
+cookie có thể ở server qua field SetCookie của HTTP设置 cookie, ví dụ tôi dùng Go viết một dịch vụ đơn giản:
 
 ```go
 func cookie(w http.ResponseWriter, r *http.Request) {
-    // 设置了两个 cookie 
+    // 设置了两个 cookie -> Đã đặt hai cookie
 	http.SetCookie(w, &http.Cookie{
 		Name:       "name1",
 		Value:      "value1",
@@ -34,110 +34,109 @@ func cookie(w http.ResponseWriter, r *http.Request) {
 		Name:  "name2",
 		Value: "value2",
 	})
-    // 将字符串写入网页
+    // 将字符串写入网页 -> Ghi chuỗi vào trang web
 	fmt.Fprintln(w, "页面内容")
 }
 ```
 
-当浏览器访问对应网址时，通过浏览器的开发者工具查看此次 HTTP 通信的细节，可以看见服务器的回应发出了两次 `SetCookie` 命令：
+Khi trình duyệt truy cập URL tương ứng, qua dev tool xem chi tiết giao tiếp HTTP lần này, thấy回应 của server phát hai lệnh `SetCookie`:
 
 ![](https://labuladong.online/algo/images/session/1.png)
 
-在这之后，浏览器的请求中的 `Cookie` 字段就带上了这两个 cookie：
+Sau đó, field `Cookie` trong request của trình duyệt就带 hai cookie này:
 
 ![](https://labuladong.online/algo/images/session/2.png)
 
-**cookie 的作用其实就是这么简单，无非就是服务器给每个客户端（浏览器）打的标签**，方便服务器辨认而已。当然，HTTP 还有很多参数可以设置 cookie，比如过期时间，或者让某个 cookie 只有某个特定路径才能使用等等。
+**Tác dụng cookie thực ra đơn giản vậy,无非 server打标签 cho mỗi client (trình duyệt)**, tiện server辨认 mà thôi. Đương nhiên, HTTP còn nhiều tham số có thể设置 cookie, ví dụ thời gian hết hạn, hay để cookie nào đó chỉ path特定 nào mới dùng được v.v.
 
-但问题是，我们也知道现在的很多网站功能很复杂，而且涉及很多的数据交互，比如说电商网站的购物车功能，信息量大，而且结构也比较复杂，无法通过简单的 cookie 机制传递这么多信息，而且要知道 cookie 字段是存储在 HTTP header 中的，就算能够承载这些信息，也会消耗很多的带宽，比较消耗网络资源。
+Nhưng vấn đề là, ta cũng biết nhiều web giờ chức năng rất phức tạp, mà liên quan nhiều tương tác dữ liệu, ví dụ chức năng giỏ hàng của web thương mại, lượng tin lớn, mà cấu trúc cũng phức tạp, không thể qua cơ chế cookie đơn giản truyền nhiều tin vậy, mà phải biết field cookie lưu trong HTTP header, cho dù承载 được tin này, cũng tốn nhiều băng thông,比较 tốn tài nguyên mạng.
 
-session 就可以配合 cookie 解决这一问题，比如说一个 cookie 存储这样一个变量 `sessionID=xxxx`，仅仅把这一个 cookie 传给服务器，然后服务器通过这个 ID 找到对应的 session，这个 session 是一个数据结构，里面存储着该用户的购物车等详细信息，服务器可以通过这些信息返回该用户的定制化网页，有效解决了追踪用户的问题。
+session có thể配合 cookie giải vấn đề này, ví dụ một cookie lưu một biến `sessionID=xxxx`,仅仅把 cookie này truyền cho server, rồi server qua ID này tìm session tương ứng, session này là một cấu trúc dữ liệu, trong đó lưu chi tiết như giỏ hàng của user đó, server có thể qua tin này trả web定制化 của user đó, giải quyết hiệu quả vấn đề追踪 user.
 
-**session 是一个数据结构，由网站的开发者设计，所以可以承载各种数据**，只要客户端的 cookie 传来一个唯一的 session ID，服务器就可以找到对应的 session，认出这个客户。
+**session là một cấu trúc dữ liệu, do developer web thiết kế, nên có thể承载 đủ loại dữ liệu**, chỉ cần cookie của client truyền tới một session ID duy nhất, server là tìm được session tương ứng, nhận ra khách này.
 
-当然，由于 session 存储在服务器中，肯定会消耗服务器的资源，所以 session 一般都会有一个过期时间，服务器一般会定期检查并删除过期的 session，如果后来该用户再次访问服务器，可能就会面临重新登录等等措施，然后服务器新建一个 session，将 session ID 通过 cookie 的形式传送给客户端。
+Đương nhiên, vì session lưu ở server,肯定 tốn tài nguyên server, nên session一般 đều có thời gian hết hạn, server一般 sẽ kiểm tra định kỳ và xóa session hết hạn, nếu sau user đó lại truy cập server, có thể đối mặt重新登录 v.v., rồi server tạo mới một session, truyền session ID qua dạng cookie cho client.
 
-那么，我们知道 cookie 和 session 的原理，有什么切实的好处呢？**除了应对面试，我给你说一个鸡贼的用处，就是可以白嫖某些服务**。
+Vậy, ta biết nguyên lý cookie và session, có lợi thực tế gì? **Ngoài应对 phỏng vấn, tôi nói cho bạn một util鸡贼, chính là có thể白嫖 vài dịch vụ**.
 
-有些网站，你第一次使用它的服务，它直接免费让你试用，但是用一次之后，就让你登录然后付费继续使用该服务。而且你发现网站似乎通过某些手段记住了你的电脑，除非你换个电脑或者换个浏览器才能再白嫖一次。
+Có web, lần đầu bạn dùng dịch vụ nó, nó trực tiếp miễn phí cho试用, nhưng dùng một lần xong thì bắt bạn login rồi trả phí dùng tiếp. Mà bạn phát hiện web dường như qua thủ đoạn nào đó nhớ máy bạn, trừ khi bạn đổi máy hay đổi trình duyệt mới白嫖 lại được.
 
-那么问题来了，你试用的时候没有登录，网站服务器是怎么记住你的呢？这就很显然了，服务器一定是给你的浏览器打了 cookie，后台建立了对应的 session 记录你的状态。你的浏览器在每次访问该网站的时候都会听话地带着 cookie，服务器一查 session 就知道这个浏览器已经免费使用过了，得让它登录付费，不能让它继续白嫖了。
+Vậy vấn đề tới, lúc bạn试用 không login, server web nhớ bạn sao? Rất rõ ràng, server一定打 cookie cho trình duyệt bạn,后台 lập session tương ứng ghi trạng thái bạn. Trình duyệt bạn mỗi lần truy cập web đó đều听话带 cookie, server一查 session là biết trình duyệt này đã dùng miễn phí rồi, phải bắt nó login trả phí, không cho nó白嫖 tiếp.
 
-那如果我不让浏览器发送 cookie，每次都伪装成一个第一次来试用的小萌新，不就可以不断白嫖了么？浏览器会把网站的 cookie 以文件的形式存在某些地方（不同的浏览器配置不同），你把他们找到然后删除就行了。但是对于 Firefox 和 Chrome 浏览器，有很多插件可以直接编辑 cookie，比如我的 Chrome 浏览器就用的一款叫做 EditThisCookie 的插件，这是他们官网：
+Vậy nếu tôi không để trình duyệt gửi cookie, mỗi lần đều giả làm萌新 lần đầu tới试用, chẳng phải có thể白嫖 liên tục sao? Trình duyệt sẽ存 cookie của web dưới dạng file ở chỗ nào đó (trình duyệt khác cấu hình khác), bạn tìm rồi xóa là được. Nhưng với Firefox và Chrome, có nhiều plugin có thể edit thẳng cookie, ví dụ Chrome của tôi dùng một plugin tên EditThisCookie, đây là web chính thức của họ:
 
 ![](https://labuladong.online/algo/images/session/3.png)
 
-这类插件可以读取浏览器在当前网页的 cookie，点开插件可以任意编辑和删除 cookie。**当然，偶尔白嫖一两次还行，不鼓励高频率白嫖，想常用还是掏钱吧，否则网站赚不到钱，就只能取消免费试用这个机制了**。
+Loại plugin này có thể đọc cookie của trình duyệt ở web hiện tại, mở plugin có thể tùy ý edit và xóa cookie. **Đương nhiên, thỉnh thoảng白嫖 một hai lần còn được, không khuyến khích白嫖 tần suất cao, muốn dùng thường vẫn móc tiền吧, nếu không web không kiếm được tiền, chỉ能取消 cơ chế试用 miễn phí này**.
 
-以上就是关于 cookie 和 session 的简单介绍，cookie 是 HTTP 协议的一部分，不算复杂，而 session 是可以定制的，所以下面详细看一下实现 session 管理的代码架构吧。
+Trên đây là giới thiệu đơn giản về cookie và session, cookie là một phần của giao thức HTTP, không phức tạp, còn session có thể定制, nên dưới đây xem kỹ架构 code quản lý session吧.
 
-### 二、session 的实现
+### Hai, implement session
 
-session 的原理不难，但是具体实现它可是很有技巧的，一般需要三个组件配合完成，它们分别是 `Manager`、`Provider` 和 `Session` 三个类（接口）。
+Nguyên lý session không khó, nhưng implement cụ thể nó可是 rất có技巧, thông thường cần ba component配合 hoàn thành, chúng lần lượt là ba class (interface) `Manager`, `Provider` và `Session`.
 
 ![](https://labuladong.online/algo/images/session/4.jpg)
 
-1、浏览器通过 HTTP 协议向服务器请求路径 `/content` 的网页资源，对应路径上有一个 Handler 函数接收请求，解析 HTTP header 中的 cookie，得到其中存储的 sessionID，然后把这个 ID 发给 `Manager`。
+1, Trình duyệt qua giao thức HTTP向 server request tài nguyên web path `/content`, hàm Handler trên path tương ứng nhận request,解析 cookie trong HTTP header, được sessionID lưu trong đó, rồi đưa ID này cho `Manager`.
 
-2、`Manager` 充当一个 session 管理器的角色，主要存储一些配置信息，比如 session 的存活时间，cookie 的名字等等。而所有的 session 存在 `Manager` 内部的一个 `Provider` 中。所以 `Manager` 会把 `sid`（sessionID）传递给 `Provider`，让它去找这个 ID 对应的具体是哪个 session。
+2, `Manager` đóng vai session manager, chủ yếu lưu vài thông tin cấu hình, ví dụ thời gian sống session, tên cookie v.v. Mà mọi session存 trong một `Provider` nội bộ `Manager`. Nên `Manager` sẽ truyền `sid` (sessionID) cho `Provider`, để nó tìm ID này tương ứng cụ thể session nào.
 
-3、`Provider` 就是一个容器，最常见的应该就是一个散列表，将每个 `sid` 和对应的 session 一一映射起来。收到 `Manager` 传递的 `sid` 之后，它就找到 `sid` 对应的 session 结构，也就是 `Session` 结构，然后返回它。
+3, `Provider` chính là một container, hay gặp nhất应该 chính là một hash table, ánh xạ mỗi `sid` với session tương ứng一一. Nhận `sid` `Manager` truyền xong, nó就找到 session struct tương ứng `sid`, chính là struct `Session`, rồi trả về nó.
 
-4、`Session` 中存储着用户的具体信息，由 Handler 函数中的逻辑拿出这些信息，生成该用户的 HTML 网页，返回给客户端。
+4, `Session`中存储 thông tin cụ thể của user, logic trong hàm Handler lấy tin này, sinh trang HTML của user đó, trả cho client.
 
-那么你也许会问，为什么搞这么麻烦，直接在 Handler 函数中搞一个哈希表，然后存储 `sid` 和 `Session` 结构的映射不就完事儿了？
+Vậy bạn có thể hỏi, vì sao搞麻烦 vậy, trực tiếp搞 một hash table trong hàm Handler, rồi lưu ánh xạ `sid` và struct `Session` chẳng phải xong sao?
 
-**这就是设计层面的技巧了**，下面就来说说，为什么分成 `Manager`、`Provider` 和 `Session`。
+**Đây chính là技巧 ở层面 thiết kế**, dưới đây就来说 vì sao chia thành `Manager`, `Provider` và `Session`.
 
-先从最底层的 `Session` 说。既然 session 就是键值对，为啥不直接用哈希表，而是要抽象出这么一个数据结构呢？
+Nói từ `Session`底层 nhất. Đã session chính là key-value, vì sao không dùng thẳng hash table, mà phải trừu tượng ra cấu trúc dữ liệu này?
 
-第一，因为 `Session` 结构可能不止存储了一个哈希表，还可以存储一些辅助数据，比如 `sid`，访问次数，过期时间或者最后一次的访问时间，这样便于实现想 LRU、LFU 这样的算法。
+Thứ nhất, vì struct `Session` có thể không chỉ lưu một hash table, còn có thể lưu vài dữ liệu phụ, ví dụ `sid`, số lần truy cập, thời gian hết hạn hay thời gian truy cập cuối, như vậy tiện implement thuật toán như LRU, LFU.
 
-第二，因为 session 可以有不同的存储方式。如果用编程语言内置的哈希表，那么 session 数据就是存储在内存中，如果数据量大，很容易造成程序崩溃，而且一旦程序结束，所有 session 数据都会丢失。所以可以有很多种 session 的存储方式，比如存入缓存数据库 Redis，或者存入 MySQL 等等。
+Thứ hai, vì session có thể có cách lưu khác nhau. Nếu dùng hash table内置 của ngôn ngữ, thì dữ liệu session就是 lưu trong bộ nhớ, nếu lượng dữ liệu lớn, rất dễ gây crash chương trình, mà một khi chương trình kết thúc, mọi dữ liệu session đều mất. Nên có thể có nhiều cách lưu session, ví dụ存 vào database cache Redis, hay存 vào MySQL v.v.
 
-因此，`Session` 结构提供一层抽象，屏蔽不同存储方式的差异，只要提供一组通用接口操纵键值对：
+Do đó, struct `Session` cung cấp một lớp trừu tượng, che khác biệt cách lưu, chỉ cần cung cấp một nhóm interface chung thao tác key-value:
 
 ```go
 type Session interface {
-    // 设置键值对
+    // 设置键值对 -> Đặt key-value
     Set(key, val interface{})
-    // 获取 key 对应的值
+    // 获取 key 对应的值 -> Lấy value tương ứng key
     Get(key interface{}) interface{}
-    // 删除键 key
+    // 删除键 key -> Xóa key
     Delete(key interface{})
 }
 ```
 
-再说 `Provider` 为啥要抽象出来。我们上面那个图的 `Provider` 就是一个散列表，保存 `sid` 到 `Session` 的映射，但是实际中肯定会更加复杂。我们不是要时不时删除一些 session 吗，除了设置存活时间之外，还可以采用一些其他策略，比如 LRU 缓存淘汰算法，这样就需要 `Provider` 内部使用哈希链表这种数据结构来存储 session。
+Nói tiếp vì sao `Provider` phải trừu tượng ra. `Provider` của图 trên chính là một hash table, lưu ánh xạ `sid` tới `Session`, nhưng thực tế肯定 phức tạp hơn. Ta不是 phải thỉnh thoảng xóa vài session sao, ngoài设置 thời gian sống, còn có thể dùng chiến lược khác, ví dụ thuật toán loại cache LRU, như vậy就需 nội bộ `Provider` dùng cấu trúc dữ liệu như hash-linked-list để lưu session.
 
 > [!TIP]
-> 关于 LRU 算法的奥妙，参见前文 [LRU 算法详解](https://labuladong.online/algo/data-structure/lru-cache/)。
+> Về奥妙 thuật toán LRU, xem bài trước [Chi tiết thuật toán LRU](https://labuladong.online/algo/data-structure/lru-cache/).
 
-因此，`Provider` 作为一个容器，就是要屏蔽算法细节，以合理的数据结构和算法组织 `sid` 和 `Session` 的映射关系，只需要实现下面这几个方法实现对 session 的增删查改：
+Do đó, `Provider` làm container, chính là要 che chi tiết thuật toán, tổ chức quan hệ ánh xạ `sid` và `Session` bằng cấu trúc dữ liệu và thuật toán hợp lý, chỉ cần implement mấy method dưới để增删查改 session:
 
 ```go
 type Provider interface {
-    // 新增并返回一个 session
+    // 新增并返回一个 session -> Thêm mới và trả về một session
     SessionCreate(sid string) (Session, error)
-    // 删除一个 session
+    // 删除一个 session -> Xóa một session
     SessionDestroy(sid string)
-    // 查找一个 session
+    // 查找一个 session -> Tìm một session
     SessionRead(sid string) (Session, error)
-    // 修改一个session
+    // 修改一个session -> Sửa một session
     SessionUpdate(sid string)
-    // 通过类似 LRU 的算法回收过期的 session
+    // 通过类似 LRU 的算法回收过期的 session -> Thu hồi session hết hạn bằng thuật toán kiểu LRU
     SessionGC(maxLifeTime int64)
 }
 ```
 
-最后说 `Manager`，大部分具体工作都委托给 `Session` 和 `Provider` 承担了，`Manager` 主要就是一个参数集合，比如 session 的存活时间，清理过期 session 的策略，以及 session 的可用存储方式。`Manager` 屏蔽了操作的具体细节，我们可以通过 `Manager` 灵活地配置 session 机制。
+Cuối nói `Manager`, phần lớn việc cụ thể đều ủy cho `Session` và `Provider` gánh, `Manager` chủ yếu chính là một tập tham số, ví dụ thời gian sống session, chiến lược dọn session hết hạn, cùng cách lưu session khả dụng. `Manager` che chi tiết thao tác, ta có thể qua `Manager` cấu hình linh hoạt cơ chế session.
 
-综上，session 机制分成几部分的最主要原因就是解耦，实现定制化。我在 Github 上看过几个 Go 语言实现的 session 服务，源码都很简单，有兴趣的朋友可以学习学习：
+Tóm lại, cơ chế session chia mấy phần nguyên nhân chủ yếu nhất chính là解耦, implement定制化. Tôi trên Github xem vài dịch vụ session Go implement, source đều rất đơn giản, bạn hứng thú có thể học:
 
 https://github.com/alexedwards/scs
 
 https://github.com/astaxie/build-web-application-with-golang
-
 
 
 

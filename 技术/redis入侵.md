@@ -1,96 +1,95 @@
-# Redis 入侵
+# Redis bị xâm nhập
 
 
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**通知：为满足广大读者的需求，网站上架 [速成目录](https://labuladong.online/algo/intro/quick-learning-plan/)，如有需要可以看下，谢谢大家的支持~另外，建议你在我的 [网站](https://labuladong.online/algo/) 学习文章，体验更好。**
+**Thông báo: Theo nhu cầu của đông đảo độc giả, website đã mở [lộ trình học cấp tốc](https://labuladong.online/algo/intro/quick-learning-plan/), bạn nào cần có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, bạn nên học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
 
 
 **-----------**
 
-好吧，我也做了回标题党，像我这么细心的同学，怎么可能让服务器被入侵呢？
+Thôi, tôi cũng làm tiêu đề câu view một lần, như bạn cẩn thận thế này, sao có thể để server bị xâm nhập?
 
-其实是这样的，昨天我和一个朋友聊天，他说他自己有一台云服务器运行了 Redis 数据库，有一天突然发现数据库里的**数据全没了**，只剩下一个奇奇怪怪的键值对，其中值看起来像一个 RSA 公钥的字符串，他以为是误操作删库了，幸好自己的服务器里没啥重要的数据，也就没在意。
+Thực ra là thế này, hôm qua tôi chat với một người bạn, cậu ấy nói có một cloud server chạy database Redis, một hôm bỗng phát hiện **dữ liệu toàn mất**, chỉ còn một cặp key-value kỳ lạ, trong đó value trông như chuỗi RSA public key, cậu ấy tưởng误 thao tác xóa库, may server mình không có dữ liệu quan trọng gì, cũng không để ý.
 
-经过一番攀谈交心了解到，他跑了一个比较古老已经停止维护的开源项目，安装的旧版本的 Redis，而且他对 Linux 的使用不是很熟练。我就知道，他的服务器已经被攻陷了，想到也许还会有不少像我这位朋友的人，不重视操作系统的权限、防火墙的设置和数据库的保护，我就写一篇文章简单看看这种情况出现的原因，以及如何防范。
+Qua một番攀谈交心 biết được, cậu ấy chạy một open source比较古老 đã ngừng维护, cài bản Redis cũ, mà cậu ấy dùng Linux không rành lắm. Tôi liền biết server cậu ấy đã bị hạ, nghĩ có lẽ còn không ít người như bạn tôi, không coi trọng quyền OS,设置 firewall và bảo vệ database, tôi viết một bài xem đơn giản nguyên nhân tình huống này, cùng cách phòng.
 
 > [!NOTE]
-> 这种手法现在已经行不通了，因为新版本 Redis 都增加了 protect mode，增加了安全性，我们只能在本地简单模拟一下，就别乱试了。
+> Thủ pháp này giờ đã không dùng được, vì bản Redis mới đều thêm protect mode, tăng bảo mật, chúng ta chỉ mô phỏng đơn giản ở local, đừng thử bậy.
 
-### 事件经过
+### Diễn biến sự kiện
 
-其实这种攻击手法都是 2015 年的事了，那时候 Redis 的安全保护机制比较差，只能靠运维人员来合理配置以保证数据库的安全。有段时间，全球几万个 Redis 节点遭到了攻击，出现了上述奇怪的现象，所有数据被清空，只剩一个键叫 `crackit`，它的值形似 RSA 公钥的字符串。
+Thực ra thủ pháp tấn công này đều là chuyện 2015, hồi đó cơ chế bảo vệ an toàn của Redis比较差, chỉ能靠 nhân viên vận hành cấu hình hợp lý để đảm bảo an toàn database. Có thời gian, mấy vạn node Redis toàn cầu bị tấn công, xuất hiện hiện tượng lạ trên, mọi dữ liệu bị xóa sạch, chỉ còn một key tên `crackit`, value nó形似 chuỗi RSA public key.
 
-后来查证，攻击者利用 Redis 动态设置配置和数据持久化的功能，把自己的 RSA 公钥写入到了被攻击服务器的 `/root/.ssh/authored_keys` 这个文件，从而可以用私钥直接登录对方的 root 用户，侵入对方系统。
+Sau查证, kẻ tấn công lợi dụng chức năng设置 cấu hình động và persist dữ liệu của Redis, ghi RSA public key của mình vào file `/root/.ssh/authored_keys` của server bị tấn công, từ đó có thể dùng private key login thẳng user root đối phương, xâm nhập hệ thống đối phương.
 
-沦陷的服务器安全防护做的很不好，具体如下：
+Server沦陷 làm bảo vệ an toàn rất不好, cụ thể như sau:
 
-1、Redis 的端口是默认端口，而且可以从公网访问。
+1, Port Redis là port mặc định, mà có thể truy cập từ public net.
 
-2、Redis 还没设密码。
+2, Redis còn chưa đặt mật khẩu.
 
-3、Redis 进程是由 root 用户启动的。
+3, Process Redis do user root khởi động.
 
-以上每个点都是比较危险的，合在一起，那真是很致命了。且不说别人把公钥写到你的系统里，就说连上你的数据库然后删库，那损失都够大了。那么具体的流程是什么呢，下面我在本地回环地址上简单演示一下。
+Mỗi điểm trên đều比较 nguy hiểm, hợp lại thì真是 rất致命. Chưa nói người ta ghi public key vào hệ thống bạn,就说 nối vào database bạn rồi xóa库, tổn thất đó đã đủ lớn. Vậy流程 cụ thể là gì, dưới đây tôi demo đơn giản ở địa chỉ loopback local.
 
-### 本地演示
+### Demo local
 
-Redis 监听的默认端口是 6379，我们设置它接收网卡 127.0.0.1 的连接，这样我从本地肯定可以连接 Redis，以此模拟「从公网可以访问 Redis」这一条件。
+Port mặc định Redis lắng nghe là 6379, ta设置 nó nhận kết nối card mạng 127.0.0.1, như vậy tôi từ local肯定 có thể nối Redis,以此 mô phỏng điều kiện 「từ public net có thể truy cập Redis」 này.
 
-现在我是名叫 fdl 的普通用户，我想用 ssh 登录我系统上的 root 用户，要输入 root 的密码，我不知道，所以没办法登录。
+Giờ tôi là user thường tên fdl, tôi muốn dùng ssh login user root trên hệ thống, phải nhập mật khẩu root, tôi không biết, nên không cách login.
 
-除了密码登录之外，还可以使用 RSA 密钥对登录，但是必须要把我的公钥存到 root 的家目录中 `/root/.ssh/authored_keys`。我们知道 `/root` 目录的权限设置是不允许任何其他用户闯入读写的：
+Ngoài login mật khẩu, còn có thể dùng cặp key RSA login, nhưng必须要把 public key của tôi存 vào home root `/root/.ssh/authored_keys`. Ta biết quyền thư mục `/root`设置 không cho user khác nào xông vào đọc ghi:
 
 ![](https://labuladong.online/algo/images/redis/1.png)
 
-但是，我发现自己竟然可以直接访问 Redis：
+Nhưng, tôi phát hiện mình竟然 có thể truy cập thẳng Redis:
 
 ![](https://labuladong.online/algo/images/redis/2.png)
 
-如果 Redis 是以 root 的身份运行的，那么我就可以通过操作 Redis，让它把我的公钥写到 root 的家目录中。Redis 有一种持久化方式是生成 RDB 文件，其中会包含原始数据。
+Nếu Redis chạy với thân phận root, thì tôi có thể qua thao tác Redis, để nó ghi public key của tôi vào home root. Redis có một kiểu persist là sinh file RDB, trong đó sẽ chứa dữ liệu gốc.
 
-我露出了邪恶的微笑，先把 Redis 中的数据全部清空，然后把我的 RSA 公钥写到数据库里，这里在开头和结尾加换行符目的是避免 RDB 文件生成过程中损坏到公钥字符串：
+Tôi露出 nụ cười邪恶, trước xóa sạch dữ liệu trong Redis, rồi ghi RSA public key của tôi vào database, ở đây thêm換行 đầu cuối mục đích tránh quá trình sinh file RDB làm hỏng chuỗi public key:
 
 ![](https://labuladong.online/algo/images/redis/3.png)
 
-命令 Redis 把生成的数据文件保存到 `/root/.ssh/` 中的 `authored_keys` 文件中：
+Ra lệnh Redis lưu file dữ liệu sinh ra vào file `authored_keys` trong `/root/.ssh/`:
 
 ![](https://labuladong.online/algo/images/redis/4.png)
 
-现在，root 的家目录中已经包含了我们的 RSA 公钥，我们现在可以通过密钥对登录进 root 了：
+Giờ, home root đã chứa RSA public key của ta, ta giờ có thể qua cặp key login vào root:
 
 ![](https://labuladong.online/algo/images/redis/5.png)
 
-看一下刚才写入 root 家的公钥：
+Xem public key vừa ghi vào nhà root:
 
 ![](https://labuladong.online/algo/images/redis/6.png)
 
-乱码是 GDB 文件的某种编码吧，但是中间的公钥被完整保存了，而且 ssh 登录程序竟然也识别了这段被乱码包围的公钥！
+Loạn mã là mã hóa nào đó của file GDB吧, nhưng public key ở giữa được lưu完整, mà chương trình login ssh竟然 cũng nhận đoạn public key bị loạn mã bao quanh này!
 
-至此，拥有了 root 权限，就可以为所欲为了。。。
+Tới đây, có quyền root, là có thể为所欲为。。。
 
-### 吸取教训
+### Rút kinh nghiệm
 
-虽然现在基本不会受到这种攻击（新版本的 Redis 没有密码时默认不对外网开放），但是对于系统的安全性是每个人都应该重视的。
+Dù giờ cơ bản không bị tấn công này (bản Redis mới không mật khẩu mặc định không mở ra外网), nhưng với an toàn hệ thống là mỗi người đều nên coi trọng.
 
-我们自己折腾东西，用个低配云服务器，为了省事儿一般也不认真配置防火墙，数据库不设密码或者设成 admin、root 这样简单的密码，反正也没啥数据。这样肯定不是个好习惯。
+Tụi mình tự vọc, dùng cloud server thấp, để省事一般 cũng không cấu hình firewall认真, database không đặt mật khẩu hay đặt mật khẩu đơn giản như admin, root,反正 cũng không có dữ liệu gì. Như vậy肯定 không phải thói quen tốt.
 
-现在我们的计算机系统越来越完善，每个成熟的项目都由最优秀的一帮人维护，从技术上说应该算是无懈可击了，那么唯一可能出问题的地方就在于使用它们的人。
+Giờ hệ máy tính của ta ngày càng完善, mỗi project成熟 đều do nhóm xuất sắc nhất维护, nói về技术应该算 vô懈可击, vậy nơi duy nhất có thể出问题 chính là người dùng chúng.
 
-就像经常看到有人的 QQ 被盗，我相信盗号的人肯定不是跑到腾讯的数据库里盗号，肯定是 QQ 号主安全防范意识差，在哪个钓鱼网站输入了自己的账号密码，导致被盗。我基本没见过微信被盗的，可能是微信弱化密码登录，改用二维码扫描登录的原因。这应该也算是一种安全方面的考量吧，毕竟微信是有支付功能的。
+Như hay thấy QQ ai đó bị盗, tôi tin người盗号肯定 không phải chạy vào database Tencent盗号,肯定 là chủ号防范 ý thức kém, nhập tài khoản mật khẩu ở web钓鱼 nào đó, dẫn tới bị盗. Tôi cơ bản chưa thấy WeChat bị盗, có thể là WeChat弱化 login mật khẩu, đổi dùng quét QR login. Đây应该 cũng算 một考量 an toàn吧, dù sao WeChat có chức năng thanh toán.
 
-上面这种骗局对于技术人来说，看看 url，浏览器分析一下网络包就很容易识别出来，但是你还别不信，一般人真的搞不明白怎么识别钓鱼网站和官方网站。就像我真没想到都 2020 年了，还有人在找 Redis 的这个漏洞，而且还有人中招。。。
+Trò骗 trên với dân技术 mà nói, xem url, trình duyệt phân tích gói mạng là rất dễ nhận ra, nhưng bạn还别 không tin, người一般真的搞 không rõ sao nhận web钓鱼 và web chính thức. Như tôi真没想到都 2020 rồi, còn có người tìm lỗ hổng Redis này, mà còn có người trúng。。。
 
-那么说回 Redis 数据库的使用，在官网上明确写出了安全防护的建议，我简单总结一下吧：
+Vậy nói về dùng database Redis, trên web chính thức viết rõ建议 bảo vệ an toàn, tôi tóm đơn giản吧:
 
-1、不要用 root 用户启动 Redis Server，而且一定要设置密码，而且密码不要太短，否则容易被暴力破解。
+1, Đừng dùng user root khởi động Redis Server, mà nhất định phải đặt mật khẩu, mà mật khẩu đừng quá ngắn, nếu không dễ bị暴力破解.
 
-2、配置服务器防火墙和 Redis 的 config 文件，尽量不要让 Redis 与外界接触。
+2, Cấu hình firewall server và file config Redis, cố đừng để Redis tiếp xúc外界.
 
-3、利用 rename 功能伪装 flushall 这种危险命令，以防被删库，丢失数据。
-
+3, Lợi dụng chức năng rename ngụy trang lệnh nguy hiểm như flushall, đề phòng bị xóa库, mất dữ liệu.
 
 
 

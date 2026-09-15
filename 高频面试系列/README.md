@@ -1,7 +1,7 @@
-# 高频面试系列
+# Chuỗi bài Câu hỏi phỏng vấn tần suất cao
 
-8 说了，本章都是高频面试题，配合前面的动态规划系列，祝各位马到成功！
+Như đã nói ở trên, chương này toàn là câu hỏi phỏng vấn tần suất cao<!-- TRANSLATION_REVIEW: nguyên văn "8 说了" có thể là lỗi gõ của "如上说了" (như đã nói ở trên) -->, kết hợp với chuỗi bài quy hoạch động ở trước, chúc các bạn mã đáo thành công!
 
-欢迎关注我的公众号 labuladong，查看全部文章：
+Mời theo dõi tài khoản công chúng labuladong để xem toàn bộ bài viết:
 
-![labuladong二维码](../pictures/qrcode.jpg)
+![Mã QR labuladong](../pictures/qrcode.jpg)

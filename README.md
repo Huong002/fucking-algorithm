@@ -3,444 +3,444 @@
 
 English version is on [labuladong.online](https://labuladong.online/algo/en/) too. Just enjoy：)
 
-# labuladong 的算法笔记
+# Ghi chép thuật toán của labuladong
 
-本仓库总共 60 多篇原创文章，都是基于 LeetCode 的题目，涵盖了所有题型和技巧，而且一定要做到**举一反三，通俗易懂**，绝不是简单的代码堆砌，后面有目录。
+Kho này có tổng cộng hơn 60 bài viết gốc, đều dựa trên các đề LeetCode, bao phủ mọi dạng đề và kỹ thuật, và nhất định phải đạt được **suy một ra ba, dễ hiểu**, tuyệt đối không phải là nơi chất đống code đơn thuần. Mục lục ở phía sau.
 
-我先吐槽几句。**刷题刷题，刷的是题，培养的是思维，本仓库的目的就是传递这种算法思维**。我要是只写一个包含 LeetCode 题目代码的仓库，有个锤子用？没有思路解释，没有思维框架，顶多写个时间复杂度，那玩意一眼就能看出来。
+Tôi xin "xả" vài câu trước. **Luyện đề, luyện đề, luyện là đề, rèn là tư duy, mục đích của kho này chính là truyền đạt tư duy thuật toán ấy**. Nếu tôi chỉ viết một kho chứa code đề LeetCode thì có tác dụng quái gì? Không có giải thích hướng suy nghĩ, không có khung tư duy, cùng lắm ghi thêm độ phức tạp thời gian, thứ mà nhìn một cái là thấy ngay.
 
-只想要答案的话很容易，题目评论区五花八门的答案，动不动就秀 python 一行代码解决，有那么多人点赞。问题是，你去做算法题，是去学习编程语言的奇技淫巧的，还是学习算法思维的呢？你的快乐，到底源自复制别人的一行代码通过测试，已完成题目 +1，还是源自自己通过逻辑推理和算法框架不看答案写出解法？
+Nếu chỉ muốn đáp án thì rất dễ, dưới phần bình luận mỗi đề có đủ loại đáp án, thỉnh thoảng còn khoe code Python một dòng là xong, được bao nhiêu người like. Vấn đề là, bạn đi làm đề thuật toán, là để học mẹo vặt của ngôn ngữ lập trình, hay để học tư duy thuật toán? Niềm vui của bạn, rốt cuộc đến từ việc copy một dòng code của người khác cho qua test, số đề hoàn thành +1, hay đến từ việc tự mình dùng suy luận logic và khung thuật toán viết ra lời giải mà không cần xem đáp án?
 
-网上总有大佬喷我，说我写的东西太基础，要么说不能借助框架思维来学习算法。我只能说大家刷算法就是找工作吃饭的，不是打竞赛的，我也是一路摸爬滚打过来的，我们要的是清楚明白有所得，不是故弄玄虚无所指。
+Trên mạng hay có cao thủ chê tôi, nói thứ tôi viết quá cơ bản, hoặc nói không thể dựa vào tư duy khung để học thuật toán. Tôi chỉ có thể nói mọi người luyện thuật toán là để kiếm việc nuôi thân, không phải để thi đấu, tôi cũng từng lăn lộn bò trườn mà lên, chúng ta cần rõ ràng minh bạch và thu được điều gì đó, chứ không phải làm ra vẻ huyền bí mà chẳng chỉ ra điều gì.
 
-不想办法做到通俗易懂，难道要上来先把《算法导论》吹上天，然后把人家都心怀敬仰地劝退？
+Không tìm cách viết cho dễ hiểu, chẳng lẽ vừa vào đã thổi phồng cuốn *Introduction to Algorithms* lên tận trời, rồi khiến người ta kính nể mà chùn bước rút lui?
 
-**做啥事情做多了，都能发现套路的，我把各种算法套路框架总结出来，相信可以帮助其他人少走弯路**。我这个纯靠自学的小童鞋，花了一年时间刷题和总结，自己写了一份算法小抄，后面有目录，这里就不废话了。
+**Việc gì làm nhiều rồi cũng phát hiện ra công thức, tôi tổng kết các công thức khung của đủ loại thuật toán, tin rằng có thể giúp người khác bớt đi đường vòng**. Tôi là một đứa hoàn toàn tự học, mất một năm luyện đề và tổng kết, tự viết một bản cheat-sheet thuật toán, mục lục ở phía sau, ở đây không lảm nhảm nữa.
 
-## 在开始学习之前
+## Trước khi bắt đầu học
 
-**1、先给本仓库点个 star，满足一下我的虚荣心**，文章质量绝对值你一个 star。我还在继续创作，给我一点继续写文的动力，感谢。
+**1. Hãy cho kho này một star trước, thỏa mãn chút hư vinh của tôi**, chất lượng bài viết tuyệt đối xứng đáng với một star của bạn. Tôi vẫn đang tiếp tục sáng tác, hãy cho tôi chút động lực để viết tiếp, cảm ơn.
 
-**2、建议收藏我的在线网站，每篇文章开头都有对应的力扣题目链接，可以边看文章边刷题，一共可以手把手带你刷 500 道题目**：
+**2. Nên lưu lại website trực tuyến của tôi, đầu mỗi bài viết đều có link đề LeetCode tương ứng, có thể vừa đọc bài vừa luyện đề, tổng cộng có thể cầm tay dẫn bạn luyện 500 đề**：
 
-2024 最新地址：https://labuladong.online/algo/
+2024 Địa chỉ mới nhất：https://labuladong.online/algo/
 
-~~GitHub Pages 地址：https://labuladong.online/algo/~~
+~~Địa chỉ GitHub Pages: https://labuladong.online/algo/~~
 
-~~Gitee Pages 地址：https://labuladong.gitee.io/algo/~~
+~~Địa chỉ Gitee Pages: https://labuladong.gitee.io/algo/~~
 
-## labuladong 刷题全家桶简介
+## Giới thiệu combo luyện đề của labuladong
 
-### 一、算法可视化面板
+### 1. Bảng trực quan hóa thuật toán
 
-我的算法网站、所有配套插件都集成了一个算法可视化工具，可以对数据结构和递归过程进行可视化，大幅降低理解算法的难度。几乎每道题目的解法代码都有对应的可视化面板，具体参见下方介绍。
+Website thuật toán, mọi plugin đi kèm của tôi đều tích hợp một công cụ trực quan hóa thuật toán, có thể trực quan hóa cấu trúc dữ liệu và quá trình đệ quy, giảm mạnh độ khó khi hiểu thuật toán. Code lời giải của hầu như mọi đề đều có bảng trực quan hóa tương ứng, xem giới thiệu bên dưới để biết chi tiết.
 
 
-### 二、学习网站
+### 2. Website học tập
 
-内容当然是我的系列算法教程中最核心的部分，我的算法教程都发布在网站 [labuladong.online](https://labuladong.online/algo/) 上，相信你会未来会在这里花费大量的学习时间，而不是仅仅加入收藏夹~
+Nội dung đương nhiên là phần cốt lõi nhất trong chuỗi hướng dẫn thuật toán của tôi, mọi hướng dẫn thuật toán của tôi đều đăng trên website [labuladong.online](https://labuladong.online/algo/), tin rằng bạn sẽ dành rất nhiều thời gian học tập ở đây trong tương lai, chứ không chỉ thêm vào bookmark~
 
 ![](https://labuladong.github.io/pictures/简介/web_intro1.jpg)
 
-### 三、Chrome 插件
+### 3. Plugin Chrome
 
-**主要功能**：Chrome 插件可以在中文版力扣或英文版 LeetCode 上快捷查看我的「题解」或「思路」，并添加了题目和算法技巧之间的引用关系，可以和我的网站/公众号/课程联动，给我的读者提供最丝滑的刷题体验。安装使用手册见下方目录。
+**Chức năng chính**：Plugin Chrome có thể xem nhanh "lời giải" hay "hướng suy nghĩ" của tôi ngay trên LeetCode bản tiếng Trung hoặc LeetCode bản tiếng Anh, đồng thời thêm quan hệ tham chiếu giữa đề bài và kỹ thuật thuật toán, có thể liên động với website/tài khoản công chúng/khóa học của tôi, mang đến cho độc giả trải nghiệm luyện đề mượt mà nhất. Sách hướng dẫn cài đặt và sử dụng xem ở mục lục bên dưới.
 
 ![](https://labuladong.github.io/pictures/简介/chrome_intro.jpg)
 
 
-### 四、vscode 插件
+### 4. Plugin vscode
 
-**主要功能**：和 Chrome 插件功能基本相同，习惯在 vscode 上刷题的读者可以使用该插件。安装使用手册见下方目录。
+**Chức năng chính**：Về cơ bản giống chức năng của plugin Chrome, độc giả quen luyện đề trên vscode có thể dùng plugin này. Sách hướng dẫn cài đặt và sử dụng xem ở mục lục bên dưới.
 
 ![](https://labuladong.github.io/pictures/简介/vs_intro.jpg)
 
 
-### 五、Jetbrains 插件
+### 5. Plugin Jetbrains
 
-**主要功能**：和 Chrome 插件功能基本相同，习惯在 Jetbrains 家的 IDE（PyCharm/Intellij/Goland 等）上刷题的读者可以使用该插件。安装使用手册见下方目录。
+**Chức năng chính**：Về cơ bản giống chức năng của plugin Chrome, độc giả quen luyện đề trên IDE nhà Jetbrains (PyCharm/Intellij/Goland, v.v.) có thể dùng plugin này. Sách hướng dẫn cài đặt và sử dụng xem ở mục lục bên dưới.
 
 ![](https://labuladong.github.io/pictures/简介/jb_intro.jpg)
 
 
-最后祝大家学习愉快，在题海中自在遨游！
+Cuối cùng chúc mọi người học vui, tự do bơi lội trong biển đề!
 
 
-# 文章目录
+# Mục lục bài viết
 
 <!-- table start -->
 
 
-* [本站简介](https://labuladong.online/algo/home/)
+* [Giới thiệu website](https://labuladong.online/algo/home/)
 
-* [针对初学和速成的学习规划](https://labuladong.online/algo/menu/plan/)
-  * [速成目录学习规划](https://labuladong.online/algo/intro/quick-learning-plan/)
-  * [完整目录学习规划](https://labuladong.online/algo/intro/beginner-learning-plan/)
-  * [算法刷题的重点和坑](https://labuladong.online/algo/intro/how-to-learn-algorithms/)
-  * [习题章节的练习/复习方法](https://labuladong.online/algo/intro/how-to-practice/)
+* [Lộ trình học cho người mới và học cấp tốc](https://labuladong.online/algo/menu/plan/)
+  * [Lộ trình học cấp tốc theo mục lục](https://labuladong.online/algo/intro/quick-learning-plan/)
+  * [Lộ trình học đầy đủ theo mục lục](https://labuladong.online/algo/intro/beginner-learning-plan/)
+  * [Trọng tâm và bẫy thường gặp khi luyện thuật toán](https://labuladong.online/algo/intro/how-to-learn-algorithms/)
+  * [Cách luyện tập/ôn tập các chương bài tập](https://labuladong.online/algo/intro/how-to-practice/)
 
-* [配套学习工具使用指南](https://labuladong.online/algo/menu/tools/)
-  * [AI 助教随时答疑](https://labuladong.online/algo/intro/ai-assistant/)
-  * [算法可视化面板使用说明](https://labuladong.online/algo/intro/visualize/)
-  * [算法游戏玩法及汇总](https://labuladong.online/algo/intro/game/)
-  * [配套 Chrome 刷题插件](https://labuladong.online/algo/intro/chrome/)
-  * [配套 vscode/cursor 刷题插件](https://labuladong.online/algo/intro/vscode/)
-  * [配套 JetBrains 刷题插件](https://labuladong.online/algo/intro/jetbrains/)
-  * [本站付费会员](https://labuladong.online/algo/intro/site-vip/)
+* [Hướng dẫn sử dụng công cụ học tập đi kèm](https://labuladong.online/algo/menu/tools/)
+  * [Trợ giảng AI giải đáp mọi lúc](https://labuladong.online/algo/intro/ai-assistant/)
+  * [Hướng dẫn dùng bảng trực quan hóa thuật toán](https://labuladong.online/algo/intro/visualize/)
+  * [Cách chơi và tổng hợp game thuật toán](https://labuladong.online/algo/intro/game/)
+  * [Plugin Chrome luyện đề đi kèm](https://labuladong.online/algo/intro/chrome/)
+  * [Plugin vscode/cursor luyện đề đi kèm](https://labuladong.online/algo/intro/vscode/)
+  * [Plugin JetBrains luyện đề đi kèm](https://labuladong.online/algo/intro/jetbrains/)
+  * [Hội viên trả phí của website](https://labuladong.online/algo/intro/site-vip/)
 
-* [入门：编程语言基础及练习](https://labuladong.online/algo/menu/)
-  * [本章导读](https://labuladong.online/algo/intro/programming-language-basic/)
-  * [C++ 语言基础](https://labuladong.online/algo/programming-language-basic/cpp/)
-  * [Java 语言基础](https://labuladong.online/algo/programming-language-basic/java/)
-  * [Golang 语言基础](https://labuladong.online/algo/programming-language-basic/golang/)
-  * [Python 语言基础](https://labuladong.online/algo/programming-language-basic/python/)
-  * [JavaScript 语言基础](https://labuladong.online/algo/intro/js/)
-  * [力扣/LeetCode 解题须知](https://labuladong.online/algo/intro/leetcode/)
-  * [编程语言刷题实践](https://labuladong.online/algo/programming-language-basic/lc-practice/)
-  * [ACM 模式代码模板](https://labuladong.online/algo/intro/acm-mode/)
+* [Nhập môn: kiến thức cơ bản và bài luyện ngôn ngữ lập trình](https://labuladong.online/algo/menu/)
+  * [Mở đầu chương](https://labuladong.online/algo/intro/programming-language-basic/)
+  * [Nền tảng ngôn ngữ C++](https://labuladong.online/algo/programming-language-basic/cpp/)
+  * [Nền tảng ngôn ngữ Java](https://labuladong.online/algo/programming-language-basic/java/)
+  * [Nền tảng ngôn ngữ Golang](https://labuladong.online/algo/programming-language-basic/golang/)
+  * [Nền tảng ngôn ngữ Python](https://labuladong.online/algo/programming-language-basic/python/)
+  * [Nền tảng ngôn ngữ JavaScript](https://labuladong.online/algo/intro/js/)
+  * [Những điều cần biết khi giải đề LeetCode](https://labuladong.online/algo/intro/leetcode/)
+  * [Thực hành luyện đề theo ngôn ngữ lập trình](https://labuladong.online/algo/programming-language-basic/lc-practice/)
+  * [Template code chế độ ACM](https://labuladong.online/algo/intro/acm-mode/)
 
-* [基础：数据结构及排序精讲](https://labuladong.online/algo/menu/quick-start/)
-  * [本章导读](https://labuladong.online/algo/intro/data-structure-basic/)
-  * [时间空间复杂度入门](https://labuladong.online/algo/intro/complexity-basic/)
+* [Cơ bản: giảng kỹ cấu trúc dữ liệu và sắp xếp](https://labuladong.online/algo/menu/quick-start/)
+  * [Mở đầu chương](https://labuladong.online/algo/intro/data-structure-basic/)
+  * [Nhập môn độ phức tạp thời gian và không gian](https://labuladong.online/algo/intro/complexity-basic/)
 
-  * [手把手带你实现动态数组](https://labuladong.online/algo/menu/dynamic-array/)
-    * [数组（顺序存储）基本原理](https://labuladong.online/algo/data-structure-basic/array-basic/)
-    * [动态数组代码实现](https://labuladong.online/algo/data-structure-basic/array-implement/)
+  * [Cầm tay hướng dẫn cài đặt mảng động](https://labuladong.online/algo/menu/dynamic-array/)
+    * [Nguyên lý cơ bản của mảng (lưu trữ tuần tự)](https://labuladong.online/algo/data-structure-basic/array-basic/)
+    * [Cài đặt code mảng động](https://labuladong.online/algo/data-structure-basic/array-implement/)
 
-  * [手把手带你实现单/双链表](https://labuladong.online/algo/menu/linked-list/)
-    * [链表（链式存储）基本原理](https://labuladong.online/algo/data-structure-basic/linkedlist-basic/)
-    * [链表代码实现](https://labuladong.online/algo/data-structure-basic/linkedlist-implement/)
-    * [【游戏】实现贪吃蛇](https://labuladong.online/algo/game/snake/)
+  * [Cầm tay hướng dẫn cài đặt danh sách liên kết đơn/kép](https://labuladong.online/algo/menu/linked-list/)
+    * [Nguyên lý cơ bản của danh sách liên kết (lưu trữ mắt xích)](https://labuladong.online/algo/data-structure-basic/linkedlist-basic/)
+    * [Cài đặt code danh sách liên kết](https://labuladong.online/algo/data-structure-basic/linkedlist-implement/)
+    * [[Game] Cài đặt game rắn săn mồi](https://labuladong.online/algo/game/snake/)
 
-  * [数组链表的种种变换](https://labuladong.online/algo/menu/arr-linked/)
-    * [环形数组技巧及实现](https://labuladong.online/algo/data-structure-basic/cycle-array/)
-    * [跳表核心原理](https://labuladong.online/algo/data-structure-basic/skip-list-basic/)
-    * [位图原理及实现](https://labuladong.online/algo/data-structure-basic/bitmap/)
+  * [Các biến thể của mảng và danh sách liên kết](https://labuladong.online/algo/menu/arr-linked/)
+    * [Kỹ thuật mảng vòng và cách cài đặt](https://labuladong.online/algo/data-structure-basic/cycle-array/)
+    * [Nguyên lý cốt lõi của skip list](https://labuladong.online/algo/data-structure-basic/skip-list-basic/)
+    * [Nguyên lý bitmap và cách cài đặt](https://labuladong.online/algo/data-structure-basic/bitmap/)
 
-  * [手把手带你实现队列/栈](https://labuladong.online/algo/menu/queue-stack/)
-    * [队列/栈基本原理](https://labuladong.online/algo/data-structure-basic/queue-stack-basic/)
-    * [用链表实现队列/栈](https://labuladong.online/algo/data-structure-basic/linked-queue-stack/)
-    * [用数组实现队列/栈](https://labuladong.online/algo/data-structure-basic/array-queue-stack/)
-    * [双端队列（Deque）原理及实现](https://labuladong.online/algo/data-structure-basic/deque-implement/)
+  * [Cầm tay hướng dẫn cài đặt hàng đợi/ngăn xếp](https://labuladong.online/algo/menu/queue-stack/)
+    * [Nguyên lý cơ bản của hàng đợi/ngăn xếp](https://labuladong.online/algo/data-structure-basic/queue-stack-basic/)
+    * [Dùng danh sách liên kết cài đặt hàng đợi/ngăn xếp](https://labuladong.online/algo/data-structure-basic/linked-queue-stack/)
+    * [Dùng mảng cài đặt hàng đợi/ngăn xếp](https://labuladong.online/algo/data-structure-basic/array-queue-stack/)
+    * [Nguyên lý deque (hàng đợi hai đầu) và cách cài đặt](https://labuladong.online/algo/data-structure-basic/deque-implement/)
 
-  * [哈希表的原理及实现](https://labuladong.online/algo/menu/hash-table/)
-    * [哈希表核心原理](https://labuladong.online/algo/data-structure-basic/hashmap-basic/)
-    * [用拉链法实现哈希表](https://labuladong.online/algo/data-structure-basic/hashtable-chaining/)
-    * [线性探查法的两个难点](https://labuladong.online/algo/data-structure-basic/linear-probing-key-point/)
-    * [线性探查法的两种代码实现](https://labuladong.online/algo/data-structure-basic/linear-probing-code/)
-    * [哈希集合的原理及代码实现](https://labuladong.online/algo/data-structure-basic/hash-set/)
+  * [Nguyên lý bảng băm và cách cài đặt](https://labuladong.online/algo/menu/hash-table/)
+    * [Nguyên lý cốt lõi của bảng băm](https://labuladong.online/algo/data-structure-basic/hashmap-basic/)
+    * [Dùng phương pháp chaining cài đặt bảng băm](https://labuladong.online/algo/data-structure-basic/hashtable-chaining/)
+    * [Hai điểm khó của phương pháp thăm dò tuyến tính](https://labuladong.online/algo/data-structure-basic/linear-probing-key-point/)
+    * [Hai cách cài đặt code phương pháp thăm dò tuyến tính](https://labuladong.online/algo/data-structure-basic/linear-probing-code/)
+    * [Nguyên lý hash set và cách cài đặt code](https://labuladong.online/algo/data-structure-basic/hash-set/)
 
-  * [哈希表结构的种种变换](https://labuladong.online/algo/menu/hash-table-variation/)
-    * [用链表加强哈希表（LinkedHashMap）](https://labuladong.online/algo/data-structure-basic/hashtable-with-linked-list/)
-    * [用数组加强哈希表（ArrayHashMap）](https://labuladong.online/algo/data-structure-basic/hashtable-with-array/)
-    * [布隆过滤器原理及实现](https://labuladong.online/algo/data-structure-basic/bloom-filter/)
+  * [Các biến thể của cấu trúc bảng băm](https://labuladong.online/algo/menu/hash-table-variation/)
+    * [Dùng danh sách liên kết tăng cường bảng băm (LinkedHashMap)](https://labuladong.online/algo/data-structure-basic/hashtable-with-linked-list/)
+    * [Dùng mảng tăng cường bảng băm (ArrayHashMap)](https://labuladong.online/algo/data-structure-basic/hashtable-with-array/)
+    * [Nguyên lý bộ lọc Bloom và cách cài đặt](https://labuladong.online/algo/data-structure-basic/bloom-filter/)
 
-  * [二叉树结构及遍历](https://labuladong.online/algo/menu/binary-tree/)
-    * [二叉树基础及常见类型](https://labuladong.online/algo/data-structure-basic/binary-tree-basic/)
-    * [二叉树的递归/层序遍历](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
-    * [DFS 和 BFS 的适用场景](https://labuladong.online/algo/data-structure-basic/use-case-of-dfs-bfs/)
-    * [多叉树的递归/层序遍历](https://labuladong.online/algo/data-structure-basic/n-ary-tree-traverse-basic/)
+  * [Cấu trúc cây nhị phân và cách duyệt](https://labuladong.online/algo/menu/binary-tree/)
+    * [Kiến thức cơ bản và các loại cây nhị phân thường gặp](https://labuladong.online/algo/data-structure-basic/binary-tree-basic/)
+    * [Duyệt cây nhị phân bằng đệ quy/duyệt theo tầng](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
+    * [Trường hợp áp dụng của DFS và BFS](https://labuladong.online/algo/data-structure-basic/use-case-of-dfs-bfs/)
+    * [Duyệt cây đa phân bằng đệ quy/duyệt theo tầng](https://labuladong.online/algo/data-structure-basic/n-ary-tree-traverse-basic/)
 
-  * [二叉树结构的种种变换](https://labuladong.online/algo/menu/binary-tree/)
-    * [二叉搜索树的应用及可视化](https://labuladong.online/algo/data-structure-basic/tree-map-basic/)
-    * [红黑树的完美平衡及可视化](https://labuladong.online/algo/data-structure-basic/rbtree-basic/)
-    * [Trie/字典树/前缀树原理及可视化](https://labuladong.online/algo/data-structure-basic/trie-map-basic/)
-    * [二叉堆核心原理及可视化](https://labuladong.online/algo/data-structure-basic/binary-heap-basic/)
-    * [二叉堆/优先级队列代码实现](https://labuladong.online/algo/data-structure-basic/binary-heap-implement/)
-    * [线段树核心原理及可视化](https://labuladong.online/algo/data-structure-basic/segment-tree-basic/)
-    * [数据压缩和霍夫曼树](https://labuladong.online/algo/data-structure-basic/huffman-tree/)
-    * [正在更新 ing](https://labuladong.online/algo/intro/updating/)
+  * [Các biến thể của cấu trúc cây nhị phân](https://labuladong.online/algo/menu/binary-tree/)
+    * [Ứng dụng cây tìm kiếm nhị phân và trực quan hóa](https://labuladong.online/algo/data-structure-basic/tree-map-basic/)
+    * [Cân bằng hoàn hảo của cây đỏ-đen và trực quan hóa](https://labuladong.online/algo/data-structure-basic/rbtree-basic/)
+    * [Nguyên lý Trie/cây từ điển/cây tiền tố và trực quan hóa](https://labuladong.online/algo/data-structure-basic/trie-map-basic/)
+    * [Nguyên lý cốt lõi của binary heap và trực quan hóa](https://labuladong.online/algo/data-structure-basic/binary-heap-basic/)
+    * [Cài đặt code binary heap/hàng đợi ưu tiên](https://labuladong.online/algo/data-structure-basic/binary-heap-implement/)
+    * [Nguyên lý cốt lõi của cây đoạn (segment tree) và trực quan hóa](https://labuladong.online/algo/data-structure-basic/segment-tree-basic/)
+    * [Nén dữ liệu và cây Huffman](https://labuladong.online/algo/data-structure-basic/huffman-tree/)
+    * [Đang cập nhật](https://labuladong.online/algo/intro/updating/)
 
-  * [图结构基础及算法概览](https://labuladong.online/algo/menu/graph-theory/)
-    * [图论中的基本术语](https://labuladong.online/algo/data-structure-basic/graph-terminology/)
-    * [图结构的通用代码实现](https://labuladong.online/algo/data-structure-basic/graph-basic/)
-    * [图结构的 DFS/BFS 遍历](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/)
-    * [欧拉图和一笔画游戏](https://labuladong.online/algo/data-structure-basic/eulerian-graph/)
-    * [图结构最短路径算法概览](https://labuladong.online/algo/data-structure-basic/graph-shortest-path/)
-    * [最小生成树算法概览](https://labuladong.online/algo/data-structure-basic/graph-minimum-spanning-tree/)
-    * [Union Find 并查集原理](https://labuladong.online/algo/data-structure-basic/union-find-basic/)
-    * [正在更新 ing](https://labuladong.online/algo/intro/updating/)
+  * [Kiến thức cơ bản về cấu trúc đồ thị và tổng quan thuật toán](https://labuladong.online/algo/menu/graph-theory/)
+    * [Thuật ngữ cơ bản trong lý thuyết đồ thị](https://labuladong.online/algo/data-structure-basic/graph-terminology/)
+    * [Cài đặt code tổng quát cho cấu trúc đồ thị](https://labuladong.online/algo/data-structure-basic/graph-basic/)
+    * [Duyệt đồ thị bằng DFS/BFS](https://labuladong.online/algo/data-structure-basic/graph-traverse-basic/)
+    * [Đồ thị Euler và game vẽ một nét](https://labuladong.online/algo/data-structure-basic/eulerian-graph/)
+    * [Tổng quan thuật toán đường đi ngắn nhất trên đồ thị](https://labuladong.online/algo/data-structure-basic/graph-shortest-path/)
+    * [Tổng quan thuật toán cây khung nhỏ nhất](https://labuladong.online/algo/data-structure-basic/graph-minimum-spanning-tree/)
+    * [Nguyên lý Union-Find (DSU)](https://labuladong.online/algo/data-structure-basic/union-find-basic/)
+    * [Đang cập nhật](https://labuladong.online/algo/intro/updating/)
 
-  * [十大排序算法原理及可视化](https://labuladong.online/algo/menu/sorting/)
-    * [本章导读](https://labuladong.online/algo/intro/sorting/)
-    * [排序算法的关键指标](https://labuladong.online/algo/data-structure-basic/sort-basic/)
-    * [选择排序所面临的问题](https://labuladong.online/algo/data-structure-basic/select-sort/)
-    * [拥有稳定性：冒泡排序](https://labuladong.online/algo/data-structure-basic/bubble-sort/)
-    * [运用逆向思维：插入排序](https://labuladong.online/algo/data-structure-basic/insertion-sort/)
-    * [突破 O(N^2)：希尔排序](https://labuladong.online/algo/data-structure-basic/shell-sort/)
-    * [妙用二叉树前序位置：快速排序](https://labuladong.online/algo/data-structure-basic/quick-sort/)
-    * [妙用二叉树后序位置：归并排序](https://labuladong.online/algo/data-structure-basic/merge-sort/)
-    * [二叉堆结构的运用：堆排序](https://labuladong.online/algo/data-structure-basic/heap-sort/)
-    * [全新的排序原理：计数排序](https://labuladong.online/algo/data-structure-basic/counting-sort/)
-    * [博采众长：桶排序](https://labuladong.online/algo/data-structure-basic/bucket-sort/)
-    * [基数排序（Radix Sort）](https://labuladong.online/algo/data-structure-basic/radix-sort/)
+  * [Nguyên lý 10 thuật toán sắp xếp và trực quan hóa](https://labuladong.online/algo/menu/sorting/)
+    * [Mở đầu chương](https://labuladong.online/algo/intro/sorting/)
+    * [Chỉ số quan trọng của thuật toán sắp xếp](https://labuladong.online/algo/data-structure-basic/sort-basic/)
+    * [Vấn đề của sắp xếp chọn (selection sort)](https://labuladong.online/algo/data-structure-basic/select-sort/)
+    * [Sắp xếp nổi bọt (bubble sort) có tính ổn định](https://labuladong.online/algo/data-structure-basic/bubble-sort/)
+    * [Tư duy ngược: sắp xếp chèn (insertion sort)](https://labuladong.online/algo/data-structure-basic/insertion-sort/)
+    * [Vượt qua O(N^2): sắp xếp Shell](https://labuladong.online/algo/data-structure-basic/shell-sort/)
+    * [Dùng khéo vị trí tiền thứ tự của cây nhị phân: sắp xếp nhanh (quick sort)](https://labuladong.online/algo/data-structure-basic/quick-sort/)
+    * [Dùng khéo vị trí hậu thứ tự của cây nhị phân: sắp xếp trộn (merge sort)](https://labuladong.online/algo/data-structure-basic/merge-sort/)
+    * [Vận dụng cấu trúc binary heap: sắp xếp vun đống (heap sort)](https://labuladong.online/algo/data-structure-basic/heap-sort/)
+    * [Nguyên lý sắp xếp mới: sắp xếp đếm (counting sort)](https://labuladong.online/algo/data-structure-basic/counting-sort/)
+    * [Sắp xếp thùng (bucket sort)](https://labuladong.online/algo/data-structure-basic/bucket-sort/)
+    * [Sắp xếp cơ số (Radix Sort)](https://labuladong.online/algo/data-structure-basic/radix-sort/)
 
-  * [正在更新 ing](https://labuladong.online/algo/intro/updating/)
-
-
-* [第零章、核心刷题框架汇总](https://labuladong.online/algo/menu/core/)
-  * [本章导读](https://labuladong.online/algo/intro/core-intro/)
-  * [学习数据结构和算法的框架思维](https://labuladong.online/algo/essential-technique/algorithm-summary/)
-  * [双指针技巧秒杀七道链表题目](https://labuladong.online/algo/essential-technique/linked-list-skills-summary/)
-  * [双指针技巧秒杀七道数组题目](https://labuladong.online/algo/essential-technique/array-two-pointers-summary/)
-  * [滑动窗口算法核心代码模板](https://labuladong.online/algo/essential-technique/sliding-window-framework/)
-  * [二叉树系列算法核心纲领](https://labuladong.online/algo/essential-technique/binary-tree-summary/)
-  * [一个视角 + 两种思维模式搞定递归](https://labuladong.online/algo/essential-technique/understand-recursion/)
-  * [动态规划解题套路框架](https://labuladong.online/algo/essential-technique/dynamic-programming-framework/)
-  * [回溯算法解题套路框架](https://labuladong.online/algo/essential-technique/backtrack-framework/)
-  * [BFS 算法解题套路框架](https://labuladong.online/algo/essential-technique/bfs-framework/)
-  * [回溯算法秒杀所有排列/组合/子集问题](https://labuladong.online/algo/essential-technique/permutation-combination-subset-all-in-one/)
-  * [贪心算法解题套路框架](https://labuladong.online/algo/essential-technique/greedy/)
-  * [分治算法解题套路框架](https://labuladong.online/algo/essential-technique/divide-and-conquer/)
-  * [算法时空复杂度分析实用指南](https://labuladong.online/algo/essential-technique/complexity-analysis/)
+  * [Đang cập nhật](https://labuladong.online/algo/intro/updating/)
 
 
-* [第一章、经典数据结构算法](https://labuladong.online/algo/menu/ds/)
-  * [手把手刷链表算法](https://labuladong.online/algo/menu/linked-list/)
-    * [双指针技巧秒杀七道链表题目](https://labuladong.online/algo/essential-technique/linked-list-skills-summary/)
-    * [链表双指针经典习题](https://labuladong.online/algo/problem-set/linkedlist-two-pointers/)
-    * [单链表的花式反转方法汇总](https://labuladong.online/algo/data-structure/reverse-linked-list-recursion/)
-    * [如何判断回文链表](https://labuladong.online/algo/data-structure/palindrome-linked-list/)
-
-  * [手把手刷数组算法](https://labuladong.online/algo/menu/array/)
-    * [双指针技巧秒杀七道数组题目](https://labuladong.online/algo/essential-technique/array-two-pointers-summary/)
-    * [【游戏】消消乐游戏](https://labuladong.online/algo/game/match-three/)
-    * [二维数组的花式遍历技巧](https://labuladong.online/algo/practice-in-action/2d-array-traversal-summary/)
-    * [数组双指针经典习题](https://labuladong.online/algo/problem-set/array-two-pointers/)
-    * [【游戏】生命游戏](https://labuladong.online/algo/game/life-game/)
-    * [一个方法团灭 nSum 问题](https://labuladong.online/algo/practice-in-action/nsum/)
-    * [小而美的算法技巧：前缀和数组](https://labuladong.online/algo/data-structure/prefix-sum/)
-    * [前缀和技巧经典习题](https://labuladong.online/algo/problem-set/perfix-sum/)
-    * [小而美的算法技巧：差分数组](https://labuladong.online/algo/data-structure/diff-array/)
-    * [滑动窗口算法核心代码模板](https://labuladong.online/algo/essential-technique/sliding-window-framework/)
-    * [滑动窗口算法经典习题](https://labuladong.online/algo/problem-set/sliding-window/)
-    * [滑动窗口延伸：Rabin Karp 字符匹配算法](https://labuladong.online/algo/practice-in-action/rabinkarp/)
-    * [二分搜索算法核心代码模板](https://labuladong.online/algo/essential-technique/binary-search-framework/)
-    * [二分搜索左闭右开写法](https://labuladong.online/algo/essential-technique/binary-search-left-open/)
-    * [实际运用二分搜索时的思维框架](https://labuladong.online/algo/frequency-interview/binary-search-in-action/)
-    * [二分搜索算法经典习题](https://labuladong.online/algo/problem-set/binary-search/)
-    * [带权重的随机选择算法](https://labuladong.online/algo/frequency-interview/random-pick-with-weight/)
-    * [田忌赛马背后的算法决策](https://labuladong.online/algo/practice-in-action/advantage-shuffle/)
+* [Chương 0: tổng hợp khung tư duy luyện đề cốt lõi](https://labuladong.online/algo/menu/core/)
+  * [Mở đầu chương](https://labuladong.online/algo/intro/core-intro/)
+  * [Tư duy khung khi học cấu trúc dữ liệu và thuật toán](https://labuladong.online/algo/essential-technique/algorithm-summary/)
+  * [Kỹ thuật hai con trỏ xử gọn 7 bài danh sách liên kết](https://labuladong.online/algo/essential-technique/linked-list-skills-summary/)
+  * [Kỹ thuật hai con trỏ xử gọn 7 bài mảng](https://labuladong.online/algo/essential-technique/array-two-pointers-summary/)
+  * [Template code cốt lõi của thuật toán cửa sổ trượt (Sliding Window)](https://labuladong.online/algo/essential-technique/sliding-window-framework/)
+  * [Cương lĩnh cốt lõi của chuỗi thuật toán cây nhị phân](https://labuladong.online/algo/essential-technique/binary-tree-summary/)
+  * [Một góc nhìn + hai lối tư duy xử gọn đệ quy](https://labuladong.online/algo/essential-technique/understand-recursion/)
+  * [Khung công thức giải đề quy hoạch động (DP)](https://labuladong.online/algo/essential-technique/dynamic-programming-framework/)
+  * [Khung công thức giải đề thuật toán quay lui (backtracking)](https://labuladong.online/algo/essential-technique/backtrack-framework/)
+  * [Khung công thức giải đề thuật toán BFS](https://labuladong.online/algo/essential-technique/bfs-framework/)
+  * [Quay lui xử gọn mọi bài hoán vị/tổ hợp/tập con](https://labuladong.online/algo/essential-technique/permutation-combination-subset-all-in-one/)
+  * [Khung công thức giải đề thuật toán tham lam](https://labuladong.online/algo/essential-technique/greedy/)
+  * [Khung công thức giải đề thuật toán chia để trị](https://labuladong.online/algo/essential-technique/divide-and-conquer/)
+  * [Hướng dẫn thực dụng phân tích độ phức tạp thời gian và không gian](https://labuladong.online/algo/essential-technique/complexity-analysis/)
 
 
-  * [经典队列/栈算法](https://labuladong.online/algo/menu/queue-stack/)
-    * [队列实现栈以及栈实现队列](https://labuladong.online/algo/data-structure/stack-queue/)
-    * [栈的经典习题](https://labuladong.online/algo/problem-set/stack/)
-    * [括号类问题汇总](https://labuladong.online/algo/problem-set/parentheses/)
-    * [队列的经典习题](https://labuladong.online/algo/problem-set/queue/)
-    * [单调栈算法模板解决三道例题](https://labuladong.online/algo/data-structure/monotonic-stack/)
-    * [单调栈的几种变体及经典习题](https://labuladong.online/algo/problem-set/monotonic-stack/)
-    * [单调队列结构解决滑动窗口问题](https://labuladong.online/algo/data-structure/monotonic-queue/)
-    * [单调队列的通用实现及经典习题](https://labuladong.online/algo/problem-set/monotonic-queue/)
+* [Chương 1: thuật toán cấu trúc dữ liệu kinh điển](https://labuladong.online/algo/menu/ds/)
+  * [Cầm tay luyện thuật toán danh sách liên kết](https://labuladong.online/algo/menu/linked-list/)
+    * [Kỹ thuật hai con trỏ xử gọn 7 bài danh sách liên kết](https://labuladong.online/algo/essential-technique/linked-list-skills-summary/)
+    * [Bài tập kinh điển hai con trỏ trên danh sách liên kết](https://labuladong.online/algo/problem-set/linkedlist-two-pointers/)
+    * [Tổng hợp các cách đảo danh sách liên kết đơn](https://labuladong.online/algo/data-structure/reverse-linked-list-recursion/)
+    * [Cách kiểm tra danh sách liên kết đối xứng (palindrome)](https://labuladong.online/algo/data-structure/palindrome-linked-list/)
 
-  * [手把手刷二叉树算法](https://labuladong.online/algo/menu/binary-tree/)
-    * [二叉树系列算法核心纲领](https://labuladong.online/algo/essential-technique/binary-tree-summary/)
-    * [二叉树心法（思路篇）](https://labuladong.online/algo/data-structure/binary-tree-part1/)
-    * [二叉树心法（构造篇）](https://labuladong.online/algo/data-structure/binary-tree-part2/)
-    * [二叉树心法（后序篇）](https://labuladong.online/algo/data-structure/binary-tree-part3/)
-    * [二叉树心法（序列化篇）](https://labuladong.online/algo/data-structure/serialize-and-deserialize-binary-tree/)
-    * [二叉搜索树心法（特性篇）](https://labuladong.online/algo/data-structure/bst-part1/)
-    * [二叉搜索树心法（基操篇）](https://labuladong.online/algo/data-structure/bst-part2/)
-    * [二叉搜索树心法（构造篇）](https://labuladong.online/algo/data-structure/bst-part3/)
-    * [二叉搜索树心法（后序篇）](https://labuladong.online/algo/data-structure/bst-part4/)
-
-  * [二叉树算法习题汇总](https://labuladong.online/algo/menu/100-bt/)
-    * [本章导读](https://labuladong.online/algo/intro/binary-tree-practice/)
-    * [用「遍历」思维解题 I](https://labuladong.online/algo/problem-set/binary-tree-traverse-i/)
-    * [用「遍历」思维解题 II](https://labuladong.online/algo/problem-set/binary-tree-traverse-ii/)
-    * [用「遍历」思维解题 III](https://labuladong.online/algo/problem-set/binary-tree-traverse-iii/)
-    * [用「分解问题」思维解题 I](https://labuladong.online/algo/problem-set/binary-tree-divide-i/)
-    * [用「分解问题」思维解题 II](https://labuladong.online/algo/problem-set/binary-tree-divide-ii/)
-    * [同时运用两种思维解题](https://labuladong.online/algo/problem-set/binary-tree-combine-two-view/)
-    * [利用后序位置解题 I](https://labuladong.online/algo/problem-set/binary-tree-post-order-i/)
-    * [利用后序位置解题 II](https://labuladong.online/algo/problem-set/binary-tree-post-order-ii/)
-    * [利用后序位置解题 III](https://labuladong.online/algo/problem-set/binary-tree-post-order-iii/)
-    * [运用层序遍历解题 I](https://labuladong.online/algo/problem-set/binary-tree-level-i/)
-    * [运用层序遍历解题 II](https://labuladong.online/algo/problem-set/binary-tree-level-ii/)
-    * [二叉搜索树经典例题 I](https://labuladong.online/algo/problem-set/bst1/)
-    * [二叉搜索树经典例题 II](https://labuladong.online/algo/problem-set/bst2/)
-
-  * [二叉树的拓展延伸](https://labuladong.online/algo/menu/more-bt/)
-    * [拓展：最近公共祖先系列解题框架](https://labuladong.online/algo/practice-in-action/lowest-common-ancestor-summary/)
-    * [拓展：如何计算完全二叉树的节点数](https://labuladong.online/algo/data-structure/count-complete-tree-nodes/)
-    * [拓展：惰性展开多叉树](https://labuladong.online/algo/data-structure/flatten-nested-list-iterator/)
-    * [拓展：归并排序详解及应用](https://labuladong.online/algo/practice-in-action/merge-sort/)
-    * [拓展：快速排序详解及应用](https://labuladong.online/algo/practice-in-action/quick-sort/)
-    * [拓展：用栈模拟递归迭代遍历二叉树](https://labuladong.online/algo/data-structure/iterative-traversal-binary-tree/)
-
-  * [经典数据结构设计](https://labuladong.online/algo/menu/design/)
-    * [算法就像搭乐高：手撸 LRU 算法](https://labuladong.online/algo/data-structure/lru-cache/)
-    * [算法就像搭乐高：手撸 LFU 算法](https://labuladong.online/algo/frequency-interview/lfu/)
-    * [常数时间删除/查找数组中的任意元素](https://labuladong.online/algo/data-structure/random-set/)
-    * [哈希表更多习题](https://labuladong.online/algo/problem-set/hash-table/)
-    * [优先级队列经典习题](https://labuladong.online/algo/problem-set/binary-heap/)
-    * [TreeMap/TreeSet 代码实现](https://labuladong.online/algo/data-structure-basic/tree-map-implement/)
-    * [基本线段树的代码实现](https://labuladong.online/algo/data-structure/segment-tree-implement/)
-    * [优化：实现动态线段树](https://labuladong.online/algo/data-structure/segment-tree-dynamic/)
-    * [优化：实现懒更新线段树](https://labuladong.online/algo/data-structure/segment-tree-lazy-update/)
-    * [线段树经典习题](https://labuladong.online/algo/problem-set/segment-tree/)
-    * [Trie 树代码实现](https://labuladong.online/algo/data-structure/trie-implement/)
-    * [Trie 树算法习题](https://labuladong.online/algo/problem-set/trie/)
-    * [设计考场座位分配算法](https://labuladong.online/algo/frequency-interview/exam-room/)
-    * [更多经典设计习题](https://labuladong.online/algo/problem-set/ds-design/)
-    * [实现霍夫曼编码压缩算法](https://labuladong.online/algo/data-structure/huffman-tree-implementation/)
-    * [一致性哈希算法的原理及实现](https://labuladong.online/algo/data-structure/consistent-hashing/)
-    * [拓展：如何实现一个计算器](https://labuladong.online/algo/data-structure/implement-calculator/)
-    * [拓展：两个二叉堆实现中位数算法](https://labuladong.online/algo/practice-in-action/find-median-from-data-stream/)
-    * [拓展：数组去重问题（困难版）](https://labuladong.online/algo/frequency-interview/remove-duplicate-letters/)
+  * [Cầm tay luyện thuật toán mảng](https://labuladong.online/algo/menu/array/)
+    * [Kỹ thuật hai con trỏ xử gọn 7 bài mảng](https://labuladong.online/algo/essential-technique/array-two-pointers-summary/)
+    * [[Game] Game match-3](https://labuladong.online/algo/game/match-three/)
+    * [Các kỹ thuật duyệt mảng 2 chiều](https://labuladong.online/algo/practice-in-action/2d-array-traversal-summary/)
+    * [Bài tập kinh điển hai con trỏ trên mảng](https://labuladong.online/algo/problem-set/array-two-pointers/)
+    * [[Game] Game of Life](https://labuladong.online/algo/game/life-game/)
+    * [Một phương pháp quét sạch họ bài nSum](https://labuladong.online/algo/practice-in-action/nsum/)
+    * [Kỹ thuật nhỏ mà hay: mảng tổng tiền tố (prefix sum)](https://labuladong.online/algo/data-structure/prefix-sum/)
+    * [Bài tập kinh điển kỹ thuật tổng tiền tố](https://labuladong.online/algo/problem-set/perfix-sum/)
+    * [Kỹ thuật nhỏ mà hay: mảng hiệu (difference array)](https://labuladong.online/algo/data-structure/diff-array/)
+    * [Template code cốt lõi của thuật toán cửa sổ trượt (Sliding Window)](https://labuladong.online/algo/essential-technique/sliding-window-framework/)
+    * [Bài tập kinh điển thuật toán cửa sổ trượt](https://labuladong.online/algo/problem-set/sliding-window/)
+    * [Mở rộng cửa sổ trượt: thuật toán khớp chuỗi Rabin-Karp](https://labuladong.online/algo/practice-in-action/rabinkarp/)
+    * [Template code cốt lõi thuật toán tìm kiếm nhị phân](https://labuladong.online/algo/essential-technique/binary-search-framework/)
+    * [Cách viết tìm kiếm nhị phân khoảng đóng-trái mở-phải](https://labuladong.online/algo/essential-technique/binary-search-left-open/)
+    * [Khung tư duy khi vận dụng tìm kiếm nhị phân thực tế](https://labuladong.online/algo/frequency-interview/binary-search-in-action/)
+    * [Bài tập kinh điển thuật toán tìm kiếm nhị phân](https://labuladong.online/algo/problem-set/binary-search/)
+    * [Thuật toán chọn ngẫu nhiên có trọng số](https://labuladong.online/algo/frequency-interview/random-pick-with-weight/)
+    * [Quyết định thuật toán đằng sau điển tích Điền Kỵ đua ngựa](https://labuladong.online/algo/practice-in-action/advantage-shuffle/)
 
 
-  * [经典图算法](https://labuladong.online/algo/menu/graph/)
-    * [二分图判定算法](https://labuladong.online/algo/data-structure/bipartite-graph/)
-    * [Hierholzer 算法寻找欧拉路径](https://labuladong.online/algo/data-structure/eulerian-graph-hierholzer/)
-    * [欧拉路径经典习题](https://labuladong.online/algo/problem-set/eulerian-path/)
-    * [环检测算法](https://labuladong.online/algo/data-structure/cycle-detection/)
-    * [拓扑排序算法](https://labuladong.online/algo/data-structure/topological-sort/)
-    * [Union-Find 并查集算法](https://labuladong.online/algo/data-structure/union-find/)
-    * [并查集经典习题](https://labuladong.online/algo/problem-set/union-find/)
-    * [Dijkstra 算法核心原理及实现](https://labuladong.online/algo/data-structure/dijkstra/)
-    * [Dijkstra 拓展：带限制的最短路问题](https://labuladong.online/algo/data-structure/dijkstra-follow-up/)
-    * [Dijkstra 算法经典习题](https://labuladong.online/algo/problem-set/dijkstra/)
-    * [A* 算法核心原理及实现](https://labuladong.online/algo/data-structure/a-star/)
-    * [Kruskal 最小生成树算法](https://labuladong.online/algo/data-structure/kruskal/)
-    * [Prim 最小生成树算法](https://labuladong.online/algo/data-structure/prim/)
+  * [Thuật toán hàng đợi/ngăn xếp kinh điển](https://labuladong.online/algo/menu/queue-stack/)
+    * [Dùng hàng đợi cài đặt ngăn xếp và ngược lại](https://labuladong.online/algo/data-structure/stack-queue/)
+    * [Bài tập kinh điển về ngăn xếp](https://labuladong.online/algo/problem-set/stack/)
+    * [Tổng hợp bài toán dấu ngoặc](https://labuladong.online/algo/problem-set/parentheses/)
+    * [Bài tập kinh điển về hàng đợi](https://labuladong.online/algo/problem-set/queue/)
+    * [Template thuật toán ngăn xếp đơn điệu giải 3 bài mẫu](https://labuladong.online/algo/data-structure/monotonic-stack/)
+    * [Các biến thể của ngăn xếp đơn điệu và bài tập kinh điển](https://labuladong.online/algo/problem-set/monotonic-stack/)
+    * [Dùng cấu trúc hàng đợi đơn điệu giải bài toán cửa sổ trượt](https://labuladong.online/algo/data-structure/monotonic-queue/)
+    * [Cài đặt tổng quát hàng đợi đơn điệu và bài tập kinh điển](https://labuladong.online/algo/problem-set/monotonic-queue/)
 
-* [第二章、经典暴力搜索算法](https://labuladong.online/algo/menu/braute-force-search/)
-  * [DFS/回溯算法](https://labuladong.online/algo/menu/dfs/)
-    * [回溯算法解题套路框架](https://labuladong.online/algo/essential-technique/backtrack-framework/)
-    * [回溯算法实践：数独和 N 皇后问题](https://labuladong.online/algo/practice-in-action/sudoku-nqueue/)
-    * [【游戏】实现数独作弊器](https://labuladong.online/algo/game/sudoku/)
-    * [回溯算法秒杀所有排列/组合/子集问题](https://labuladong.online/algo/essential-technique/permutation-combination-subset-all-in-one/)
-    * [解答回溯算法/DFS算法的若干疑问](https://labuladong.online/algo/essential-technique/backtrack-vs-dfs/)
-    * [一文秒杀所有岛屿题目](https://labuladong.online/algo/frequency-interview/island-dfs-summary/)
-    * [【游戏】扫雷 II](https://labuladong.online/algo/game/minesweeper-ii/)
-    * [球盒模型：回溯算法穷举的两种视角](https://labuladong.online/algo/practice-in-action/two-views-of-backtrack/)
-    * [回溯算法实践：括号生成](https://labuladong.online/algo/practice-in-action/generate-parentheses/)
-    * [回溯算法实践：集合划分](https://labuladong.online/algo/practice-in-action/partition-to-k-equal-sum-subsets/)
-    * [回溯算法经典习题 I](https://labuladong.online/algo/problem-set/backtrack-i/)
-    * [回溯算法经典习题 II](https://labuladong.online/algo/problem-set/backtrack-ii/)
-    * [回溯算法经典习题 III](https://labuladong.online/algo/problem-set/backtrack-iii/)
+  * [Cầm tay luyện thuật toán cây nhị phân](https://labuladong.online/algo/menu/binary-tree/)
+    * [Cương lĩnh cốt lõi của chuỗi thuật toán cây nhị phân](https://labuladong.online/algo/essential-technique/binary-tree-summary/)
+    * [Bí kíp cây nhị phân (phần tư duy)](https://labuladong.online/algo/data-structure/binary-tree-part1/)
+    * [Bí kíp cây nhị phân (phần dựng cây)](https://labuladong.online/algo/data-structure/binary-tree-part2/)
+    * [Bí kíp cây nhị phân (phần hậu thứ tự)](https://labuladong.online/algo/data-structure/binary-tree-part3/)
+    * [Bí kíp cây nhị phân (phần tuần tự hóa)](https://labuladong.online/algo/data-structure/serialize-and-deserialize-binary-tree/)
+    * [Bí kíp cây tìm kiếm nhị phân (phần tính chất)](https://labuladong.online/algo/data-structure/bst-part1/)
+    * [Bí kíp cây tìm kiếm nhị phân (phần thao tác cơ bản)](https://labuladong.online/algo/data-structure/bst-part2/)
+    * [Bí kíp cây tìm kiếm nhị phân (phần dựng cây)](https://labuladong.online/algo/data-structure/bst-part3/)
+    * [Bí kíp cây tìm kiếm nhị phân (phần hậu thứ tự)](https://labuladong.online/algo/data-structure/bst-part4/)
 
-  * [BFS 算法](https://labuladong.online/algo/menu/bfs/)
-    * [BFS 算法解题套路框架](https://labuladong.online/algo/essential-technique/bfs-framework/)
-    * [【游戏】求解迷宫](https://labuladong.online/algo/game/maze/)
-    * [【游戏】华容道游戏](https://labuladong.online/algo/game/huarong-road/)
-    * [【游戏】连连看游戏](https://labuladong.online/algo/game/connect-two/)
-    * [BFS 经典习题 I](https://labuladong.online/algo/problem-set/bfs/)
-    * [BFS 经典习题 II](https://labuladong.online/algo/problem-set/bfs-ii/)
+  * [Tổng hợp bài tập thuật toán cây nhị phân](https://labuladong.online/algo/menu/100-bt/)
+    * [Mở đầu chương](https://labuladong.online/algo/intro/binary-tree-practice/)
+    * [Dùng tư duy "duyệt cây" giải đề I](https://labuladong.online/algo/problem-set/binary-tree-traverse-i/)
+    * [Dùng tư duy "duyệt cây" giải đề II](https://labuladong.online/algo/problem-set/binary-tree-traverse-ii/)
+    * [Dùng tư duy "duyệt cây" giải đề III](https://labuladong.online/algo/problem-set/binary-tree-traverse-iii/)
+    * [Dùng tư duy "phân rã bài toán" giải đề I](https://labuladong.online/algo/problem-set/binary-tree-divide-i/)
+    * [Dùng tư duy "phân rã bài toán" giải đề II](https://labuladong.online/algo/problem-set/binary-tree-divide-ii/)
+    * [Vận dụng đồng thời hai lối tư duy để giải đề](https://labuladong.online/algo/problem-set/binary-tree-combine-two-view/)
+    * [Tận dụng vị trí hậu thứ tự để giải đề I](https://labuladong.online/algo/problem-set/binary-tree-post-order-i/)
+    * [Tận dụng vị trí hậu thứ tự để giải đề II](https://labuladong.online/algo/problem-set/binary-tree-post-order-ii/)
+    * [Tận dụng vị trí hậu thứ tự để giải đề III](https://labuladong.online/algo/problem-set/binary-tree-post-order-iii/)
+    * [Vận dụng duyệt theo tầng để giải đề I](https://labuladong.online/algo/problem-set/binary-tree-level-i/)
+    * [Vận dụng duyệt theo tầng để giải đề II](https://labuladong.online/algo/problem-set/binary-tree-level-ii/)
+    * [Bài mẫu kinh điển cây tìm kiếm nhị phân I](https://labuladong.online/algo/problem-set/bst1/)
+    * [Bài mẫu kinh điển cây tìm kiếm nhị phân II](https://labuladong.online/algo/problem-set/bst2/)
 
-* [第三章、经典动态规划算法](https://labuladong.online/algo/menu/dp/)
-  * [动态规划基本技巧](https://labuladong.online/algo/menu/dp-basic/)
-    * [动态规划解题套路框架](https://labuladong.online/algo/essential-technique/dynamic-programming-framework/)
-    * [动态规划设计：最长递增子序列](https://labuladong.online/algo/dynamic-programming/longest-increasing-subsequence/)
-    * [base case 和备忘录的初始值怎么定？](https://labuladong.online/algo/dynamic-programming/memo-fundamental/)
-    * [动态规划穷举的两种视角](https://labuladong.online/algo/dynamic-programming/two-views-of-dp/)
-    * [动态规划和回溯算法的思维转换](https://labuladong.online/algo/dynamic-programming/word-break/)
-    * [对动态规划进行空间压缩](https://labuladong.online/algo/dynamic-programming/space-optimization/)
-    * [最优子结构原理和 dp 数组遍历方向](https://labuladong.online/algo/dynamic-programming/faq-summary/)
+  * [Mở rộng về cây nhị phân](https://labuladong.online/algo/menu/more-bt/)
+    * [Mở rộng: khung giải họ bài tổ tiên chung gần nhất](https://labuladong.online/algo/practice-in-action/lowest-common-ancestor-summary/)
+    * [Mở rộng: cách đếm số nút của cây nhị phân hoàn chỉnh](https://labuladong.online/algo/data-structure/count-complete-tree-nodes/)
+    * [Mở rộng: trải phẳng cây đa phân một cách lazy](https://labuladong.online/algo/data-structure/flatten-nested-list-iterator/)
+    * [Mở rộng: giải chi tiết và ứng dụng sắp xếp trộn](https://labuladong.online/algo/practice-in-action/merge-sort/)
+    * [Mở rộng: giải chi tiết và ứng dụng sắp xếp nhanh](https://labuladong.online/algo/practice-in-action/quick-sort/)
+    * [Mở rộng: dùng ngăn xếp mô phỏng đệ quy để duyệt cây nhị phân bằng lặp](https://labuladong.online/algo/data-structure/iterative-traversal-binary-tree/)
 
-  * [子序列类型问题](https://labuladong.online/algo/menu/subsequence/)
-    * [经典动态规划：编辑距离](https://labuladong.online/algo/dynamic-programming/edit-distance/)
-    * [动态规划设计：最大子数组](https://labuladong.online/algo/dynamic-programming/maximum-subarray/)
-    * [经典动态规划：最长公共子序列](https://labuladong.online/algo/dynamic-programming/longest-common-subsequence/)
-    * [动态规划之子序列问题解题模板](https://labuladong.online/algo/dynamic-programming/subsequence-problem/)
-
-  * [背包类型问题](https://labuladong.online/algo/menu/knapsack/)
-    * [经典动态规划：0-1 背包问题](https://labuladong.online/algo/dynamic-programming/knapsack1/)
-    * [经典动态规划：子集背包问题](https://labuladong.online/algo/dynamic-programming/knapsack2/)
-    * [经典动态规划：完全背包问题](https://labuladong.online/algo/dynamic-programming/knapsack3/)
-    * [背包问题的变体：目标和](https://labuladong.online/algo/dynamic-programming/target-sum/)
-
-  * [用动态规划玩游戏](https://labuladong.online/algo/menu/dp-game/)
-    * [动态规划之最小路径和](https://labuladong.online/algo/dynamic-programming/minimum-path-sum/)
-    * [动态规划帮我通关了《魔塔》](https://labuladong.online/algo/dynamic-programming/magic-tower/)
-    * [动态规划帮我通关了《辐射4》](https://labuladong.online/algo/dynamic-programming/freedom-trail/)
-    * [旅游省钱大法：加权最短路径](https://labuladong.online/algo/dynamic-programming/cheap-travel/)
-    * [多源最短路径：Floyd 算法](https://labuladong.online/algo/data-structure/floyd/)
-    * [经典动态规划：正则表达式](https://labuladong.online/algo/dynamic-programming/regular-expression-matching/)
-    * [经典动态规划：高楼扔鸡蛋](https://labuladong.online/algo/dynamic-programming/egg-drop/)
-    * [经典动态规划：戳气球](https://labuladong.online/algo/dynamic-programming/burst-balloons/)
-    * [经典动态规划：博弈问题](https://labuladong.online/algo/dynamic-programming/game-theory/)
-    * [一个方法团灭 LeetCode 打家劫舍问题](https://labuladong.online/algo/dynamic-programming/house-robber/)
-    * [一个方法团灭 LeetCode 股票买卖问题](https://labuladong.online/algo/dynamic-programming/stock-problem-summary/)
-
-  * [动态规划习题集](https://labuladong.online/algo/menu/dp-basic/)
-    * [打家劫舍问题模式](https://labuladong.online/algo/problem-set/rob-house/)
-    * [背包问题经典习题](https://labuladong.online/algo/problem-set/knapsack/)
-    * [动态规划经典习题 I](https://labuladong.online/algo/problem-set/dynamic-programming-i/)
-    * [动态规划经典习题 II](https://labuladong.online/algo/problem-set/dynamic-programming-ii/)
-
-  * [贪心类型问题](https://labuladong.online/algo/menu/greedy/)
-    * [贪心算法解题套路框架](https://labuladong.online/algo/essential-technique/greedy/)
-    * [老司机加油算法](https://labuladong.online/algo/frequency-interview/gas-station-greedy/)
-    * [贪心算法之区间调度问题](https://labuladong.online/algo/frequency-interview/interval-scheduling/)
-    * [扫描线技巧：安排会议室](https://labuladong.online/algo/frequency-interview/scan-line-technique/)
-    * [剪视频剪出一个贪心算法](https://labuladong.online/algo/frequency-interview/cut-video/)
+  * [Thiết kế cấu trúc dữ liệu kinh điển](https://labuladong.online/algo/menu/design/)
+    * [Thuật toán như xếp Lego: tự tay cài đặt thuật toán LRU](https://labuladong.online/algo/data-structure/lru-cache/)
+    * [Thuật toán như xếp Lego: tự tay cài đặt thuật toán LFU](https://labuladong.online/algo/frequency-interview/lfu/)
+    * [Xóa/tìm phần tử bất kỳ trong mảng với thời gian hằng số](https://labuladong.online/algo/data-structure/random-set/)
+    * [Thêm bài tập về bảng băm](https://labuladong.online/algo/problem-set/hash-table/)
+    * [Bài tập kinh điển hàng đợi ưu tiên](https://labuladong.online/algo/problem-set/binary-heap/)
+    * [Cài đặt code TreeMap/TreeSet](https://labuladong.online/algo/data-structure-basic/tree-map-implement/)
+    * [Cài đặt code cây đoạn cơ bản](https://labuladong.online/algo/data-structure/segment-tree-implement/)
+    * [Tối ưu: cài đặt cây đoạn động](https://labuladong.online/algo/data-structure/segment-tree-dynamic/)
+    * [Tối ưu: cài đặt cây đoạn cập nhật lazy](https://labuladong.online/algo/data-structure/segment-tree-lazy-update/)
+    * [Bài tập kinh điển cây đoạn](https://labuladong.online/algo/problem-set/segment-tree/)
+    * [Cài đặt code cây Trie](https://labuladong.online/algo/data-structure/trie-implement/)
+    * [Bài tập thuật toán cây Trie](https://labuladong.online/algo/problem-set/trie/)
+    * [Thiết kế thuật toán xếp chỗ ngồi phòng thi](https://labuladong.online/algo/frequency-interview/exam-room/)
+    * [Thêm bài tập thiết kế kinh điển](https://labuladong.online/algo/problem-set/ds-design/)
+    * [Cài đặt thuật toán nén mã Huffman](https://labuladong.online/algo/data-structure/huffman-tree-implementation/)
+    * [Nguyên lý và cài đặt thuật toán băm nhất quán](https://labuladong.online/algo/data-structure/consistent-hashing/)
+    * [Mở rộng: cách cài đặt một máy tính bỏ túi](https://labuladong.online/algo/data-structure/implement-calculator/)
+    * [Mở rộng: thuật toán tìm trung vị bằng hai binary heap](https://labuladong.online/algo/practice-in-action/find-median-from-data-stream/)
+    * [Mở rộng: bài khử trùng lặp trong mảng (bản khó)](https://labuladong.online/algo/frequency-interview/remove-duplicate-letters/)
 
 
-* [第四章、其他常见算法技巧](https://labuladong.online/algo/menu/other/)
-  * [数学运算技巧](https://labuladong.online/algo/menu/math/)
-    * [一行代码就能解决的算法题](https://labuladong.online/algo/frequency-interview/one-line-solutions/)
-    * [常用的位操作](https://labuladong.online/algo/frequency-interview/bitwise-operation/)
-    * [必知必会数学技巧](https://labuladong.online/algo/essential-technique/math-techniques-summary/)
-    * [【游戏】扫雷游戏地图生成器](https://labuladong.online/algo/game/minesweeper/)
-    * [谈谈游戏中的随机算法](https://labuladong.online/algo/frequency-interview/random-algorithm/)
-    * [讲两道常考的阶乘算法题](https://labuladong.online/algo/frequency-interview/factorial-problems/)
-    * [如何高效寻找素数](https://labuladong.online/algo/frequency-interview/print-prime-number/)
-    * [如何同时寻找缺失和重复的元素](https://labuladong.online/algo/frequency-interview/mismatch-set/)
-    * [几个反直觉的概率问题](https://labuladong.online/algo/frequency-interview/probability-problem/)
-    * [数学技巧相关习题](https://labuladong.online/algo/problem-set/math-tricks/)
+  * [Thuật toán đồ thị kinh điển](https://labuladong.online/algo/menu/graph/)
+    * [Thuật toán kiểm tra đồ thị hai phía](https://labuladong.online/algo/data-structure/bipartite-graph/)
+    * [Thuật toán Hierholzer tìm đường Euler](https://labuladong.online/algo/data-structure/eulerian-graph-hierholzer/)
+    * [Bài tập kinh điển đường Euler](https://labuladong.online/algo/problem-set/eulerian-path/)
+    * [Thuật toán phát hiện chu trình](https://labuladong.online/algo/data-structure/cycle-detection/)
+    * [Thuật toán sắp xếp topo](https://labuladong.online/algo/data-structure/topological-sort/)
+    * [Thuật toán Union-Find (DSU)](https://labuladong.online/algo/data-structure/union-find/)
+    * [Bài tập kinh điển DSU](https://labuladong.online/algo/problem-set/union-find/)
+    * [Nguyên lý cốt lõi và cài đặt thuật toán Dijkstra](https://labuladong.online/algo/data-structure/dijkstra/)
+    * [Mở rộng Dijkstra: bài toán đường ngắn nhất có giới hạn](https://labuladong.online/algo/data-structure/dijkstra-follow-up/)
+    * [Bài tập kinh điển thuật toán Dijkstra](https://labuladong.online/algo/problem-set/dijkstra/)
+    * [Nguyên lý cốt lõi và cài đặt thuật toán A*](https://labuladong.online/algo/data-structure/a-star/)
+    * [Thuật toán cây khung nhỏ nhất Kruskal](https://labuladong.online/algo/data-structure/kruskal/)
+    * [Thuật toán cây khung nhỏ nhất Prim](https://labuladong.online/algo/data-structure/prim/)
 
-  * [经典面试题](https://labuladong.online/algo/menu/interview/)
-    * [如何高效解决接雨水问题](https://labuladong.online/algo/frequency-interview/trapping-rain-water/)
-    * [一文秒杀所有丑数系列问题](https://labuladong.online/algo/frequency-interview/ugly-number-summary/)
-    * [一个方法解决三道区间问题](https://labuladong.online/algo/practice-in-action/interval-problem-summary/)
-    * [谁能想到，斗地主也能玩出算法](https://labuladong.online/algo/practice-in-action/split-array-into-consecutive-subsequences/)
-    * [烧饼排序算法](https://labuladong.online/algo/frequency-interview/pancake-sorting/)
-    * [字符串乘法计算](https://labuladong.online/algo/practice-in-action/multiply-strings/)
-    * [如何判定完美矩形](https://labuladong.online/algo/frequency-interview/perfect-rectangle/)
+* [Chương 2: thuật toán tìm kiếm brute-force kinh điển](https://labuladong.online/algo/menu/braute-force-search/)
+  * [Thuật toán DFS/quay lui](https://labuladong.online/algo/menu/dfs/)
+    * [Khung công thức giải đề thuật toán quay lui (backtracking)](https://labuladong.online/algo/essential-technique/backtrack-framework/)
+    * [Thực hành quay lui: Sudoku và bài N hậu](https://labuladong.online/algo/practice-in-action/sudoku-nqueue/)
+    * [[Game] Cài đặt tool 'hack' Sudoku](https://labuladong.online/algo/game/sudoku/)
+    * [Quay lui xử gọn mọi bài hoán vị/tổ hợp/tập con](https://labuladong.online/algo/essential-technique/permutation-combination-subset-all-in-one/)
+    * [Giải đáp một số thắc mắc về thuật toán quay lui/DFS](https://labuladong.online/algo/essential-technique/backtrack-vs-dfs/)
+    * [Một bài xử gọn mọi bài toán đảo](https://labuladong.online/algo/frequency-interview/island-dfs-summary/)
+    * [[Game] Dò mìn II](https://labuladong.online/algo/game/minesweeper-ii/)
+    * [Mô hình bóng-hộp: hai góc nhìn liệt kê của thuật toán quay lui](https://labuladong.online/algo/practice-in-action/two-views-of-backtrack/)
+    * [Thực hành quay lui: sinh dấu ngoặc](https://labuladong.online/algo/practice-in-action/generate-parentheses/)
+    * [Thực hành quay lui: phân hoạch tập hợp](https://labuladong.online/algo/practice-in-action/partition-to-k-equal-sum-subsets/)
+    * [Bài tập kinh điển thuật toán quay lui I](https://labuladong.online/algo/problem-set/backtrack-i/)
+    * [Bài tập kinh điển thuật toán quay lui II](https://labuladong.online/algo/problem-set/backtrack-ii/)
+    * [Bài tập kinh điển thuật toán quay lui III](https://labuladong.online/algo/problem-set/backtrack-iii/)
 
-* [更多内容](https://labuladong.online/algo/menu/appendix/)
-  * [计算机基础知识](https://labuladong.online/algo/menu/computer-basics/)
-    * [AI 时代的前端开发入门教程](https://labuladong.online/algo/computer-science/frontend-introduction/)
-    * [现代加密技术入门](https://labuladong.online/algo/computer-science/encryption-intro/)
-    * [深入理解 session 和 cookie](https://labuladong.online/algo/other-skills/session-and-cookie/)
-    * [深入理解 JSON Web Token (JWT)](https://labuladong.online/algo/computer-science/how-jwt-works/)
-    * [认证和授权的区别与联系](https://labuladong.online/algo/computer-science/authentication-vs-authorization/)
-    * [深入理解 OAuth 2.0 授权框架](https://labuladong.online/algo/computer-science/oauth2-explained/)
-    * [OAuth 2.0 和 OIDC 认证](https://labuladong.online/algo/computer-science/oidc/)
-    * [OAuth 2.0 与 PKCE](https://labuladong.online/algo/computer-science/pkce/)
-    * [深入理解单点登录 (SSO)](https://labuladong.online/algo/computer-science/sso/)
-    * [深入理解数字证书和 CA](https://labuladong.online/algo/computer-science/certificate-and-ca/)
-    * [深入理解 TLS 密钥协商](https://labuladong.online/algo/computer-science/tls-key-exchange/)
-    * [深入理解 mTLS 双向认证](https://labuladong.online/algo/computer-science/mtls/)
-    * [初识 Linux 文件系统](https://labuladong.online/algo/other-skills/linux-file-system/)
-    * [Linux的进程、线程、文件描述符是什么](https://labuladong.online/algo/other-skills/linux-process/)
-    * [Linux 管道符的坑](https://labuladong.online/algo/other-skills/linux-pipeline/)
-    * [Linux shell 的使用技巧](https://labuladong.online/algo/other-skills/linux-shell/)
-    * [浅谈存储系统：LSM 树设计原理](https://labuladong.online/algo/other-skills/lsm-tree/)
-    * [正在更新 ing](https://labuladong.online/algo/intro/updating/)
+  * [Thuật toán BFS](https://labuladong.online/algo/menu/bfs/)
+    * [Khung công thức giải đề thuật toán BFS](https://labuladong.online/algo/essential-technique/bfs-framework/)
+    * [[Game] Giải mê cung](https://labuladong.online/algo/game/maze/)
+    * [[Game] Game Hoa Dung Đạo](https://labuladong.online/algo/game/huarong-road/)
+    * [[Game] Game nối hình (Lianliankan)](https://labuladong.online/algo/game/connect-two/)
+    * [Bài tập kinh điển BFS I](https://labuladong.online/algo/problem-set/bfs/)
+    * [Bài tập kinh điển BFS II](https://labuladong.online/algo/problem-set/bfs-ii/)
 
-  * [设计模式](https://labuladong.online/algo/menu/design-pattern/)
-    * [单例模式](https://labuladong.online/algo/design-pattern/singleton/)
-    * [工厂方法模式](https://labuladong.online/algo/design-pattern/factory-method/)
-    * [抽象工厂模式](https://labuladong.online/algo/design-pattern/abstract-factory/)
-    * [生成器模式](https://labuladong.online/algo/design-pattern/builder/)
-    * [原型模式](https://labuladong.online/algo/design-pattern/prototype/)
-    * [适配器模式](https://labuladong.online/algo/design-pattern/adapter/)
-    * [组合模式](https://labuladong.online/algo/design-pattern/composite/)
-    * [装饰模式](https://labuladong.online/algo/design-pattern/decorator/)
-    * [桥接模式](https://labuladong.online/algo/design-pattern/bridge/)
-    * [观察者模式](https://labuladong.online/algo/design-pattern/observer/)
-    * [策略模式](https://labuladong.online/algo/design-pattern/strategy/)
-    * [正在更新 ing](https://labuladong.online/algo/intro/updating/)
+* [Chương 3: thuật toán quy hoạch động kinh điển](https://labuladong.online/algo/menu/dp/)
+  * [Kỹ thuật cơ bản của quy hoạch động](https://labuladong.online/algo/menu/dp-basic/)
+    * [Khung công thức giải đề quy hoạch động (DP)](https://labuladong.online/algo/essential-technique/dynamic-programming-framework/)
+    * [Thiết kế DP: dãy con tăng dài nhất](https://labuladong.online/algo/dynamic-programming/longest-increasing-subsequence/)
+    * [Cách xác định base case và giá trị khởi tạo của memo?](https://labuladong.online/algo/dynamic-programming/memo-fundamental/)
+    * [Hai góc nhìn liệt kê của quy hoạch động](https://labuladong.online/algo/dynamic-programming/two-views-of-dp/)
+    * [Chuyển đổi tư duy giữa quy hoạch động và thuật toán quay lui](https://labuladong.online/algo/dynamic-programming/word-break/)
+    * [Nén không gian cho quy hoạch động](https://labuladong.online/algo/dynamic-programming/space-optimization/)
+    * [Nguyên lý cấu trúc con tối ưu và hướng duyệt mảng dp](https://labuladong.online/algo/dynamic-programming/faq-summary/)
+
+  * [Họ bài dãy con (subsequence)](https://labuladong.online/algo/menu/subsequence/)
+    * [DP kinh điển: khoảng cách chỉnh sửa (edit distance)](https://labuladong.online/algo/dynamic-programming/edit-distance/)
+    * [Thiết kế DP: mảng con có tổng lớn nhất](https://labuladong.online/algo/dynamic-programming/maximum-subarray/)
+    * [DP kinh điển: dãy con chung dài nhất](https://labuladong.online/algo/dynamic-programming/longest-common-subsequence/)
+    * [Template giải họ bài dãy con bằng DP](https://labuladong.online/algo/dynamic-programming/subsequence-problem/)
+
+  * [Họ bài ba lô (knapsack)](https://labuladong.online/algo/menu/knapsack/)
+    * [DP kinh điển: bài toán ba lô 0-1](https://labuladong.online/algo/dynamic-programming/knapsack1/)
+    * [DP kinh điển: bài toán ba lô tập con](https://labuladong.online/algo/dynamic-programming/knapsack2/)
+    * [DP kinh điển: bài toán ba lô đầy đủ](https://labuladong.online/algo/dynamic-programming/knapsack3/)
+    * [Biến thể ba lô: tổng mục tiêu (target sum)](https://labuladong.online/algo/dynamic-programming/target-sum/)
+
+  * [Dùng quy hoạch động 'phá đảo' game](https://labuladong.online/algo/menu/dp-game/)
+    * [DP: tổng đường đi nhỏ nhất](https://labuladong.online/algo/dynamic-programming/minimum-path-sum/)
+    * [Quy hoạch động giúp tôi phá đảo 'Tháp ma thuật'](https://labuladong.online/algo/dynamic-programming/magic-tower/)
+    * [Quy hoạch động giúp tôi phá đảo 'Fallout 4'](https://labuladong.online/algo/dynamic-programming/freedom-trail/)
+    * [Bí kíp du lịch tiết kiệm: đường ngắn nhất có trọng số](https://labuladong.online/algo/dynamic-programming/cheap-travel/)
+    * [Đường ngắn nhất đa nguồn: thuật toán Floyd](https://labuladong.online/algo/data-structure/floyd/)
+    * [DP kinh điển: biểu thức chính quy](https://labuladong.online/algo/dynamic-programming/regular-expression-matching/)
+    * [DP kinh điển: thả trứng từ tòa nhà cao](https://labuladong.online/algo/dynamic-programming/egg-drop/)
+    * [DP kinh điển: chọc bóng bay](https://labuladong.online/algo/dynamic-programming/burst-balloons/)
+    * [DP kinh điển: bài toán trò chơi đối kháng](https://labuladong.online/algo/dynamic-programming/game-theory/)
+    * [Một phương pháp quét sạch họ bài trộm nhà trên LeetCode](https://labuladong.online/algo/dynamic-programming/house-robber/)
+    * [Một phương pháp quét sạch họ bài mua bán cổ phiếu trên LeetCode](https://labuladong.online/algo/dynamic-programming/stock-problem-summary/)
+
+  * [Tuyển tập bài tập quy hoạch động](https://labuladong.online/algo/menu/dp-basic/)
+    * [Mẫu bài trộm nhà](https://labuladong.online/algo/problem-set/rob-house/)
+    * [Bài tập kinh điển bài toán ba lô](https://labuladong.online/algo/problem-set/knapsack/)
+    * [Bài tập kinh điển quy hoạch động I](https://labuladong.online/algo/problem-set/dynamic-programming-i/)
+    * [Bài tập kinh điển quy hoạch động II](https://labuladong.online/algo/problem-set/dynamic-programming-ii/)
+
+  * [Họ bài tham lam](https://labuladong.online/algo/menu/greedy/)
+    * [Khung công thức giải đề thuật toán tham lam](https://labuladong.online/algo/essential-technique/greedy/)
+    * [Thuật toán đổ xăng của 'tài già'](https://labuladong.online/algo/frequency-interview/gas-station-greedy/)
+    * [Thuật toán tham lam: bài toán lập lịch khoảng](https://labuladong.online/algo/frequency-interview/interval-scheduling/)
+    * [Kỹ thuật sweep line: xếp phòng họp](https://labuladong.online/algo/frequency-interview/scan-line-technique/)
+    * [Cắt video mà ra một thuật toán tham lam](https://labuladong.online/algo/frequency-interview/cut-video/)
+
+
+* [Chương 4: các kỹ thuật thuật toán thường gặp khác](https://labuladong.online/algo/menu/other/)
+  * [Kỹ thuật tính toán số học](https://labuladong.online/algo/menu/math/)
+    * [Bài thuật toán giải được chỉ bằng một dòng code](https://labuladong.online/algo/frequency-interview/one-line-solutions/)
+    * [Các thao tác bit thường dùng](https://labuladong.online/algo/frequency-interview/bitwise-operation/)
+    * [Kỹ thuật toán học nhất định phải biết](https://labuladong.online/algo/essential-technique/math-techniques-summary/)
+    * [[Game] Tool sinh bản đồ game dò mìn](https://labuladong.online/algo/game/minesweeper/)
+    * [Bàn về thuật toán ngẫu nhiên trong game](https://labuladong.online/algo/frequency-interview/random-algorithm/)
+    * [Hai bài giai thừa thường gặp khi thi](https://labuladong.online/algo/frequency-interview/factorial-problems/)
+    * [Cách tìm số nguyên tố hiệu quả](https://labuladong.online/algo/frequency-interview/print-prime-number/)
+    * [Cách tìm đồng thời phần tử thiếu và phần tử trùng](https://labuladong.online/algo/frequency-interview/mismatch-set/)
+    * [Vài bài toán xác suất 'ngược trực giác'](https://labuladong.online/algo/frequency-interview/probability-problem/)
+    * [Bài tập liên quan kỹ thuật toán học](https://labuladong.online/algo/problem-set/math-tricks/)
+
+  * [Câu hỏi phỏng vấn kinh điển](https://labuladong.online/algo/menu/interview/)
+    * [Cách giải hiệu quả bài hứng nước mưa](https://labuladong.online/algo/frequency-interview/trapping-rain-water/)
+    * [Một bài xử gọn họ bài số xấu (ugly number)](https://labuladong.online/algo/frequency-interview/ugly-number-summary/)
+    * [Một phương pháp giải 3 bài toán khoảng](https://labuladong.online/algo/practice-in-action/interval-problem-summary/)
+    * [Ai ngờ chơi Đấu địa chủ cũng ra thuật toán](https://labuladong.online/algo/practice-in-action/split-array-into-consecutive-subsequences/)
+    * [Thuật toán sắp xếp bánh kếp (pancake sort)](https://labuladong.online/algo/frequency-interview/pancake-sorting/)
+    * [Phép nhân chuỗi số](https://labuladong.online/algo/practice-in-action/multiply-strings/)
+    * [Cách kiểm tra hình chữ nhật hoàn hảo](https://labuladong.online/algo/frequency-interview/perfect-rectangle/)
+
+* [Nội dung khác](https://labuladong.online/algo/menu/appendix/)
+  * [Kiến thức cơ bản về máy tính](https://labuladong.online/algo/menu/computer-basics/)
+    * [Hướng dẫn nhập môn phát triển frontend trong thời đại AI](https://labuladong.online/algo/computer-science/frontend-introduction/)
+    * [Nhập môn kỹ thuật mã hóa hiện đại](https://labuladong.online/algo/computer-science/encryption-intro/)
+    * [Hiểu sâu session và cookie](https://labuladong.online/algo/other-skills/session-and-cookie/)
+    * [Hiểu sâu JSON Web Token (JWT)](https://labuladong.online/algo/computer-science/how-jwt-works/)
+    * [Khác biệt và liên hệ giữa xác thực và ủy quyền](https://labuladong.online/algo/computer-science/authentication-vs-authorization/)
+    * [Hiểu sâu khung ủy quyền OAuth 2.0](https://labuladong.online/algo/computer-science/oauth2-explained/)
+    * [Xác thực OAuth 2.0 và OIDC](https://labuladong.online/algo/computer-science/oidc/)
+    * [OAuth 2.0 và PKCE](https://labuladong.online/algo/computer-science/pkce/)
+    * [Hiểu sâu đăng nhập một lần (SSO)](https://labuladong.online/algo/computer-science/sso/)
+    * [Hiểu sâu chứng chỉ số và CA](https://labuladong.online/algo/computer-science/certificate-and-ca/)
+    * [Hiểu sâu đàm phán khóa TLS](https://labuladong.online/algo/computer-science/tls-key-exchange/)
+    * [Hiểu sâu xác thực hai chiều mTLS](https://labuladong.online/algo/computer-science/mtls/)
+    * [Làm quen hệ thống file Linux](https://labuladong.online/algo/other-skills/linux-file-system/)
+    * [Tiến trình, luồng và file descriptor trong Linux là gì](https://labuladong.online/algo/other-skills/linux-process/)
+    * [Cái bẫy của toán tử pipe trong Linux](https://labuladong.online/algo/other-skills/linux-pipeline/)
+    * [Mẹo dùng Linux shell](https://labuladong.online/algo/other-skills/linux-shell/)
+    * [Bàn về hệ lưu trữ: nguyên lý thiết kế cây LSM](https://labuladong.online/algo/other-skills/lsm-tree/)
+    * [Đang cập nhật](https://labuladong.online/algo/intro/updating/)
+
+  * [Mẫu thiết kế (design pattern)](https://labuladong.online/algo/menu/design-pattern/)
+    * [Mẫu Singleton](https://labuladong.online/algo/design-pattern/singleton/)
+    * [Mẫu Factory Method](https://labuladong.online/algo/design-pattern/factory-method/)
+    * [Mẫu Abstract Factory](https://labuladong.online/algo/design-pattern/abstract-factory/)
+    * [Mẫu Builder](https://labuladong.online/algo/design-pattern/builder/)
+    * [Mẫu Prototype](https://labuladong.online/algo/design-pattern/prototype/)
+    * [Mẫu Adapter](https://labuladong.online/algo/design-pattern/adapter/)
+    * [Mẫu Composite](https://labuladong.online/algo/design-pattern/composite/)
+    * [Mẫu Decorator](https://labuladong.online/algo/design-pattern/decorator/)
+    * [Mẫu Bridge](https://labuladong.online/algo/design-pattern/bridge/)
+    * [Mẫu Observer](https://labuladong.online/algo/design-pattern/observer/)
+    * [Mẫu Strategy](https://labuladong.online/algo/design-pattern/strategy/)
+    * [Đang cập nhật](https://labuladong.online/algo/intro/updating/)
 
 
 <!-- table end -->
 
-# 感谢如下大佬参与翻译
+# Cảm ơn các cao thủ sau đã tham gia dịch thuật (bản gốc tiếng Anh)
 
-按照昵称字典序排名：
+Xếp theo thứ tự từ điển của nickname：
 
 [ABCpril](https://github.com/ABCpril), 
 [andavid](https://github.com/andavid), 
@@ -494,6 +494,6 @@ English version is on [labuladong.online](https://labuladong.online/algo/en/) to
 
 # Donate
 
-如果本仓库对你有帮助，可以请作者喝杯速溶咖啡
+Nếu kho này giúp ích cho bạn, có thể mời tác giả một ly cà phê hòa tan
 
 <img src="pictures/pay.jpg" width = "200" align=center />
