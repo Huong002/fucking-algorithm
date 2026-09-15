@@ -22,6 +22,10 @@
 - Giữ nguyên indent comment code. URL/path/key nghi ngờ → giữ + REVIEW_REQUIRED.
 - Spec: docs/superpowers/specs/2026-09-15-translation-design.md (chưa commit).
 
-## Nợ
-- 1 REVIEW_REQUIRED: 技术/linuxshell.md:335 (từ khóa grep minh họa).
-- Chưa commit/push gì (chờ human duyệt).
+## Rename (2026-09-15, chưa commit — chờ human duyệt)
+- Backup: `backup/vi-pre-rename`.
+- 6 thư mục → EN + 72 file → kebab-case ASCII (78 staged renames,
+  similarity 100%, 0 dòng nội dung đổi).
+- GitHub URL trong contribution-guide đã cập nhật path mới.
+- `pictures/` nguyên vẹn. `git ls-files` hết path Hán ngoài `pictures/`.
+- Ảnh gãy 123 chỗ là tồn tại từ trước (ảnh không có trong repo), không do rename.

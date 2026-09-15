@@ -16,7 +16,7 @@ Nếu bạn phát hiện code lời giải nào đó không vượt qua được
 
 Trước hết, cảm ơn bạn đã sẵn lòng sửa lỗi cho code lời giải trong plugin của tôi. Sau khi bạn gửi PR sửa lỗi vào repo này, bạn sẽ trở thành contributor của repo, xuất hiện trong danh sách người đóng góp ở trang chủ của repo. Repo này đã đạt 115k star, đóng góp của bạn sẽ được rất nhiều người nhìn thấy.
 
-Sửa code rất đơn giản, mọi code lời giải đa ngôn ngữ đều được lưu trong [多语言解法代码/solution_code.md](https://github.com/labuladong/fucking-algorithm/blob/master/%E5%A4%9A%E8%AF%AD%E8%A8%80%E8%A7%A3%E6%B3%95%E4%BB%A3%E7%A0%81/solution_code.md), bạn chỉ cần sửa file này là được. Nội dung trong đó được tổ chức như sau:
+Sửa code rất đơn giản, mọi code lời giải đa ngôn ngữ đều được lưu trong [multi-language-solutions/solution-code.md](https://github.com/labuladong/fucking-algorithm/blob/master/multi-language-solutions/solution-code.md), bạn chỉ cần sửa file này là được. Nội dung trong đó được tổ chức như sau:
 
     https://leetcode.cn/problems/xxx 的多语言解法👇
 
@@ -58,13 +58,13 @@ Sửa code rất đơn giản, mọi code lời giải đa ngôn ngữ đều đ
     https://leetcode.cn/problems/xxx 的多语言解法👆
 
 
-Ví dụ bạn muốn sửa lời giải JavaScript của [https://leetcode-cn.com/problems/longest-palindromic-substring/](https://leetcode-cn.com/problems/longest-palindromic-substring/), bạn có thể tìm từ khóa `longest-palindromic-substring` trong [多语言解法代码/solution_code.md](https://github.com/labuladong/fucking-algorithm/blob/master/%E5%A4%9A%E8%AF%AD%E8%A8%80%E8%A7%A3%E6%B3%95%E4%BB%A3%E7%A0%81/solution_code.md) là sẽ thấy lời giải đa ngôn ngữ của bài này, rồi sửa code lời giải JavaScript tương ứng và gửi PR là xong.
+Ví dụ bạn muốn sửa lời giải JavaScript của [https://leetcode-cn.com/problems/longest-palindromic-substring/](https://leetcode-cn.com/problems/longest-palindromic-substring/), bạn có thể tìm từ khóa `longest-palindromic-substring` trong [multi-language-solutions/solution-code.md](https://github.com/labuladong/fucking-algorithm/blob/master/multi-language-solutions/solution-code.md) là sẽ thấy lời giải đa ngôn ngữ của bài này, rồi sửa code lời giải JavaScript tương ứng và gửi PR là xong.
 
 Plugin của tôi sẽ tự động lấy nội dung mới nhất của file này, nên sau khi PR của bạn được merge vào nhánh master, phần nội dung sửa trong plugin cũng sẽ có hiệu lực.
 
 ## Yêu cầu khi gửi PR
 
-1、PR của bạn phải là sửa phần code trong file [多语言解法代码/solution_code.md](https://github.com/labuladong/fucking-algorithm/blob/master/%E5%A4%9A%E8%AF%AD%E8%A8%80%E8%A7%A3%E6%B3%95%E4%BB%A3%E7%A0%81/solution_code.md), không sửa file khác và nội dung khác.
+1、PR của bạn phải là sửa phần code trong file [multi-language-solutions/solution-code.md](https://github.com/labuladong/fucking-algorithm/blob/master/multi-language-solutions/solution-code.md), không sửa file khác và nội dung khác.
 
 2、Mục đích dịch lời giải của tôi sang đa ngôn ngữ là để giúp các bạn có nền tảng khác nhau hiểu được tư duy thuật toán, vì vậy code bạn sửa có thể không phải là cách tối ưu hiệu năng nhất, nhưng nên cố gắng giữ nhất quán với hướng tiếp cận trong lời giải của tôi, và giữ đầy đủ chú thích (comment) như trong lời giải của tôi.
 
