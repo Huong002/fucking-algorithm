@@ -1,0 +1,3 @@
+- Prefers Vietnamese for communication. Confidence: 0.95
+- Wants exact impact checks of links and references before renaming files or directories, with clear identification of safe and breaking cases. Confidence: 0.9
+- Prefers a detailed, step-by-step plan before executing bulk file or directory renames, including a complete old-to-new mapping, explicit invariants, and post-change validation. Confidence: 0.9

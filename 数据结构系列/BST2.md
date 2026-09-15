@@ -5,13 +5,13 @@
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**Thông báo: Theo nhu cầu của đông đảo độc giả, website đã ra mắt [Lộ trình速成](https://labuladong.online/algo/intro/quick-learning-plan/), ai cần có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, khuyên bạn học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
+**Thông báo: Theo nhu cầu của đông đảo độc giả, website đã ra mắt [Lộ trình cấp tốc ](https://labuladong.online/algo/intro/quick-learning-plan/), ai cần có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, khuyên bạn học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
 
 
-Đọc xong bài này, bạn không chỉ học được套路thuật toán, mà còn tiện tay giải được các bài sau:
+Đọc xong bài này, bạn không chỉ học được khuôn mẫu thuật toán, mà còn tiện tay giải được các bài sau:
 
-| LeetCode | 力扣 | Độ khó |
+| LeetCode | LeetCode CN | Độ khó |
 | :----: | :----: | :----: |
 | [450. Delete Node in a BST](https://leetcode.com/problems/delete-node-in-a-bst/) | [450. Xóa Node trong cây tìm kiếm nhị phân](https://leetcode.cn/problems/delete-node-in-a-bst/) | 🟠 |
 | [700. Search in a Binary Search Tree](https://leetcode.com/problems/search-in-a-binary-search-tree/) | [700. Tìm kiếm trong cây tìm kiếm nhị phân](https://leetcode.cn/problems/search-in-a-binary-search-tree/) | 🟢 |
@@ -28,7 +28,7 @@
 > - [Cơ bản về cấu trúc cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-basic/)
 > - [Duyệt DFS/BFS cây nhị phân](https://labuladong.online/algo/data-structure-basic/binary-tree-traverse-basic/)
 
-Bài trước [Tâm pháp cây tìm kiếm nhị phân (Phần đặc tính)](https://labuladong.online/algo/data-structure/bst-part1/) đã giới thiệu đặc tính cơ bản của BST, còn lợi dụng đặc tính「duyệt trung序 có thứ tự」của cây tìm kiếm nhị phân để giải mấy bài, bài này cài đặt các thao tác cơ bản của BST: kiểm tra tính hợp lệ, thêm, xóa, tìm. Trong đó「xóa」và「kiểm tra hợp lệ」hơi phức tạp.
+Bài trước [Tâm pháp cây tìm kiếm nhị phân (Phần đặc tính)](https://labuladong.online/algo/data-structure/bst-part1/) đã giới thiệu đặc tính cơ bản của BST, còn lợi dụng đặc tính「duyệt trung thứ tự có thứ tự」của cây tìm kiếm nhị phân để giải mấy bài, bài này cài đặt các thao tác cơ bản của BST: kiểm tra tính hợp lệ, thêm, xóa, tìm. Trong đó「xóa」và「kiểm tra hợp lệ」hơi phức tạp.
 
 Thao tác cơ bản của BST chủ yếu dựa vào đặc tính「trái nhỏ phải lớn」, có thể làm thao tác tìm kiếm nhị phân tương tự trong cây nhị phân, hiệu suất tìm một phần tử rất cao. Ví dụ dưới đây chính là một cây nhị phân hợp lệ:
 
@@ -51,11 +51,11 @@ Khung code này thực ra gần giống khung duyệt cây nhị phân, chẳng 
 
 ## Một, kiểm tra tính hợp lệ của BST
 
-Bài 98 trên LeetCode「Kiểm chứng cây tìm kiếm nhị phân」bắt bạn判断BST nhập vào có hợp lệ không:
+Bài 98 trên LeetCode「Kiểm chứng cây tìm kiếm nhị phân」bắt bạn kiểm tra BST nhập vào có hợp lệ không:
 
 <Problem slug="validate-binary-search-tree" />
 
-Chú ý, ở đây có坑nhé. Theo đặc tính trái nhỏ phải lớn của BST, mỗi Node muốn判断mình có phải Node BST hợp lệ không, việc要làm không phải là so sánh mình với con trái/phải sao? Cảm giác nên viết code thế này:
+Chú ý, ở đây có bẫy nhé. Theo đặc tính trái nhỏ phải lớn của BST, mỗi Node muốn kiểm tra mình có phải Node BST hợp lệ không, việc cần làm không phải là so sánh mình với con trái/phải sao? Cảm giác nên viết code thế này:
 
 ```java
 boolean isValidBST(TreeNode root) {
@@ -72,11 +72,11 @@ boolean isValidBST(TreeNode root) {
 }
 ```
 
-Nhưng thuật toán này sai rồi, mỗi Node của BST phải nhỏ hơn **toàn bộ** Node của cây con phải, cây nhị phân dưới đây rõ ràng không phải BST, vì trong cây con phải của Node 10 có một Node 6, nhưng thuật toán của chúng ta sẽ判定nó là BST hợp lệ:
+Nhưng thuật toán này sai rồi, mỗi Node của BST phải nhỏ hơn **toàn bộ** Node của cây con phải, cây nhị phân dưới đây rõ ràng không phải BST, vì trong cây con phải của Node 10 có một Node 6, nhưng thuật toán của chúng ta sẽ kiểm tra nó là BST hợp lệ:
 
 ![](https://labuladong.online/algo/images/bst/假BST.png)
 
-**Nguyên nhân lỗi là, với mỗi Node `root`, code chỉ kiểm tra Node con trái/phải của nó có符合nguyên tắc trái nhỏ phải lớn không; nhưng theo định nghĩa BST, toàn bộ cây con trái của `root` đều phải nhỏ hơn `root.val`, toàn bộ cây con phải đều phải lớn hơn `root.val`**.
+**Nguyên nhân lỗi là, với mỗi Node `root`, code chỉ kiểm tra Node con trái/phải của nó có phù hợp nguyên tắc trái nhỏ phải lớn không; nhưng theo định nghĩa BST, toàn bộ cây con trái của `root` đều phải nhỏ hơn `root.val`, toàn bộ cây con phải đều phải lớn hơn `root.val`**.
 
 Vấn đề là, với một Node `root` nào đó, nó chỉ quản được Node con trái/phải của mình, làm sao truyền ràng buộc của `root` cho cây con trái/phải? Xem code đúng:
 
@@ -90,7 +90,7 @@ class Solution {
     public boolean _isValidBST(TreeNode root, TreeNode min, TreeNode max) {
         // base case
         if (root == null) return true;
-        // Nếu root.val không符合giới hạn của max và min,说明không phải BST hợp lệ
+        // Nếu root.val không phù hợp giới hạn của max và min, cho thấy không phải BST hợp lệ
         if (min != null && root.val <= min.val) return false;
         if (max != null && root.val >= max.val) return false;
         // Theo định nghĩa, giới hạn giá trị lớn nhất của cây con trái là root.val, giá trị nhỏ nhất của cây con phải là root.val
@@ -129,7 +129,7 @@ Nếu là tìm trong một cây nhị phân thường, có thể viết code th�
 TreeNode searchBST(TreeNode root, int target) {
     if (root == null) return null;
     if (root.val == target) return root;
-    // Node hiện tại chưa tìm được thì đệ quy去cây con trái/phải tìm
+    // Node hiện tại chưa tìm được thì đệ quy đi cây con trái/phải tìm
     TreeNode left = searchBST(root.left, target);
     TreeNode right = searchBST(root.right, target);
 
@@ -137,9 +137,9 @@ TreeNode searchBST(TreeNode root, int target) {
 }
 ```
 
-Viết vậy hoàn toàn đúng, nhưng đoạn code này tương đương liệt kê mọi Node, áp dụng cho mọi cây nhị phân. Vậy làm sao phát huy充分đặc thù của BST, dùng đặc tính「trái nhỏ phải lớn」?
+Viết vậy hoàn toàn đúng, nhưng đoạn code này tương đương liệt kê mọi Node, áp dụng cho mọi cây nhị phân. Vậy làm sao phát huy đầy đủ đặc thù của BST, dùng đặc tính「trái nhỏ phải lớn」?
 
-Rất đơn giản, thực ra không cần đệ quy tìm cả hai bên, tư tưởng giống tìm kiếm nhị phân, dựa vào so sánh `target` và `root.val` là có thể loại một bên. Sửa chút思路trên:
+Rất đơn giản, thực ra không cần đệ quy tìm cả hai bên, tư tưởng giống tìm kiếm nhị phân, dựa vào so sánh `target` và `root.val` là có thể loại một bên. Sửa chút ý tưởng trên:
 
 ```java
 TreeNode searchBST(TreeNode root, int target) {
@@ -180,13 +180,13 @@ Vì BST thường không tồn tại Node trùng giá trị, nên chúng ta thư
 
 Bài trước, chúng ta tổng kết khung duyệt trong BST, chính là vấn đề「tìm」. Áp khung trực tiếp, cộng thêm thao tác「sửa」là được.
 
-**Một khi liên quan「sửa」,就类似vấn đề dựng cây nhị phân, hàm phải trả về kiểu `TreeNode`, và phải nhận giá trị trả về của gọi đệ quy**.
+**Một khi liên quan「sửa」, thì tương tự vấn đề dựng cây nhị phân, hàm phải trả về kiểu `TreeNode`, và phải nhận giá trị trả về của gọi đệ quy**.
 
 Bài 701 trên LeetCode「Thao tác chèn trong cây tìm kiếm nhị phân」chính là vấn đề này:
 
 <Problem slug="insert-into-a-binary-search-tree" />
 
-Xem thẳng code解法, có thể kết hợp chú thích và panel trực quan để hiểu:
+Xem thẳng code lời giải, có thể kết hợp chú thích và panel trực quan để hiểu:
 
 ```java
 class Solution {
@@ -246,9 +246,9 @@ TreeNode deleteNode(TreeNode root, int key) {
 }
 ```
 
-Tìm được Node mục tiêu rồi, ví dụ là Node `A`, xóa Node này thế nào, đây là khó. Vì khi xóa Node đồng thời không được phá tính chất BST. Có ba trường hợp, dùng hình để说明.
+Tìm được Node mục tiêu rồi, ví dụ là Node `A`, xóa Node này thế nào, đây là khó. Vì khi xóa Node đồng thời không được phá tính chất BST. Có ba trường hợp, dùng hình để cho thấy .
 
-**Trường hợp 1**: `A`恰好là Node末端, hai Node con đều rỗng, vậy nó có thể去世tại chỗ.
+**Trường hợp 1**: `A` vừa đúng là Node cuối, hai Node con đều rỗng, vậy nó có thể ra đi tại chỗ.
 
 ![](https://labuladong.online/algo/images/bst/bst_deletion_case_1.png)
 
@@ -258,7 +258,7 @@ if (root.left == null && root.right == null)
 ```
 
 
-**Trường hợp 2**: `A` chỉ có một Node con không rỗng, vậy nó phải để đứa con này接替vị trí của mình.
+**Trường hợp 2**: `A` chỉ có một Node con không rỗng, vậy nó phải để đứa con này nối thay vị trí của mình.
 
 ![](https://labuladong.online/algo/images/bst/bst_deletion_case_2.png)
 
@@ -269,7 +269,7 @@ if (root.right == null) return root.left;
 ```
 
 
-**Trường hợp 3**: `A` có hai Node con, phiền rồi, để không phá tính chất BST, `A`必须tìm Node lớn nhất trong cây con trái, hoặc Node nhỏ nhất trong cây con phải来接替mình. Chúng ta giảng theo cách thứ hai.
+**Trường hợp 3**: `A` có hai Node con, phiền rồi, để không phá tính chất BST, `A` bắt buộc tìm Node lớn nhất trong cây con trái, hoặc Node nhỏ nhất trong cây con phải nối thay mình. Chúng ta giảng theo cách thứ hai.
 
 ![](https://labuladong.online/algo/images/bst/bst_deletion_case_3.png)
 
@@ -279,7 +279,7 @@ if (root.left != null && root.right != null) {
     TreeNode minNode = getMin(root.right);
     // Biến root thành minNode
     root.val = minNode.val;
-    // Chuyển去xóa minNode
+    // Chuyển đi xóa minNode
     root.right = deleteNode(root.right, minNode.val);
 }
 ```
@@ -361,15 +361,15 @@ root.val = minNode.val;
 ```
 
 
-Chỉ riêng với bài thuật toán này thì được, nhưng thao tác vậy không hoàn hảo, chúng ta thường không hoán đổi Node bằng cách sửa giá trị bên trong Node. Vì trong ứng dụng thực tế, vùng dữ liệu bên trong Node BST do user tự định nghĩa, có thể rất phức tạp, mà BST làm cấu trúc dữ liệu (một工具人), thao tác của nó phải解耦với vùng dữ liệu lưu bên trong, nên chúng ta thiên về dùng thao tác con trỏ để hoán đổi Node, căn bản không cần quan tâm dữ liệu bên trong.
+Chỉ riêng với bài thuật toán này thì được, nhưng thao tác vậy không hoàn hảo, chúng ta thường không hoán đổi Node bằng cách sửa giá trị bên trong Node. Vì trong ứng dụng thực tế, vùng dữ liệu bên trong Node BST do user tự định nghĩa, có thể rất phức tạp, mà BST làm cấu trúc dữ liệu (một người phụ việc), thao tác của nó phải gỡ ràng buộc với vùng dữ liệu lưu bên trong, nên chúng ta thiên về dùng thao tác con trỏ để hoán đổi Node, căn bản không cần quan tâm dữ liệu bên trong.
 
-Cuối cùng tóm tắt đơn giản, qua bài này, chúng ta tổng kết mấy技巧sau:
+Cuối cùng tóm tắt đơn giản, qua bài này, chúng ta tổng kết mấy kỹ thuật sau:
 
-1、Nếu Node hiện tại ảnh hưởng tổng thể tới Node con bên dưới, có thể tăng danh sách tham số qua hàm phụ trợ, mượn tham số truyền thông tin.
+1, Nếu Node hiện tại ảnh hưởng tổng thể tới Node con bên dưới, có thể tăng danh sách tham số qua hàm phụ trợ, mượn tham số truyền thông tin.
 
-2、Nắm phương pháp thêm/xóa/tìm/sửa của BST.
+2, Nắm phương pháp thêm/xóa/tìm/sửa của BST.
 
-3、Khi đệ quy sửa cấu trúc dữ liệu, cần nhận giá trị trả về của gọi đệ quy, và trả về Node đã sửa.
+3, Khi đệ quy sửa cấu trúc dữ liệu, cần nhận giá trị trả về của gọi đệ quy, và trả về Node đã sửa.
 
 Bài này đến đây thôi, thêm nhiều bài tập cây nhị phân kinh điển và rèn luyện tư duy đệ quy, xem [Luyện chuyên đề đệ quy](https://labuladong.online/algo/problem-set/bst1/) trong chương cây nhị phân.
 
@@ -382,9 +382,9 @@ Bài này đến đây thôi, thêm nhiều bài tập cây nhị phân kinh đi
 <details class="hint-container details">
 <summary><strong>Bài viết trích dẫn bài này</strong></summary>
 
- - [Cài đặt code Trie/Cây字典树/Cây tiền tố](https://labuladong.online/algo/data-structure/trie-implement/)
+ - [Cài đặt code Trie/Cây cây Trie /Cây tiền tố](https://labuladong.online/algo/data-structure/trie-implement/)
  - [【Luyện tập tăng cường】Bài tập kinh điển về cây tìm kiếm nhị phân II](https://labuladong.online/algo/problem-set/bst2/)
- - [Tâm pháp cây tìm kiếm nhị phân (Phần hậu序)](https://labuladong.online/algo/data-structure/bst-part4/)
+ - [Tâm pháp cây tìm kiếm nhị phân (Phần hậu thứ tự )](https://labuladong.online/algo/data-structure/bst-part4/)
  - [Tâm pháp cây tìm kiếm nhị phân (Phần dựng cây)](https://labuladong.online/algo/data-structure/bst-part3/)
 
 </details><hr>
@@ -396,11 +396,11 @@ Bài này đến đây thôi, thêm nhiều bài tập cây nhị phân kinh đi
 <details class="hint-container details">
 <summary><strong>Bài tập trích dẫn bài này</strong></summary>
 
-<strong>Cài [plugin刷题 Chrome của mình](https://labuladong.online/algo/intro/chrome/) mở các bài dưới đây có thể xem trực tiếp思路giải:</strong>
+<strong>Cài [plugin luyện bài Chrome của mình](https://labuladong.online/algo/intro/chrome/) mở các bài dưới đây có thể xem trực tiếp ý tưởng giải:</strong>
 
-| LeetCode | 力扣 | Độ khó |
+| LeetCode | LeetCode CN | Độ khó |
 | :----: | :----: | :----: |
-| - | [Kiếm Chỉ Offer 33. Chuỗi duyệt hậu序 của cây tìm kiếm nhị phân](https://leetcode.cn/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/?show=1) | 🟠 |
+| - | [Kiếm Chỉ Offer 33. Chuỗi duyệt hậu thứ tự của cây tìm kiếm nhị phân](https://leetcode.cn/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/?show=1) | 🟠 |
 
 </details>
 <hr>

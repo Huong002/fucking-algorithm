@@ -5,13 +5,13 @@
 
 ![](https://labuladong.online/algo/images/souyisou1.png)
 
-**Thông báo: Theo nhu cầu của đông đảo độc giả, website đã ra mắt [Lộ trình速成](https://labuladong.online/algo/intro/quick-learning-plan/), ai cần có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, khuyên bạn học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
+**Thông báo: Theo nhu cầu của đông đảo độc giả, website đã ra mắt [Lộ trình cấp tốc ](https://labuladong.online/algo/intro/quick-learning-plan/), ai cần có thể xem qua, cảm ơn sự ủng hộ của mọi người~ Ngoài ra, khuyên bạn học bài viết trên [website](https://labuladong.online/algo/) của mình để có trải nghiệm tốt hơn.**
 
 
 
-Đọc xong bài này, bạn không chỉ học được套路thuật toán, mà còn tiện tay giải được các bài sau:
+Đọc xong bài này, bạn không chỉ học được khuôn mẫu thuật toán, mà còn tiện tay giải được các bài sau:
 
-| LeetCode | 力扣 | Độ khó |
+| LeetCode | LeetCode CN | Độ khó |
 | :----: | :----: | :----: |
 | [355. Design Twitter](https://leetcode.com/problems/design-twitter/) | [355. Thiết kế Twitter](https://leetcode.cn/problems/design-twitter/) | 🟠 |
 
@@ -30,9 +30,9 @@ Bài 355 trên LeetCode「Thiết kế Twitter」không chỉ bản thân đề 
 
 Còn chức năng gì của Twitter liên quan thuật toán, đợi chúng ta mô tả yêu cầu đề là biết.
 
-## Một, giới thiệu đề &场景ứng dụng
+## Một, giới thiệu đề & tình huống ứng dụng
 
-Twitter và Weibo chức năng gần giống, chúng ta chủ yếu要cài đặt mấy API sau:
+Twitter và Weibo chức năng gần giống, chúng ta chủ yếu cần cài đặt mấy API sau:
 
 ```java
 class Twitter {
@@ -41,13 +41,13 @@ class Twitter {
     public void postTweet(int userId, int tweetId) {}
     
     // Trả về id động gần đây nhất của người mà user này follow (kể cả chính mình)
-    // Nhiều nhất 10条, mà các động này必须xếp theo timeline từ mới tới cũ
+    // Nhiều nhất 10 mục, mà các động này bắt buộc xếp theo timeline từ mới tới cũ
     public List<Integer> getNewsFeed(int userId) {}
     
-    // follower follow followee, nếu Id không tồn tại则tạo mới
+    // follower follow followee, nếu Id không tồn tại thì tạo mới
     public void follow(int followerId, int followeeId) {}
     
-    // follower unfollow followee, nếu Id không tồn tại则không làm gì
+    // follower unfollow followee, nếu Id không tồn tại thì không làm gì
     public void unfollow(int followerId, int followeeId) {}
 }
 ```
@@ -61,7 +61,7 @@ twitter.postTweet(1, 5);
 // User 1 gửi một tweet mới 5
 
 twitter.getNewsFeed(1);
-// return [5], vì自己là follow chính mình
+// return [5], vì chính mình là follow chính mình
 
 twitter.follow(1, 2);
 // User 1 follow user 2
@@ -72,7 +72,7 @@ twitter.postTweet(2, 6);
 twitter.getNewsFeed(1);
 // return [6, 5]
 // Giải thích: user 1 follow chính mình và user 2, nên trả về tweet gần đây của họ
-// Mà 6必须ở trước 5, vì 6 gửi gần đây hơn
+// Mà 6 bắt buộc ở trước 5, vì 6 gửi gần đây hơn
 
 twitter.unfollow(1, 2);
 // User 1 unfollow user 2
@@ -83,17 +83,17 @@ twitter.getNewsFeed(1);
 
 
 
-场景này trong đời thực của chúng ta rất thường gặp. Lấy vòng bạn bè ví dụ, như tôi vừa add WeChat của crush, rồi tôi去refresh động vòng bạn bè của mình, vậy động của crush sẽ xuất hiện trong danh sách động của tôi, mà còn xếp按thời gian với động khác. Chỉ là Twitter follow một chiều, bạn WeChat tương đương follow hai chiều. Trừ phi, bị chặn...
+ tình huống này trong đời thực của chúng ta rất thường gặp. Lấy vòng bạn bè ví dụ, như tôi vừa add WeChat của crush, rồi tôi đi refresh động vòng bạn bè của mình, vậy động của crush sẽ xuất hiện trong danh sách động của tôi, mà còn xếp theo thời gian với động khác. Chỉ là Twitter follow một chiều, bạn WeChat tương đương follow hai chiều. Trừ phi, bị chặn...
 
-Trong mấy API này đa số đều dễ cài đặt, khó cốt lõi nhất phải là `getNewsFeed`, vì kết quả trả về必须có thứ tự về thời gian, nhưng vấn đề là follow của user biến động, làm sao?
+Trong mấy API này đa số đều dễ cài đặt, khó cốt lõi nhất phải là `getNewsFeed`, vì kết quả trả về bắt buộc có thứ tự về thời gian, nhưng vấn đề là follow của user biến động, làm sao?
 
-**Ở đây就liên quan thuật toán**: nếu chúng ta lưu tweet từng user trong linked list, mỗi Node linked list lưu `id` bài viết và một timestamp `time` (ghi thời gian đăng tiện so sánh), mà linked list này xếp按 `time` có thứ tự, vậy nếu một user follow `k` user, chúng ta có thể dùng thuật toán merge `k` linked list có thứ tự để merge ra danh sách tweet có thứ tự, đúng đắn `getNewsFeed`!
+**Ở đây thì liên quan thuật toán**: nếu chúng ta lưu tweet từng user trong linked list, mỗi Node linked list lưu `id` bài viết và một timestamp `time` (ghi thời gian đăng tiện so sánh), mà linked list này xếp theo `time` có thứ tự, vậy nếu một user follow `k` user, chúng ta có thể dùng thuật toán merge `k` linked list có thứ tự để merge ra danh sách tweet có thứ tự, đúng đắn `getNewsFeed`!
 
-Thuật toán cụ thể等会讲解. Nhưng, dù chúng ta nắm thuật toán, phải biểu diễn lập trình user `user` và tweet `tweet` thế nào mới把thuật toán dùng mượt? **Đây就liên quan thiết kế hướng đối tượng đơn giản**, dưới đây chúng ta từ nông tới sâu, từng bước thiết kế.
+Thuật toán cụ thể v.v. sẽ giải thích . Nhưng, dù chúng ta nắm thuật toán, phải biểu diễn lập trình user `user` và tweet `tweet` thế nào mới thuật toán dùng mượt? **Đây thì liên quan thiết kế hướng đối tượng đơn giản**, dưới đây chúng ta từ nông tới sâu, từng bước thiết kế.
 
 ## Hai, thiết kế hướng đối tượng
 
-Dựa vào phân tích vừa rồi, chúng ta cần một lớp `User`, lưu thông tin `user`, còn cần một lớp `Tweet`, lưu thông tin tweet, và要làm Node của linked list. Nên chúng ta dựng khung tổng thể trước:
+Dựa vào phân tích vừa rồi, chúng ta cần một lớp `User`, lưu thông tin `user`, còn cần một lớp `Tweet`, lưu thông tin tweet, và cần làm Node của linked list. Nên chúng ta dựng khung tổng thể trước:
 
 ```java
 class Twitter {
@@ -111,11 +111,11 @@ class Twitter {
 
 
 
-Sở dĩ把lớp `Tweet` và `User`放vào trong lớp `Twitter`, vì lớp `Tweet`必须要dùng một timestamp toàn cục `timestamp`, mà lớp `User` lại cần dùng lớp `Tweet` ghi tweet user gửi, nên chúng đều làm inner class. Nhưng để rõ và gọn,下文sẽ把mỗi inner class và phương thức API拿ra cài đặt riêng.
+Sở dĩ lớp `Tweet` và `User` đặt vào trong lớp `Twitter`, vì lớp `Tweet` bắt buộc phải dùng một timestamp toàn cục `timestamp`, mà lớp `User` lại cần dùng lớp `Tweet` ghi tweet user gửi, nên chúng đều làm inner class. Nhưng để rõ và gọn, phần sau sẽ mỗi inner class và phương thức API lấy ra cài đặt riêng.
 
 ### Cài đặt lớp Tweet
 
-Dựa vào phân tích trước, lớp Tweet rất dễ cài đặt: mỗi instance Tweet cần ghi tweetId của mình và thời gian đăng time, mà làm Node linked list,要có con trỏ next指向Node tiếp theo.
+Dựa vào phân tích trước, lớp Tweet rất dễ cài đặt: mỗi instance Tweet cần ghi tweetId của mình và thời gian đăng time, mà làm Node linked list, cần có con trỏ next trỏ tới Node tiếp theo.
 
 ```java
 class Tweet {
@@ -138,7 +138,7 @@ class Tweet {
 
 ### Cài đặt lớp User
 
-Chúng ta想theo场景thực tế, thông tin một user cần lưu có userId, danh sách follow, và danh sách tweet user này từng đăng. Trong đó danh sách follow phải dùng集合 (Hash Set) để存, vì không được trùng, mà cần tìm nhanh; danh sách tweet phải由linked list来lưu, tiện thao tác merge có thứ tự. Vẽ hình hiểu:
+Chúng ta muốn theo tình huống thực tế, thông tin một user cần lưu có userId, danh sách follow, và danh sách tweet user này từng đăng. Trong đó danh sách follow phải dùng tập hợp (Hash Set) để lưu, vì không được trùng, mà cần tìm nhanh; danh sách tweet phải do linked list lưu, tiện thao tác merge có thứ tự. Vẽ hình hiểu:
 
 ![](https://labuladong.online/algo/images/design-twitter/user.jpg)
 
@@ -174,7 +174,7 @@ class User {
         Tweet twt = new Tweet(tweetId, timestamp);
         timestamp++;
         // Chèn tweet mới tạo vào đầu linked list
-        // Tweet càng靠trước giá trị time càng lớn
+        // Tweet càng dựa vào trước giá trị time càng lớn
         twt.next = head;
         head = twt;
     }
@@ -189,12 +189,12 @@ class Twitter {
     private static class Tweet {...}
     private static class User {...}
 
-    // Chúng ta cần một map把userId và đối tượng User对应起来
+    // Chúng ta cần một map userId và đối tượng User tương ứng dậy 
     private HashMap<Integer, User> userMap = new HashMap<>();
 
     // user đăng một tweet
     public void postTweet(int userId, int tweetId) {
-        // Nếu userId không tồn tại,则tạo mới
+        // Nếu userId không tồn tại, thì tạo mới
         if (!userMap.containsKey(userId))
             userMap.put(userId, new User(userId));
         User u = userMap.get(userId);
@@ -203,12 +203,12 @@ class Twitter {
     
     // follower follow followee
     public void follow(int followerId, int followeeId) {
-        // Nếu follower không tồn tại,则tạo mới
+        // Nếu follower không tồn tại, thì tạo mới
 		if(!userMap.containsKey(followerId)){
 			User u = new User(followerId);
 			userMap.put(followerId, u);
 		}
-        // Nếu followee không tồn tại,则tạo mới
+        // Nếu followee không tồn tại, thì tạo mới
 		if(!userMap.containsKey(followeeId)){
 			User u = new User(followeeId);
 			userMap.put(followeeId, u);
@@ -216,7 +216,7 @@ class Twitter {
 		userMap.get(followerId).follow(followeeId);
     }
     
-    // follower unfollow followee, nếu Id không tồn tại则không làm gì
+    // follower unfollow followee, nếu Id không tồn tại thì không làm gì
     public void unfollow(int followerId, int followeeId) {
         if (userMap.containsKey(followerId)) {
             User flwer = userMap.get(followerId);
@@ -225,9 +225,9 @@ class Twitter {
     }
 
     // Trả về id động gần đây nhất của người mà user này follow (kể cả chính mình)
-    // Nhiều nhất 10条, mà các động này必须xếp theo timeline từ mới tới cũ
+    // Nhiều nhất 10 mục, mà các động này bắt buộc xếp theo timeline từ mới tới cũ
     public List<Integer> getNewsFeed(int userId) {
-        // Cần hiểu thuật toán, xem下文
+        // Cần hiểu thuật toán, xem phần sau 
     }
 }
 ```
@@ -236,7 +236,7 @@ class Twitter {
 
 ## Ba, thiết kế thuật toán
 
-Cài đặt thuật toán merge k linked list có thứ tự cần dùng priority queue, cấu trúc dữ liệu này là ứng dụng quan trọng nhất của binary heap. Bạn có thể hiểu là nó có thể tự sắp xếp phần tử chèn vào, phần tử lộn xộn chèn vào就被放到vị trí đúng, có thể取出phần tử有序theo từ nhỏ tới lớn (hoặc từ lớn tới nhỏ). Cụ thể xem [Triển khai priority queue bằng binary heap](https://labuladong.online/algo/data-structure-basic/binary-heap-implement/).
+Cài đặt thuật toán merge k linked list có thứ tự cần dùng priority queue, cấu trúc dữ liệu này là ứng dụng quan trọng nhất của binary heap. Bạn có thể hiểu là nó có thể tự sắp xếp phần tử chèn vào, phần tử lộn xộn chèn vào thì được đặt vào vị trí đúng, có thể lấy ra phần tử có thứ tự theo từ nhỏ tới lớn (hoặc từ lớn tới nhỏ). Cụ thể xem [Triển khai priority queue bằng binary heap](https://labuladong.online/algo/data-structure-basic/binary-heap-implement/).
 
 
 ```python
@@ -252,18 +252,18 @@ while pq not empty:
 ```
 
 
-Mượn cấu trúc dữ liệu牛này hỗ trợ, chúng ta rất dễ cài đặt chức năng cốt lõi này. Chú ý chúng ta đặt priority queue按thuộc tính `time` xếp **giảm dần từ lớn tới nhỏ**, vì `time` càng lớn意味着thời gian càng gần, phải xếp phía trước:
+Mượn cấu trúc dữ liệu đỉnh này hỗ trợ, chúng ta rất dễ cài đặt chức năng cốt lõi này. Chú ý chúng ta đặt priority queue theo thuộc tính `time` xếp **giảm dần từ lớn tới nhỏ**, vì `time` càng lớn có nghĩa là thời gian càng gần, phải xếp phía trước:
 
 ```java
 class Twitter {
-    // Để tiết kiệm篇幅,省略phần code đã cho ở trên...
+    // Để tiết kiệm độ dài bài viết, lược bớt phần code đã cho ở trên...
 
     public List<Integer> getNewsFeed(int userId) {
         List<Integer> res = new ArrayList<>();
         if (!userMap.containsKey(userId)) return res;
         // Id user của danh sách follow
         Set<Integer> users = userMap.get(userId).followed;
-        // Tự động按thuộc tính time xếp từ lớn tới nhỏ,容量là kích thước users
+        // Tự động theo thuộc tính time xếp từ lớn tới nhỏ, dung lượng là kích thước users
         PriorityQueue<Tweet> pq = 
             new PriorityQueue<>(users.size(), (a, b)->(b.time - a.time));
 
@@ -275,7 +275,7 @@ class Twitter {
         }
 
         while (!pq.isEmpty()) {
-            // Nhiều nhất trả về 10条là đủ
+            // Nhiều nhất trả về 10 mục là đủ
             if (res.size() == 10) break;
             // Pop giá trị time lớn nhất (đăng gần nhất)
             Tweet twt = pq.poll();
@@ -291,11 +291,11 @@ class Twitter {
 
 
 
-Quá trình này như sau, dưới đây là GIF tôi làm mô tả quá trình merge linked list. Giả sử có ba linked list Tweet按thuộc tính time xếp giảm dần, chúng ta merge giảm dần thêm vào res. Chú ý số trong Node linked list ở hình là thuộc tính time, không phải thuộc tính id:
+Quá trình này như sau, dưới đây là GIF tôi làm mô tả quá trình merge linked list. Giả sử có ba linked list Tweet theo thuộc tính time xếp giảm dần, chúng ta merge giảm dần thêm vào res. Chú ý số trong Node linked list ở hình là thuộc tính time, không phải thuộc tính id:
 
 ![](https://labuladong.online/algo/images/design-twitter/merge.gif)
 
-Đến đây, chức năng timeline Twitter极其đơn giản hóa này thiết kế xong, thêm nhiều bài liên quan thiết kế cấu trúc dữ liệu xem [Bài tập kinh điển về thiết kế cấu trúc dữ liệu](https://labuladong.online/algo/problem-set/ds-design/).
+Đến đây, chức năng timeline Twitter cực kỳ đơn giản hóa này thiết kế xong, thêm nhiều bài liên quan thiết kế cấu trúc dữ liệu xem [Bài tập kinh điển về thiết kế cấu trúc dữ liệu](https://labuladong.online/algo/problem-set/ds-design/).
 
 
 

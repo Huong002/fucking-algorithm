@@ -1,7 +1,7 @@
 [![Star History Chart](https://api.star-history.com/svg?repos=labuladong/fucking-algorithm&type=Date)](https://star-history.com/#labuladong/fucking-algorithm&Date)
 
 
-English version is on [labuladong.online](https://labuladong.online/algo/en/) too. Just enjoy：)
+English version is on [labuladong.online](https://labuladong.online/algo/en/) too. Just enjoy:)
 
 # Ghi chép thuật toán của labuladong
 
@@ -21,9 +21,9 @@ Không tìm cách viết cho dễ hiểu, chẳng lẽ vừa vào đã thổi ph
 
 **1. Hãy cho kho này một star trước, thỏa mãn chút hư vinh của tôi**, chất lượng bài viết tuyệt đối xứng đáng với một star của bạn. Tôi vẫn đang tiếp tục sáng tác, hãy cho tôi chút động lực để viết tiếp, cảm ơn.
 
-**2. Nên lưu lại website trực tuyến của tôi, đầu mỗi bài viết đều có link đề LeetCode tương ứng, có thể vừa đọc bài vừa luyện đề, tổng cộng có thể cầm tay dẫn bạn luyện 500 đề**：
+**2. Nên lưu lại website trực tuyến của tôi, đầu mỗi bài viết đều có link đề LeetCode tương ứng, có thể vừa đọc bài vừa luyện đề, tổng cộng có thể cầm tay dẫn bạn luyện 500 đề**:
 
-2024 Địa chỉ mới nhất：https://labuladong.online/algo/
+2024 Địa chỉ mới nhất: https://labuladong.online/algo/
 
 ~~Địa chỉ GitHub Pages: https://labuladong.online/algo/~~
 
@@ -44,21 +44,21 @@ Nội dung đương nhiên là phần cốt lõi nhất trong chuỗi hướng d
 
 ### 3. Plugin Chrome
 
-**Chức năng chính**：Plugin Chrome có thể xem nhanh "lời giải" hay "hướng suy nghĩ" của tôi ngay trên LeetCode bản tiếng Trung hoặc LeetCode bản tiếng Anh, đồng thời thêm quan hệ tham chiếu giữa đề bài và kỹ thuật thuật toán, có thể liên động với website/tài khoản công chúng/khóa học của tôi, mang đến cho độc giả trải nghiệm luyện đề mượt mà nhất. Sách hướng dẫn cài đặt và sử dụng xem ở mục lục bên dưới.
+**Chức năng chính**:Plugin Chrome có thể xem nhanh "lời giải" hay "hướng suy nghĩ" của tôi ngay trên LeetCode bản tiếng Trung hoặc LeetCode bản tiếng Anh, đồng thời thêm quan hệ tham chiếu giữa đề bài và kỹ thuật thuật toán, có thể liên động với website/tài khoản công chúng/khóa học của tôi, mang đến cho độc giả trải nghiệm luyện đề mượt mà nhất. Sách hướng dẫn cài đặt và sử dụng xem ở mục lục bên dưới.
 
 ![](https://labuladong.github.io/pictures/简介/chrome_intro.jpg)
 
 
 ### 4. Plugin vscode
 
-**Chức năng chính**：Về cơ bản giống chức năng của plugin Chrome, độc giả quen luyện đề trên vscode có thể dùng plugin này. Sách hướng dẫn cài đặt và sử dụng xem ở mục lục bên dưới.
+**Chức năng chính**:Về cơ bản giống chức năng của plugin Chrome, độc giả quen luyện đề trên vscode có thể dùng plugin này. Sách hướng dẫn cài đặt và sử dụng xem ở mục lục bên dưới.
 
 ![](https://labuladong.github.io/pictures/简介/vs_intro.jpg)
 
 
 ### 5. Plugin Jetbrains
 
-**Chức năng chính**：Về cơ bản giống chức năng của plugin Chrome, độc giả quen luyện đề trên IDE nhà Jetbrains (PyCharm/Intellij/Goland, v.v.) có thể dùng plugin này. Sách hướng dẫn cài đặt và sử dụng xem ở mục lục bên dưới.
+**Chức năng chính**:Về cơ bản giống chức năng của plugin Chrome, độc giả quen luyện đề trên IDE nhà Jetbrains (PyCharm/Intellij/Goland, v.v.) có thể dùng plugin này. Sách hướng dẫn cài đặt và sử dụng xem ở mục lục bên dưới.
 
 ![](https://labuladong.github.io/pictures/简介/jb_intro.jpg)
 
@@ -440,7 +440,7 @@ Cuối cùng chúc mọi người học vui, tự do bơi lội trong biển đ�
 
 # Cảm ơn các cao thủ sau đã tham gia dịch thuật (bản gốc tiếng Anh)
 
-Xếp theo thứ tự từ điển của nickname：
+Xếp theo thứ tự từ điển của nickname:
 
 [ABCpril](https://github.com/ABCpril), 
 [andavid](https://github.com/andavid), 
